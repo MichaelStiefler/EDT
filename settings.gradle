@@ -1,0 +1,5 @@
+include ':DeviceLibrary'
+rootProject.name='EDT'
+include ':EDT Library'
+include ':EDT Test'
+include ':EDT Service'

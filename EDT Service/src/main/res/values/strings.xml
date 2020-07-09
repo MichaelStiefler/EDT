@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">CASIO Enterprise Development Tools</string>
+    <string name="admin_receiver_status" tools:ignore="ExtraTranslation">EDT Tools Device Admin: %1$s</string>
+    <string name="admin_receiver_status_enabled" tools:ignore="ExtraTranslation">enabled</string>
+    <string name="admin_receiver_status_disabled" tools:ignore="ExtraTranslation">disabled</string>
+    <string name="admin_receiver_status_pw_changed" tools:ignore="ExtraTranslation">pw changed</string>
+    <string name="admin_receiver_status_pw_failed" tools:ignore="ExtraTranslation">pw failed</string>
+    <string name="admin_receiver_status_pw_succeeded" tools:ignore="ExtraTranslation">pw succeeded</string>
+    <string name="admin_receiver_status_disable_warning" tools:ignore="ExtraTranslation">Attention: EDT Tools need Device Admin privileges for administrative features!</string>
+</resources>

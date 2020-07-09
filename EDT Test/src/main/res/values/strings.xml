@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EDT Test Application</string>
+    <string name="vertical_button_padding">50dp</string>
+</resources>
