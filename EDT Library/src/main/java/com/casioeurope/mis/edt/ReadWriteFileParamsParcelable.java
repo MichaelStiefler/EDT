@@ -18,8 +18,25 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ReadWriteFileParamsParcelable)";
 
+    private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
+        if (!LOG_METHOD_ENTRANCE_EXIT) return;
+        String nameOfCurrMethod = Thread.currentThread()
+                .getStackTrace()[3]
+                .getMethodName();
+        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrMethod = Thread.currentThread()
+                    .getStackTrace()[4]
+                    .getMethodName();
+        }
+        StringBuilder sb = new StringBuilder(addonTags.length);
+        Arrays.stream(addonTags).forEach(sb::append);
+
+        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+    }
+
     static final Creator<ReadWriteFileParamsParcelable> CREATOR = new Creator<ReadWriteFileParamsParcelable>() {
         public ReadWriteFileParamsParcelable createFromParcel(Parcel in) {
+            logMethodEntranceExit(true);
             ReadWriteFileParamsParcelable rwfpp = new ReadWriteFileParamsParcelable(new ReadWriteFileParams());
             rwfpp.path = Paths.get(Objects.requireNonNull(in.readString()));
             rwfpp.data = new byte[in.readInt()];
@@ -48,6 +65,7 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
                     }
                 }
             }
+            logMethodEntranceExit(false);
             return rwfpp;
         }
 
@@ -58,25 +76,15 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
 
     public ReadWriteFileParamsParcelable(ReadWriteFileParams rwfp) {
         super();
+        logMethodEntranceExit(true);
         this.path = rwfp.path;
         this.data = rwfp.data;
         this.fileOffset = rwfp.fileOffset;
         this.dataOffset = rwfp.dataOffset;
         this.length = rwfp.length;
         this.options = rwfp.options;
+        logMethodEntranceExit(false);
     }
-
-//    public ReadWriteFileParams getReadWriteFileParams() {
-//        ReadWriteFileParams rwfp = new ReadWriteFileParams();
-//        rwfp.path = this.path;
-//        rwfp.data = this.data;
-//        rwfp.fileOffset = this.fileOffset;
-//        rwfp.dataOffset = this.dataOffset;
-//        rwfp.length = this.length;
-//        rwfp.options = this.options;
-//        return rwfp;
-//    }
-
 
     @Override
     public int describeContents() {
@@ -85,6 +93,7 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        logMethodEntranceExit(true);
         dest.writeString(this.path.toString());
         dest.writeInt(this.data.length);
         dest.writeByteArray(this.data);
@@ -93,5 +102,6 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
         dest.writeInt(this.length);
         List<String> openOptionStrings = options == null? new ArrayList<>():options.stream().map(Object::toString).collect(Collectors.toList());
         dest.writeList(openOptionStrings);
+        logMethodEntranceExit(false);
     }
 }

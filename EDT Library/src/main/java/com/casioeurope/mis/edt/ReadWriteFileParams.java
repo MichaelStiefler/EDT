@@ -11,108 +11,77 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * The {@link ReadWriteFileParams ReadWriteFileParams} class is used to hand over parameters to the {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} functions of the CASIO Enterprise Developer Tools
+ * A set of parameters used to hand over to the {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} methods of the CASIO Enterprise Developer Tools
+ *
+ * <p>Since {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} methods use a variable set of parameters with overlapping parameter types, overloading methods or using variable argument lists isn't feasible.<br/>
+ * Instead, instances of this class hold sets of all required parameters for these methods.</p>
+ *
+ * <p>Use {@link ReadWriteFileParams.Builder} to create new instances.</p>
  */
 public class ReadWriteFileParams {
 
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ReadWriteFileParams)";
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
 
-    /**
-     * Returns the {@link java.nio.file.Path path} of this object
-     * @return {@link java.nio.file.Path String}: The {@link java.nio.file.Path path} of this object
-     */
-    @SuppressWarnings("unused")
-    /*public*/ Path getPath() {
+    private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
+        if (!LOG_METHOD_ENTRANCE_EXIT) return;
+        String nameOfCurrMethod = Thread.currentThread()
+                .getStackTrace()[3]
+                .getMethodName();
+        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrMethod = Thread.currentThread()
+                    .getStackTrace()[4]
+                    .getMethodName();
+        }
+        StringBuilder sb = new StringBuilder(addonTags.length);
+        Arrays.stream(addonTags).forEach(sb::append);
+
+        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+    }
+
+    Path getPath() {
         return path;
     }
 
     /**
-     * Returns the {@link java.nio.file.Path path} of this object converted to a {@link java.lang.String String}
-     * @return {@link java.lang.String String}: The {@link java.nio.file.Path path} of this object converted to a {@link java.lang.String String}
+     * Returns the buffer holding the data from/for {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} methods.
+     *
+     * <p>When using the {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} method, providing a data buffer (and data accordingly, logically) is mandatory.<br/>
+     * In contrast, when using the {@link EDTLib#readFile(ReadWriteFileParams) readFile} method, providing a data buffer is optional.<br/>
+     * If {@link EDTLib#readFile(ReadWriteFileParams) readFile} method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
+     * If {@link EDTLib#readFile(ReadWriteFileParams) readFile} method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
+     * </p>
+     * @return {@link java.lang.reflect.Array Array} of {@link java.lang.Byte Bytes}: The buffer holding the data to be read or written, or {@code null} if no buffer is provided.
      */
-    @SuppressWarnings("unused")
-    /*public*/ String getPathString() {
-        return path.toString();
-    }
-
-    /**
-     * Returns the buffer holding the data to be read or written
-     * @return {@link java.lang.reflect.Array Array} of {@link java.lang.Byte Bytes}: The buffer holding the data to be read or written
-     */
-    @SuppressWarnings("unused")
     public byte[] getData() {
         return data;
-    }
-
-    /**
-     * Applies a new buffer holding the data to be read or written
-     * @param newData {@link java.lang.reflect.Array Array} of {@link java.lang.Byte Bytes}: The buffer holding the data to be read or written
-     */
-    @SuppressWarnings("unused")
-    public void setData(byte[] newData) {
-        this.data = newData;
     }
 
     /**
      * Creates a new buffer holding the data to be read or written
      * @param newDataLength {@link java.lang.Integer int}: The size of the new buffer holding the data to be read or written
      */
-    @SuppressWarnings("unused")
-    public void newData(int newDataLength) {
+    void newData(int newDataLength) {
+        logMethodEntranceExit(true);
         this.data = new byte[newDataLength];
+        logMethodEntranceExit(false);
     }
 
-    /**
-     * Returns the Offset inside the file where reading/writing starts
-     * @return {@link java.lang.Integer int}: Offset inside the file where reading/writing starts
-     */
-    @SuppressWarnings("unused")
-    /*public*/ int getFileOffset() {
+    int getFileOffset() {
         return fileOffset;
     }
 
-    /**
-     * Returns the Offset inside the data buffer where reading/writing starts
-     * @return {@link java.lang.Integer int}: Offset inside the data buffer where reading/writing starts
-     */
-    @SuppressWarnings("unused")
-    /*public*/ int getDataOffset() {
+    int getDataOffset() {
         return dataOffset;
     }
 
-    /**
-     * Returns the Length of data to be read or written
-     * @return {@link java.lang.Integer int}: Length of data to be read or written
-     */
-    @SuppressWarnings("unused")
-    /*public*/ int getLength() {
+    int getLength() {
         return length;
     }
 
-    /**
-     * Returns the {@link java.util.List List} of {@link java.nio.file.StandardOpenOption StandardOpenOptions} and/or {@link java.nio.file.LinkOption LinkOptions} to apply
-     * @return {@link java.util.List List} of {@link java.nio.file.StandardOpenOption StandardOpenOptions} and/or {@link java.nio.file.LinkOption LinkOptions}: {@link java.util.List List} of {@link java.nio.file.StandardOpenOption StandardOpenOptions} and/or {@link java.nio.file.LinkOption LinkOptions} to apply
-     */
-    @SuppressWarnings("unused")
-    /*public*/ List<OpenOption> getOptions() {
+    List<OpenOption> getOptions() {
         return options;
-    }
-
-    /**
-     * Returns the {@link java.util.List List} containing Names of the {@link java.nio.file.StandardOpenOption StandardOpenOptions} and/or {@link java.nio.file.LinkOption LinkOptions} to apply
-     * @return {@link java.util.List List} of {@link java.lang.String Strings}: {@link java.util.List List} containing Names and/of the {@link java.nio.file.StandardOpenOption StandardOpenOptions} and/or {@link java.nio.file.LinkOption LinkOptions} to apply
-     */
-    @SuppressWarnings("unused")
-    /*public*/ List<String> getOptionStrings() {
-        List<String> openOptionStrings;
-        try {
-            openOptionStrings = options == null?null: options.stream().map(Object::toString).collect(Collectors.toList());
-            return openOptionStrings;
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        }
-        return null;
     }
 
     Path path;
@@ -123,38 +92,59 @@ public class ReadWriteFileParams {
     List<OpenOption> options;
 
     ReadWriteFileParams() {
+        logMethodEntranceExit(true);
         path = null;
         data = null;
         fileOffset = -1;
         dataOffset = -1;
         length = -1;
         options = null;
+        logMethodEntranceExit(false);
     }
 
-    @SuppressWarnings("unused")
     private ReadWriteFileParams (Builder builder) {
+        logMethodEntranceExit(true);
         path = Objects.requireNonNull(builder.path, "File Path must not be null!");
         data = builder.data;
         fileOffset = builder.fileOffset;
         dataOffset = builder.dataOffset;
         length = builder.length;
         options = builder.options;
+        logMethodEntranceExit(false);
     }
 
     /**
-     * Since ReadWriteFileParams uses the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a>, there's no public constructor available.<br/>
-     * Instead, this is used to create a new instance of the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder</a> of this class.<br/>
+     * Since ReadWriteFileParams uses the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a> with a mandatory {@code path} field, there's no public constructor available.<br/>
+     * Instead, this method is used to create a new instance of the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder</a> of this class.<br/>
      * In order to finally instanciate a {@link ReadWriteFileParams ReadWriteFileParams} object, call the {@link Builder#build() build()} method of the builder when all optional <a href="https://en.wikipedia.org/wiki/Builder_pattern">chaining</a> has been done.
      * @param path {@link java.nio.file.Path Path}: The file to be read from or written to. Providing a file path is mandatory.
      * @return The instance object of this class, with a mandatory file {@link java.nio.file.Path path} set, and further optional fields set from <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder</a> chaining.
      */
     @SuppressWarnings("unused")
-    public static Builder path(Path path) {
+    public static Builder fromPath(Path path) {
         return new Builder(path);
     }
 
     /**
-     * The {@link ReadWriteFileParams.Builder ReadWriteFileParams.Builder} class is used to create new Instances of the {@link ReadWriteFileParams ReadWriteFileParams} class following the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a>
+     * Provides a convenient way to set the fields of a {@link ReadWriteFileParams} object when creating a new
+     * instance, following the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a>. The following setting is required to build a {@link ReadWriteFileParams} object:
+     *
+     * <ul><li>{@code path}</li></ul>
+     *
+     * <p>The example below shows how you might create a new {@link ReadWriteFileParams} object instance:
+     *
+     * <pre><code>
+     * // Create a ReadWriteFileParams object instance with a data buffer of 4K,
+     * // for read operation starting after 1 byte, accessing the buffer from index 2 onwards, reading a hundred bytes.
+     * byte[] testData = new byte[4096];
+     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.fromPath(Paths.get("/sdcard/Download/devinfo.html"))
+     *       .setData(testData)
+     *       .setFileOffset(1)
+     *       .setDataOffset(2)
+     *       .setLength(100)
+     *       .setOptions(StandardOpenOption.READ)
+     *       .build();
+     * </code></pre>
      */
     public static final class Builder {
 
@@ -166,10 +156,12 @@ public class ReadWriteFileParams {
         private List<OpenOption> options;
 
         private Builder(Path val) {
+            logMethodEntranceExit(true);
             data = null;
             fileOffset = dataOffset = length = -1;
             options = null;
             path = val;
+            logMethodEntranceExit(false);
         }
 
         /**
@@ -180,8 +172,10 @@ public class ReadWriteFileParams {
          * @return The instance object of this {@link Builder Builder}, with a mandatory file {@link java.nio.file.Path path} set, and a data Buffer provided.
          */
         @SuppressWarnings("unused")
-        public Builder data(byte[] data) {
+        public Builder setData(byte[] data) {
+            logMethodEntranceExit(true);
             this.data = data;
+            logMethodEntranceExit(false);
             return this;
         }
 
@@ -191,8 +185,10 @@ public class ReadWriteFileParams {
          * @return The instance object of this {@link Builder Builder}, with a mandatory file {@link java.nio.file.Path path} set, and a File Offset field added.
          */
         @SuppressWarnings("unused")
-        public Builder fileOffset(int fileOffset) {
+        public Builder setFileOffset(int fileOffset) {
+            logMethodEntranceExit(true);
             this.fileOffset = fileOffset;
+            logMethodEntranceExit(false);
             return this;
         }
 
@@ -202,8 +198,10 @@ public class ReadWriteFileParams {
          * @return The instance object of this {@link Builder Builder}, with a mandatory file {@link java.nio.file.Path path} set, and a Data Offset field added.
          */
         @SuppressWarnings("unused")
-        public Builder dataOffset(int dataOffset) {
+        public Builder setDataOffset(int dataOffset) {
+            logMethodEntranceExit(true);
             this.dataOffset = dataOffset;
+            logMethodEntranceExit(false);
             return this;
         }
 
@@ -213,8 +211,10 @@ public class ReadWriteFileParams {
          * @return The instance object of this {@link Builder Builder}, with a mandatory file {@link java.nio.file.Path path} set, and a Data Length field added.
          */
         @SuppressWarnings("unused")
-        public Builder length(int length) {
+        public Builder setLength(int length) {
+            logMethodEntranceExit(true);
             this.length = length;
+            logMethodEntranceExit(false);
             return this;
         }
 
@@ -224,9 +224,11 @@ public class ReadWriteFileParams {
          * @return The instance object of this {@link Builder Builder}, with a mandatory file {@link java.nio.file.Path path} set, and further {@link java.nio.file.StandardOpenOption StandardOpenOptions} and/or {@link java.nio.file.LinkOption LinkOptions} applied.
          */
         @SuppressWarnings("unused")
-        public Builder options(OpenOption... openOptions) {
+        public Builder setOptions(OpenOption... openOptions) {
+            logMethodEntranceExit(true);
             if (options == null) this.options = new ArrayList<>();
             if (options.addAll(Arrays.asList(openOptions))) this.options = this.options.stream().distinct().collect(Collectors.toList());
+            logMethodEntranceExit(false);
             return this;
         }
 
@@ -236,6 +238,8 @@ public class ReadWriteFileParams {
          */
         @SuppressWarnings("unused")
         public ReadWriteFileParams build() {
+            logMethodEntranceExit(true);
+            logMethodEntranceExit(false);
             return new ReadWriteFileParams(this);
         }
     }

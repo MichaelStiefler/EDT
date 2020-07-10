@@ -14,6 +14,9 @@ public class PowerManager {
     private static String TAG = "EDT_TOOLS (PowerManager)";
     private static int shutdownVersion = 0;
 
+    public static final String ACTION_REQUEST_SHUTDOWN_7 = "com.android.intent.action.REQUEST_SHUTDOWN";
+    public static final String ACTION_REQUEST_SHUTDOWN_8 = "com.android.internal.intent.action.REQUEST_SHUTDOWN";
+
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
         String nameOfCurrMethod = Thread.currentThread()
@@ -47,7 +50,10 @@ public class PowerManager {
             case 1: {
                 try {
                     Intent intent = new Intent();
-                    intent.setAction("android.intent.action.ACTION_SHUTDOWN");
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+                        intent.setAction(ACTION_REQUEST_SHUTDOWN_8);
+                    else
+                        intent.setAction(ACTION_REQUEST_SHUTDOWN_7);
                     intent.setFlags(0x10000000); //device.common.MetaKeyConst.META_LOCK_ON --> from CASIOAndroidAddons.java
                     context.startActivity(intent);
                     logMethodEntranceExit(false);

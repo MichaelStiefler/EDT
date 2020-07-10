@@ -12,7 +12,6 @@ import com.casioeurope.mis.edt.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
 
 import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -151,7 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } else if (v==activityMainBinding.buttonReadFile) {
                 Log.d(TAG, "Calling Read File from Service!");
                 byte[] testData = new byte[4096];
-                ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.path(Paths.get("/sdcard/Download/devinfo.html")).data(testData).fileOffset(1).dataOffset(2).length(100).options(StandardOpenOption.READ).build();
+                ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.fromPath(Paths.get("/sdcard/Download/devinfo.html")).setData(testData).setFileOffset(1).setDataOffset(2).setLength(100).setOptions(StandardOpenOption.READ).build();
                 Log.d(TAG, String.format("Read File Result = %b", EDTLib.readFile(readWriteFileParams)));
             } else if (v==activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");

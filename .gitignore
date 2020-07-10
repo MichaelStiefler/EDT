@@ -15,3 +15,8 @@
 
 # Project exclude paths
 /DeviceLibrary/build/
+/DeviceLibrary/
+/backup/
+/Javadoc/
+/others/
+/Signed APKs/
