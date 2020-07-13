@@ -17,6 +17,7 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
 
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ReadWriteFileParamsParcelable)";
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;

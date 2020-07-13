@@ -2,6 +2,7 @@
 package com.casioeurope.mis.edt;
 import com.casioeurope.mis.edt.IWifiConfigurationParcelable;
 import com.casioeurope.mis.edt.IReadWriteFileParamsParcelable;
+import com.casioeurope.mis.edt.IAPNParcelable;
 
 interface IEDT {
     boolean testMessage(String message);
@@ -46,4 +47,11 @@ interface IEDT {
     boolean enableGps(boolean enable);
     boolean enableWwan(boolean enable);
     boolean enableDeveloperMode(boolean enable);
+    boolean createNewApn(in APNParcelable apn, boolean setAsDefault);
+    boolean updateApn(in APNParcelable apn);
+    boolean verifyApn(String name);
+    int getApnId(String name);
+    APNParcelable getApn(String name);
+    boolean setPreferredApn(String name);
+    APNParcelable[] getAllApnList();
 }

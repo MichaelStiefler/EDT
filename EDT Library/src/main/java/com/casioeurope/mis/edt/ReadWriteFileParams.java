@@ -22,7 +22,7 @@ public class ReadWriteFileParams {
 
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ReadWriteFileParams)";
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -116,12 +116,12 @@ public class ReadWriteFileParams {
     /**
      * Since ReadWriteFileParams uses the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a> with a mandatory {@code path} field, there's no public constructor available.<br/>
      * Instead, this method is used to create a new instance of the <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder</a> of this class.<br/>
-     * In order to finally instanciate a {@link ReadWriteFileParams ReadWriteFileParams} object, call the {@link Builder#build() build()} method of the builder when all optional <a href="https://en.wikipedia.org/wiki/Builder_pattern">chaining</a> has been done.
+     * In order to finally instantiate a {@link ReadWriteFileParams ReadWriteFileParams} object, call the {@link Builder#build() build()} method of the builder when all optional <a href="https://en.wikipedia.org/wiki/Builder_pattern">chaining</a> has been done.
      * @param path {@link java.nio.file.Path Path}: The file to be read from or written to. Providing a file path is mandatory.
      * @return The instance object of this class, with a mandatory file {@link java.nio.file.Path path} set, and further optional fields set from <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder</a> chaining.
      */
     @SuppressWarnings("unused")
-    public static Builder fromPath(Path path) {
+    public static Builder setPath(Path path) {
         return new Builder(path);
     }
 
@@ -137,7 +137,7 @@ public class ReadWriteFileParams {
      * // Create a ReadWriteFileParams object instance with a data buffer of 4K,
      * // for read operation starting after 1 byte, accessing the buffer from index 2 onwards, reading a hundred bytes.
      * byte[] testData = new byte[4096];
-     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.fromPath(Paths.get("/sdcard/Download/devinfo.html"))
+     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html"))
      *       .setData(testData)
      *       .setFileOffset(1)
      *       .setDataOffset(2)
@@ -160,7 +160,7 @@ public class ReadWriteFileParams {
             data = null;
             fileOffset = dataOffset = length = -1;
             options = null;
-            path = val;
+            path = Objects.requireNonNull(val, "File Path must not be null!");
             logMethodEntranceExit(false);
         }
 
@@ -233,7 +233,7 @@ public class ReadWriteFileParams {
         }
 
         /**
-         * This method is used to finally instanciate a {@link ReadWriteFileParams ReadWriteFileParams} object from this {@link Builder Builder}, after all optional <a href="https://en.wikipedia.org/wiki/Builder_pattern">chaining</a> has been done.
+         * This method is used to finally instantiate a {@link ReadWriteFileParams ReadWriteFileParams} object from this {@link Builder Builder}, after all optional <a href="https://en.wikipedia.org/wiki/Builder_pattern">chaining</a> has been done.
          * @return {@link ReadWriteFileParams ReadWriteFileParams}: instance object created from <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a>.
          */
         @SuppressWarnings("unused")

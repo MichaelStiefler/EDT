@@ -31,7 +31,7 @@ public class EDTImpl extends IEDT.Stub {
     private Context context;
     private Handler handler = new Handler();
 
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
     private static String TAG = "EDT_TOOLS (Implementation)";
 
     @SuppressWarnings({"unused", "SpellCheckingInspection"})
@@ -586,5 +586,38 @@ public class EDTImpl extends IEDT.Stub {
         return Security.enableDeveloperMode(enable, this.context);
     }
 
+    @Override
+    public boolean createNewApn(APNParcelable apn, boolean setAsDefault) {
+        return APNTools.createNewApn(this.context, apn, setAsDefault) != APN.INVALID_APN;
+    }
 
+    @Override
+    public boolean updateApn(APNParcelable apn) {
+        return APNTools.updateApn(this.context, apn);
+    }
+
+    @Override
+    public boolean verifyApn(String name) {
+        return APNTools.verifyApn(this.context, name);
+    }
+
+    @Override
+    public int getApnId(String name) {
+        return APNTools.getApnId(this.context, name);
+    }
+
+    @Override
+    public APNParcelable getApn(String name) {
+        return APNTools.getApn(this.context, name);
+    }
+
+    @Override
+    public boolean setPreferredApn(String name) {
+        return APNTools.setPreferredApn(this.context, name);
+    }
+
+    @Override
+    public APNParcelable[] getAllApnList() {
+        return APNTools.getAllApnList(this.context);
+    }
 }

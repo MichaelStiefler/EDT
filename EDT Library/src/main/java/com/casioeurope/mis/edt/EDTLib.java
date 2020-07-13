@@ -128,6 +128,22 @@ public class EDTLib {
     }
 
     /**
+     * Creates a new Access Point Name (APN) configuration for a carrier data connection and optionally sets it as the new default configuration.
+     *
+     * @param apn          {@link APN APN}:         The Access Point Name (APN) configuration for a carrier data connection.
+     * @param setAsDefault {@code boolean}: Whether or not the APN configuration should become the new default configuration.
+     * @return boolean whether or not the new Access Point Name (APN) configuration has been created successfully
+     */
+    public static boolean createNewApn(APN apn, boolean setAsDefault) {
+        try {
+            return getInstance().edtService().createNewApn(new APNParcelable(apn), setAsDefault);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Removes the specified file
      *
      * @param filePath {@link java.lang.String String}: Path (including name) of the file to be removed
@@ -324,6 +340,57 @@ public class EDTLib {
     }
 
     /**
+     * Gets the {@link java.lang.reflect.Array Array} of existing {@link APN Access Point Name (APN)} configurations.
+     *
+     * @return {@link APN APN[]} {@link java.lang.reflect.Array Array} of available Access Point Name (APN) configurations.
+     */
+    public static APN[] getAllApnList() {
+        try {
+            APNParcelable[] apnParcelables = getInstance().edtService().getAllApnList();
+            if (apnParcelables == null) return null;
+            APN[] apns = new APN[apnParcelables.length];
+            int i=0;
+            for (APNParcelable apnParcelable: apnParcelables) apns[i++] = apnParcelable.getAPN();
+            return apns;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the {@link APN Access Point Name (APN) configuration} for a carrier data connection by it's {@link APN#getName() name}.
+     *
+     * @param name          {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
+     * @return {@link APN APN} the Access Point Name (APN) configuration for a carrier data connection.
+     * If no matching configuration for the {@link APN#getName() name} could be found, the method returns {@code null}.
+     */
+    public static APN getApn(String name) {
+        try {
+            return getInstance().edtService().getApn(name).getAPN();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the {@link APN#getId() id} field of an existing Access Point Name (APN) configuration for a carrier data connection.
+     *
+     * @param name          {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
+     * @return {@code int} the {@link APN#getId() id} field of an existing Access Point Name (APN) configuration for a carrier data connection.
+     * If no matching configuration for the {@link APN#getName() name} could be found, the method returns {@link APN#INVALID_APN INVALID_APN (-1)}.
+     */
+    public static int getApnId(String name) {
+        try {
+            return getInstance().edtService().getApnId(name);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return APN.INVALID_APN;
+    }
+
+    /**
      * Reads current Barcode Scanner settings and applies new Barcode Scanner settings to/from files according to the specified file path
      *
      * <p>NOTE: The Filename for the old Barcode Scanner setting will get a suffix "_old" applied.<br/>
@@ -428,7 +495,7 @@ public class EDTLib {
      * // Create a ReadWriteFileParams object instance with a data buffer of 4K,
      * // for read operation starting after 1 byte, accessing the buffer from index 2 onwards, reading a hundred bytes.
      * byte[] testData = new byte[4096];
-     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.fromPath(Paths.get("/sdcard/Download/devinfo.html"))
+     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html"))
      *       .setData(testData)
      *       .setFileOffset(1)
      *       .setDataOffset(2)
@@ -669,6 +736,21 @@ public class EDTLib {
     }
 
     /**
+     * Sets a new preferred Access Point Name (APN) configuration for a carrier data connections.
+     *
+     * @param name          {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for becoming the new preferred carrier data connection.<br/>
+     * @return boolean whether or not the Access Point Name (APN) configuration in question could be set as the new preferred APN configuration.
+     */
+    public static boolean setPreferredApn(String name) {
+        try {
+            return getInstance().edtService().setPreferredApn(name);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Apply new Barcode Scanner Settings from file.
      *
      * <p>NOTE: The file may or may not contain a file extension.<br/>
@@ -760,6 +842,24 @@ public class EDTLib {
     }
 
     /**
+     * Updates an existing Access Point Name (APN) configuration for a carrier data connection.
+     *
+     * @param apn          {@link APN APN}:         The Access Point Name (APN) configuration for a carrier data connection, holding the new data for this configuration.<br/>
+     *                                    The "id" field holds the ID of the existing APN configuration to be updated.<br/>
+     *                                    Use {@link EDTLib#getApnId getApnId} to fetch the ID from a given name if required.
+     * @return boolean whether or not the new Access Point Name (APN) configuration has been applied successfully.<br/>
+     * If no matching configuration for the ID could be found, the method returns {@code false}.
+     */
+    public static boolean updateApn(APN apn) {
+        try {
+            return getInstance().edtService().updateApn(new APNParcelable(apn));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Update an existing network description of the set of configured networks. The {@link android.net.wifi.WifiConfiguration#networkId networkId} field must be set to the ID of the existing network being updated.
      *
      * @param wifiConfiguration {@link android.net.wifi.WifiConfiguration WifiConfiguration}: The set of variables that describe the configuration, contained in a WifiConfiguration object.
@@ -771,6 +871,21 @@ public class EDTLib {
         try {
             WifiConfigurationParcelable wifiConfigurationParcelable = new WifiConfigurationParcelable(wifiConfiguration);
             return getInstance().edtService().updateNetwork(wifiConfigurationParcelable);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Updates an existing Access Point Name (APN) configuration for a carrier data connection.
+     *
+     * @param name          {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
+     * @return boolean whether or not the Access Point Name (APN) configuration in question refers to a valid APN configuration.
+     */
+    public static boolean verifyApn(String name) {
+        try {
+            return getInstance().edtService().verifyApn(name);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -793,7 +908,7 @@ public class EDTLib {
      * // Create a ReadWriteFileParams object instance with a data buffer of 4K,
      * // for write operation starting after 1 byte, accessing the buffer from index 2 onwards, writing a hundred bytes.
      * byte[] testData = new byte[4096];
-     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.fromPath(Paths.get("/sdcard/Download/devinfo.html"))
+     * ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html"))
      *       .setData(testData)
      *       .setFileOffset(1)
      *       .setDataOffset(2)

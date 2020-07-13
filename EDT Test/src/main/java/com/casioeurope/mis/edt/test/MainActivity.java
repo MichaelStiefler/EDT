@@ -150,7 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } else if (v==activityMainBinding.buttonReadFile) {
                 Log.d(TAG, "Calling Read File from Service!");
                 byte[] testData = new byte[4096];
-                ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.fromPath(Paths.get("/sdcard/Download/devinfo.html")).setData(testData).setFileOffset(1).setDataOffset(2).setLength(100).setOptions(StandardOpenOption.READ).build();
+                ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html")).setData(testData).setFileOffset(1).setDataOffset(2).setLength(100).setOptions(StandardOpenOption.READ).build();
                 Log.d(TAG, String.format("Read File Result = %b", EDTLib.readFile(readWriteFileParams)));
             } else if (v==activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");
