@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.test;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.casioeurope.mis.edt.APN;
 import com.casioeurope.mis.edt.EDTLib;
 import com.casioeurope.mis.edt.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
@@ -152,6 +154,26 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 byte[] testData = new byte[4096];
                 ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html")).setData(testData).setFileOffset(1).setDataOffset(2).setLength(100).setOptions(StandardOpenOption.READ).build();
                 Log.d(TAG, String.format("Read File Result = %b", EDTLib.readFile(readWriteFileParams)));
+            } else if (v==activityMainBinding.getApnList) {
+                Log.d(TAG, "Calling Get All APN List from Service!");
+                APN[] apns = EDTLib.getAllApnList();
+                Log.d(TAG, String.format("Get All APN List Result = %d", apns==null?-1:apns.length));
+            } else if (v==activityMainBinding.getGoogleAccounts) {
+                Log.d(TAG, "Calling Get Google Accounts from Service!");
+                Account[] accounts = EDTLib.getGoogleAccounts();
+                Log.d(TAG, String.format("Get Google Accounts Result = %d", accounts==null?-1:accounts.length));
+            } else if (v==activityMainBinding.removeGoogleAccounts) {
+                Log.d(TAG, "Calling Remove Google Accounts from Service!");
+                Log.d(TAG, String.format("Remove Google Accounts Result = %b", EDTLib.removeAllAccounts()));
+            } else if (v==activityMainBinding.installCertificate) {
+                Log.d(TAG, "Calling Install CA Certificate from Service!");
+                Log.d(TAG, String.format("Install CA Certificate Result = %b", EDTLib.installCACertificate("TEST CA", "\\sdcard\\testca.cer")));
+            } else if (v==activityMainBinding.mountSdCard) {
+                Log.d(TAG, "Calling Mount SD Card from Service!");
+                Log.d(TAG, String.format("Mount SD Card Result = %b", EDTLib.mountSDCard(true)));
+            } else if (v==activityMainBinding.unmountSdCard) {
+                Log.d(TAG, "Calling Unmount SD Card from Service!");
+                Log.d(TAG, String.format("Unmount SD Card Result = %b", EDTLib.mountSDCard(false)));
             } else if (v==activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");
                 //Log.d(TAG, String.format("Test Message Result = %b", edtToolsService.testMessage("EDT Tools Test Message!")));

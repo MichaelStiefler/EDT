@@ -432,10 +432,94 @@
             android:paddingTop="50dp"
             android:paddingBottom="50dp"
             android:text="Read File"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintBottom_toTopOf="@+id/getApnList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonMoveFile" />
+
+        <Button
+            android:id="@+id/getApnList"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:text="Get All APNs"
+            app:layout_constraintBottom_toTopOf="@+id/getGoogleAccounts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonReadFile" />
+
+        <Button
+            android:id="@+id/getGoogleAccounts"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:text="Get All Google Accounts"
+            app:layout_constraintBottom_toTopOf="@+id/removeGoogleAccounts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/getApnList" />
+
+        <Button
+            android:id="@+id/removeGoogleAccounts"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:text="Remove All Google Accounts"
+            app:layout_constraintBottom_toTopOf="@+id/installCertificate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/getGoogleAccounts" />
+
+        <Button
+            android:id="@+id/installCertificate"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:text="Install Certificate"
+            app:layout_constraintBottom_toTopOf="@+id/mountSdCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/removeGoogleAccounts" />
+
+        <Button
+            android:id="@+id/mountSdCard"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:text="Mount SD Card"
+            app:layout_constraintBottom_toTopOf="@+id/unmountSdCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/installCertificate" />
+
+        <Button
+            android:id="@+id/unmountSdCard"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:text="Unmount SD Card"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mountSdCard" />
 
         <Button
             android:id="@+id/buttonTestMessage"
@@ -449,7 +533,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonReadFile" />
+            app:layout_constraintTop_toBottomOf="@+id/unmountSdCard" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
