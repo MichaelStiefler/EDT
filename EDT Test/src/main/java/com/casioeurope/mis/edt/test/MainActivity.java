@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, String.format("Reboot Result = %b", EDTLib.reboot()));
             } else if (v==activityMainBinding.buttonRebootFactory) {
                 Log.d(TAG, "Calling Factory Reset from Service!");
-                Log.d(TAG, String.format("Factory Reset Result = %b", EDTLib.factoryReset()));
+                Log.d(TAG, String.format("Factory Reset Result = %b", EDTLib.factoryReset(true)));
             } else if (v==activityMainBinding.buttonRebootRecovery) {
                 Log.d(TAG, "Calling Recovery Reboot from Service!");
                 Log.d(TAG, String.format("Recovery Reboot Result = %b", EDTLib.recovery()));

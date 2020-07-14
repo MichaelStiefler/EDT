@@ -147,13 +147,13 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean factoryReset() {
+    public boolean factoryReset(boolean removeAccounts) {
         Log.d(TAG, "factoryReset()");
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools factoryReset!");
             return false;
         }
-        return PowerManager.factoryReset(this.context);
+        return PowerManager.factoryReset(this.context, removeAccounts);
     }
 
     @Override
@@ -213,18 +213,7 @@ public class EDTImpl extends IEDT.Stub {
             Log.d(TAG, "No Context specified for EDT Tools removeAllAccounts!");
             return false;
         }
-        try {
-            AccountManager accountManager = AccountManager.get(this.context);
-            Account[] availableAccounts = accountManager.getAccounts();
-            for (Account availableAccount : availableAccounts) {
-                removeAccount(availableAccount);
-            }
-            return true;
-        } catch (Exception e) {
-            Log.d(TAG, "Error in removeAllAccounts():");
-            e.printStackTrace();
-            return false;
-        }
+        return AccManager.removeAllAccounts(this.context);
     }
 
     @Override
@@ -234,18 +223,7 @@ public class EDTImpl extends IEDT.Stub {
             Log.d(TAG, "No Context specified for EDT Tools removeAllGoogleAccounts!");
             return false;
         }
-        try {
-            AccountManager accountManager = AccountManager.get(this.context);
-            Account[] availableAccounts = accountManager.getAccountsByType("com.google");
-            for (Account availableAccount : availableAccounts) {
-                removeAccount(availableAccount);
-            }
-            return true;
-        } catch (Exception e) {
-            Log.d(TAG, "Error in removeAllGoogleAccounts():");
-            e.printStackTrace();
-            return false;
-        }
+        return AccManager.removeAllGoogleAccounts(this.context);
     }
 
     @Override
@@ -255,25 +233,7 @@ public class EDTImpl extends IEDT.Stub {
             Log.d(TAG, "No Context specified for EDT Tools removeAccount!");
             return false;
         }
-        try {
-            Log.d(TAG, "Removing Google Account " + account.name);
-            AccountManager.get(this.context).removeAccountExplicitly(account);
-            return true;
-        } catch (Exception e) {
-            Log.d(TAG, "Error in removeAccount():");
-            e.printStackTrace();
-        }
-        try {
-            Log.d(TAG, "Trying to remove Google Account " + account.name + " alternatively.");
-            AccountManagerFuture<Bundle> booleanAccountManagerFuture = AccountManager.get(this.context).removeAccount(account, null, null, null);
-            Bundle bundle = booleanAccountManagerFuture.getResult(10, TimeUnit.SECONDS);
-            return bundle.getBoolean(AccountManager.KEY_BOOLEAN_RESULT);
-            // return true;
-        } catch (Exception e) {
-            Log.d(TAG, "Error in removeAccount():");
-            e.printStackTrace();
-            return false;
-        }
+        return AccManager.removeAccount(this.context, account);
     }
 
     @Override
@@ -588,36 +548,111 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public boolean createNewApn(APNParcelable apn, boolean setAsDefault) {
+        Log.d(TAG, String.format("createNewApn(%s, %b)", apn.getName(), setAsDefault));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools createNewApn!");
+            return false;
+        }
         return APNTools.createNewApn(this.context, apn, setAsDefault) != APN.INVALID_APN;
     }
 
     @Override
     public boolean updateApn(APNParcelable apn) {
+        Log.d(TAG, String.format("updateApn(%s)", apn.getName()));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools updateApn!");
+            return false;
+        }
         return APNTools.updateApn(this.context, apn);
     }
 
     @Override
     public boolean verifyApn(String name) {
+        Log.d(TAG, String.format("verifyApn(%s)", name));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools verifyApn!");
+            return false;
+        }
         return APNTools.verifyApn(this.context, name);
     }
 
     @Override
     public int getApnId(String name) {
+        Log.d(TAG, String.format("getApnId(%s)", name));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools getApnId!");
+            return APN.INVALID_APN;
+        }
         return APNTools.getApnId(this.context, name);
     }
 
     @Override
     public APNParcelable getApn(String name) {
+        Log.d(TAG, String.format("getApn(%s)", name));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools getApn!");
+            return null;
+        }
         return APNTools.getApn(this.context, name);
     }
 
     @Override
     public boolean setPreferredApn(String name) {
+        Log.d(TAG, String.format("setPreferredApn(%s)", name));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools setPreferredApn!");
+            return false;
+        }
         return APNTools.setPreferredApn(this.context, name);
     }
 
     @Override
     public APNParcelable[] getAllApnList() {
+        Log.d(TAG, "getAllApnList()");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools getAllApnList!");
+            return null;
+        }
         return APNTools.getAllApnList(this.context);
+    }
+
+    @Override
+    public Account[] getGoogleAccounts() {
+        Log.d(TAG, "getGoogleAccounts()");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools getGoogleAccounts!");
+            return null;
+        }
+        return AccManager.getGoogleAccounts(this.context);
+    }
+
+    @Override
+    public boolean initializeKeyStore(String storeName, String password) {
+        Log.d(TAG, String.format("initializeKeyStore(%s, %s)", storeName, password));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools initializeKeyStore!");
+            return false;
+        }
+        return CertificateManager.initializeKeyStore(storeName, password);
+    }
+
+    @Override
+    public boolean installCACertificate(String friendlyName, String fileName) {
+        Log.d(TAG, String.format("installCACertificate(%s, %s)", friendlyName, fileName));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools installCACertificate!");
+            return false;
+        }
+        return CertificateManager.installCACertificate(friendlyName, fileName);
+    }
+
+    @Override
+    public boolean mountSDCard(boolean mount) {
+        Log.d(TAG, String.format("mountSDCard(%b)", mount));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools mountSDCard!");
+            return false;
+        }
+        return FileTools.mountSDCard(this.context, mount);
     }
 }

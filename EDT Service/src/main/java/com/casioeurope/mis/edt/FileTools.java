@@ -1,5 +1,9 @@
 package com.casioeurope.mis.edt;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtil;
@@ -110,6 +114,17 @@ public class FileTools {
                 }
             }
             logMethodEntranceExit(false);
+        }
+        return false;
+    }
+
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
+    public static boolean mountSDCard(Context context, boolean mount) {
+        try {
+            context.sendBroadcast(new Intent(mount?Intent.ACTION_MEDIA_MOUNTED:Intent.ACTION_MEDIA_UNMOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
         }
         return false;
     }

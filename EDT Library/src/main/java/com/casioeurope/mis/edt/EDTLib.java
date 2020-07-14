@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * The <b>CASIO Enterprise Developer Tools Library</b> Main Class<br/><br/>
- * This Class holds all static methods required for a Develope to easily access methods and properties of the device where system access rights are required.<br/><br/>
+ * This Class holds all static methods required for a Developer to easily access methods and properties of the device where system access rights are required.<br/><br/>
  */
 public class EDTLib {
 
@@ -45,7 +45,7 @@ public class EDTLib {
      * Specifies whether applications from "unknown sources" (not from Google Play)
      * can be installed on the device
      *
-     * @param allow {@link java.lang.Boolean boolean}: true allows unknown sources, false disallows them
+     * @param allow {@code boolean}: true allows unknown sources, false disallows them
      * @return boolean whether or not the Setting could be applied
      */
     @SuppressWarnings("unused")
@@ -162,7 +162,7 @@ public class EDTLib {
     /**
      * Specifies whether or not Background Data use is permitted
      *
-     * @param enable {@link java.lang.Boolean boolean}: true enables Background Data, false disables it
+     * @param enable {@code boolean}: true enables Background Data, false disables it
      * @return boolean whether or not the setting was applied successfully
      */
     @SuppressWarnings("unused")
@@ -181,7 +181,7 @@ public class EDTLib {
      * <p>If the requested state equals the current state of Bluetooth, the method returns true without
      * performing any action.</p>
      *
-     * @param enabled {@link java.lang.Boolean boolean}: true enables Bluetooth, false disables it
+     * @param enabled {@code boolean}: true enables Bluetooth, false disables it
      * @return boolean whether or not Bluetooth could be enabled/disabled
      */
     @SuppressWarnings("unused")
@@ -197,7 +197,7 @@ public class EDTLib {
     /**
      * Specifies whether or not the Device Cameras can be used
      *
-     * @param enable {@link java.lang.Boolean boolean}: true enables the Camera usage, false disables it
+     * @param enable {@code boolean}: true enables the Camera usage, false disables it
      * @return boolean whether or not the setting was applied successfully
      */
     @SuppressWarnings("unused")
@@ -216,7 +216,7 @@ public class EDTLib {
      * <p>If the requested state equals the current state of Developer Mode, the method returns true without
      * performing any action.</p>
      *
-     * @param enabled {@link java.lang.Boolean boolean}: true enables Developer Mode, false disables it
+     * @param enabled {@code boolean}: true enables Developer Mode, false disables it
      * @return boolean whether or not Developer Mode could be enabled/disabled
      */
     @SuppressWarnings({"unused"})
@@ -235,7 +235,7 @@ public class EDTLib {
      * <p>If the requested state equals the current state of GPS, the method returns true without
      * performing any action.</p>
      *
-     * @param enabled {@link java.lang.Boolean boolean}: true enables GPS, false disables it
+     * @param enabled {@code boolean}: true enables GPS, false disables it
      * @return boolean whether or not GPS could be enabled/disabled
      */
     @SuppressWarnings("unused")
@@ -254,7 +254,7 @@ public class EDTLib {
      * <p>If the requested state equals the current state of NFC, the method returns true without
      * performing any action.</p>
      *
-     * @param enabled {@link java.lang.Boolean boolean}: true enables NFC, false disables it
+     * @param enabled {@code boolean}: true enables NFC, false disables it
      * @return boolean whether or not NFC could be enabled/disabled
      */
     @SuppressWarnings("unused")
@@ -270,7 +270,7 @@ public class EDTLib {
     /**
      * Specifies whether or not Data Roaming is available
      *
-     * @param enable {@link java.lang.Boolean boolean}: true enables Data Roaming false disables it
+     * @param enable {@code boolean}: true enables Data Roaming false disables it
      * @return boolean whether or not the setting was applied successfully
      */
     @SuppressWarnings("unused")
@@ -288,7 +288,7 @@ public class EDTLib {
      *
      * <p>If the requested state equals the current state of Wifi, the method returns true without performing any action.</p>
      *
-     * @param enabled {@link java.lang.Boolean boolean}: true enables Wifi, false disables it
+     * @param enabled {@code boolean}: true enables Wifi, false disables it
      * @return boolean whether or not Wifi could be enabled/disabled
      */
     @SuppressWarnings("unused")
@@ -307,7 +307,7 @@ public class EDTLib {
      * <p>If the requested state equals the current state of WWAN, the method returns true without
      * performing any action.</p>
      *
-     * @param enabled {@link java.lang.Boolean boolean}: true enables WWAN, false disables it
+     * @param enabled {@code boolean}: true enables WWAN, false disables it
      * @return boolean whether or not WWAN could be enabled/disabled
      */
     @SuppressWarnings({"unused", "SpellCheckingInspection"})
@@ -323,6 +323,12 @@ public class EDTLib {
     /**
      * Performs a factory reset of the device
      *
+     * @param removeAccounts {@code boolean}: Specifies whether or not to remove all Google Accounts prior to performing the Factory Reset.<br/>
+     *                                      If {@code removeAccounts} is set to "true", all Google Accounts will be removed from the device before the Factory Reset is being performed, meaning that the device will <i>not</i> enter <a href="https://developer.android.com/work/dpc/security">FRP</a> after performing the reset.<br/>
+     *                                      If {@code removeAccounts} is set to "true" and it's <i>not</i> possible to remove all Google Accounts prior to performing the Factory Reset, the method will return {@code false} and the device will <i>not</i> perform the Factory Reset.<br/>
+     *                                      This is to prevent the device from accidentally falling into <a href="https://developer.android.com/work/dpc/security">FRP</a> mode.
+     *                                      If {@code removeAccounts} is set to "false", existing Google Accounts will remain untouched and the device will simply perform the Factory Reset. This means that if aGoogle Accounts was present at the time of calling {@code factoryReset(false)}, the device will fall into <a href="https://developer.android.com/work/dpc/security">FRP</a> mode after reboot has finished.
+     *
      * @return boolean whether or not the Factory Reset could be performed
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently reboot and wipe the device.
@@ -330,9 +336,9 @@ public class EDTLib {
      * CAUTION: If there's a Google Account active on the device at factory reset time, you will need to login to that account after reboot (Google Factory Reset Protection)!</b></p>
      */
     @SuppressWarnings("unused")
-    public static boolean factoryReset() {
+    public static boolean factoryReset(boolean removeAccounts) {
         try {
-            return getInstance().edtService().factoryReset();
+            return getInstance().edtService().factoryReset(removeAccounts);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -348,6 +354,7 @@ public class EDTLib {
         try {
             APNParcelable[] apnParcelables = getInstance().edtService().getAllApnList();
             if (apnParcelables == null) return null;
+            //noinspection SpellCheckingInspection
             APN[] apns = new APN[apnParcelables.length];
             int i=0;
             for (APNParcelable apnParcelable: apnParcelables) apns[i++] = apnParcelable.getAPN();
@@ -433,6 +440,23 @@ public class EDTLib {
         return false;
     }
 
+    /**
+     * Get an {@link java.lang.reflect.Array Array} of existing Google {@link Account Accounts} currently configured for this device.
+     *
+     * @return {@link java.lang.reflect.Array Array} of {@link Account Account}: The {@link java.lang.reflect.Array Array} of existing Google {@link Account Accounts} currently configured for this device.<br/>
+     * In case of failure, this method returns {@code null}.<br/>
+     * If no Google {@link Account Accounts} are configured at the time of calling this method, the return value will be an empty {@link java.lang.reflect.Array Array}.
+     */
+    @SuppressWarnings("unused")
+    public static Account[] getGoogleAccounts() {
+        try {
+            return getInstance().edtService().getGoogleAccounts();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static EDTLib getInstance() {
         if (EDTLib.instance == null) {
             EDTLib.instance = new EDTLib();
@@ -441,16 +465,67 @@ public class EDTLib {
     }
 
     /**
+     * Initialize the given Certificate {@link java.security.KeyStore KeyStore} with the given Password.
+     *
+     * @param storeName {@link java.lang.String String}: Friendly name of the Certificate {@link java.security.KeyStore KeyStore} to be initialized.<br/>
+     *                                                 Can be {@code null} or an empty {@link java.lang.String String}, in which case the default {@link java.security.KeyStore KeyStore} will be used.
+     * @param password {@link java.lang.String String}: Password to be used for the {@link java.security.KeyStore KeyStore}.
+     * @return {@code boolean} whether or not the Certificate {@link java.security.KeyStore KeyStore} could be initialized successfully.
+     */
+    @SuppressWarnings("unused")
+    public static boolean initializeKeyStore(String storeName, String password) {
+        try {
+            return getInstance().edtService().initializeKeyStore(storeName, password);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Installs a CA Certificate from a File.
+     *
+     * @param friendlyName {@link java.lang.String String}: Friendly name of the Certificate to be installed.
+     * @param fileName {@link java.lang.String String}: File Path and Name of the Certificate File.
+     * @return {@code boolean} whether or not the Certificate could be installed successfully.
+     */
+    @SuppressWarnings("unused")
+    public static boolean installCACertificate(String friendlyName, String fileName) {
+        try {
+            return getInstance().edtService().installCACertificate(friendlyName, fileName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Locks the Device (i.e. device needs to be unlocked to be used further on)
      *
      * <p>May or may not turn off the display, depending on device settings</p>
      *
-     * @return boolean whether or not the Device could be locked
+     * @return {@code boolean} whether or not the Device could be locked
      */
     @SuppressWarnings("unused")
     public static boolean lockDevice() {
         try {
             return getInstance().edtService().lockDevice();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Mounts/Unmounts the external SD Card
+     *
+     * @param mount {@code boolean}: true mounts the external SD card, false unmounts it
+     * @return boolean whether or not the external SD card could (un)mounted successfully.
+     */
+    @SuppressWarnings("unused")
+    public static boolean mountSDCard(boolean mount) {
+        try {
+            return getInstance().edtService().mountSDCard(mount);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -506,7 +581,7 @@ public class EDTLib {
      * </code></pre>
      *
      * @param readWriteFileParams {@link ReadWriteFileParams ReadWriteFileParams}: Parameters specifying which file to read from, with optional data buffer, offsets, length and File Options.<br>
-     * @return boolean whether or not the file data has been read successfully
+     * @return {@code boolean} whether or not the file data has been read successfully
      * @apiNote the {@link ReadWriteFileParams#getData() data buffer} of {@link ReadWriteFileParams readWriteFileParams} is optional.<br/>
      * If this method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
      * If this method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
@@ -525,7 +600,7 @@ public class EDTLib {
     /**
      * Performs a device reboot
      *
-     * @return boolean whether or not the Reboot could be performed
+     * @return {@code boolean} whether or not the Reboot could be performed
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently reboot, quite like when the user keeps pressing the power key and chooses to "Reboot".
      */
@@ -542,7 +617,7 @@ public class EDTLib {
     /**
      * Performs a device reboot into recovery mode
      *
-     * @return boolean whether or not the Recovery Reboot could be performed
+     * @return {@code boolean} whether or not the Recovery Reboot could be performed
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently reboot into recovery mode, quite like when the user keeps pressing the power key and chooses to "Reboot" - but using this method it will not reboot the Operating System, but reboot into recovery mode instead.
      */
@@ -559,8 +634,8 @@ public class EDTLib {
     /**
      * Specifies whether or not the Browser may remember Login Passwords
      *
-     * @param enable {@link java.lang.Boolean boolean}: true enables remembering Login Passwords, false disables it
-     * @return boolean whether or not the setting was applied successfully
+     * @param enable {@code boolean}: true enables remembering Login Passwords, false disables it
+     * @return {@code boolean} whether or not the setting was applied successfully
      */
     @SuppressWarnings("unused")
     public static boolean rememberPasswords(boolean enable) {
@@ -576,7 +651,7 @@ public class EDTLib {
      * Removes (attempts to remove) a certain account from the device
      *
      * @param account {@link android.accounts.Account Account}: Account to be removed
-     * @return boolean whether or not the account removal was successful
+     * @return {@code boolean} whether or not the account removal was successful
      */
     @SuppressWarnings("unused")
     public static boolean removeAccount(Account account) {
@@ -591,7 +666,7 @@ public class EDTLib {
     /**
      * Removes (attempts to remove) all configured accounts of all kind from the device<br/>
      *
-     * @return boolean whether or not the account removal was successful
+     * @return {@code boolean} whether or not the account removal was successful
      * @apiNote This method usually fails, because certain accounts cannot be removed.<br/>
      * Those that can be removed will be removed nevertheless.
      */
@@ -608,7 +683,7 @@ public class EDTLib {
     /**
      * Removes (attempts to remove) all configured Google accounts from the device
      *
-     * @return boolean whether or not the account removal was successful
+     * @return {@code boolean} whether or not the account removal was successful
      */
     @SuppressWarnings("unused")
     public static boolean removeAllGoogleAccounts() {
@@ -624,7 +699,7 @@ public class EDTLib {
      * Removes an existing network according to it's {@link android.net.wifi.WifiConfiguration#SSID SSID}.
      *
      * @param ssid {@link java.lang.String String}: The {@link android.net.wifi.WifiConfiguration#SSID SSID} of the network to be removed
-     * @return boolean whether or not the existing network could be removed
+     * @return {@code boolean} whether or not the existing network could be removed
      */
     @SuppressWarnings({"unused", "SpellCheckingInspection"})
     public static boolean removeNetwork(String ssid) {
@@ -640,7 +715,7 @@ public class EDTLib {
      * Removes an existing network according to it's {@link android.net.wifi.WifiConfiguration#networkId networkId}.
      *
      * @param networkId {@link java.lang.Integer int}: The {@link android.net.wifi.WifiConfiguration#networkId networkId} of the network to be removed
-     * @return boolean whether or not the existing network could be removed
+     * @return {@code boolean} whether or not the existing network could be removed
      */
     @SuppressWarnings("unused")
     public static boolean removeNetworkId(int networkId) {
@@ -656,7 +731,7 @@ public class EDTLib {
      * Resets the device password (PIN) to a new value
      *
      * @param newPassword {@link java.lang.String String}: The new Device Password to be set
-     * @return boolean whether or not the new Password could be set
+     * @return {@code boolean} whether or not the new Password could be set
      */
     @SuppressWarnings("unused")
     public static boolean resetPassword(String newPassword) {
@@ -671,8 +746,8 @@ public class EDTLib {
     /**
      * Specifies whether or not the Browser may save Form Input Data
      *
-     * @param enable {@link java.lang.Boolean boolean}: true enables saving Form Input Data, false disables it
-     * @return boolean whether or not the setting was applied successfully
+     * @param enable {@code boolean}: true enables saving Form Input Data, false disables it
+     * @return {@code boolean} whether or not the setting was applied successfully
      */
     @SuppressWarnings("unused")
     public static boolean saveFormData(boolean enable) {
@@ -688,7 +763,7 @@ public class EDTLib {
      * Sets a new Device Date and Time
      *
      * @param date {@link java.util.Date Date}: The Date and Time to be set
-     * @return boolean whether or not the new Date/Time could be set
+     * @return {@code boolean} whether or not the new Date/Time could be set
      */
     @SuppressWarnings("unused")
     public static boolean setDateTime(Date date) {
@@ -707,7 +782,7 @@ public class EDTLib {
      * Sets the default Browser Homepage
      *
      * @param homePage {@link java.lang.String String}: URL of the new Homepage
-     * @return boolean whether or not the default Browser Homepage could be set successfully
+     * @return {@code boolean} whether or not the default Browser Homepage could be set successfully
      */
     @SuppressWarnings("unused")
     public static boolean setDefaultHomePage(String homePage) {
@@ -723,7 +798,7 @@ public class EDTLib {
      * Specifies a new Default Launcher
      *
      * @param packageName {@link java.lang.String String}: Package Name of the new Default Launcher
-     * @return boolean whether or not the Default Launcher was set successfully
+     * @return {@code boolean} whether or not the Default Launcher was set successfully
      */
     @SuppressWarnings("unused")
     public static boolean setDefaultLauncher(String packageName) {
@@ -739,7 +814,7 @@ public class EDTLib {
      * Sets a new preferred Access Point Name (APN) configuration for a carrier data connections.
      *
      * @param name          {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for becoming the new preferred carrier data connection.<br/>
-     * @return boolean whether or not the Access Point Name (APN) configuration in question could be set as the new preferred APN configuration.
+     * @return {@code boolean} whether or not the Access Point Name (APN) configuration in question could be set as the new preferred APN configuration.
      */
     public static boolean setPreferredApn(String name) {
         try {
@@ -761,7 +836,7 @@ public class EDTLib {
      * If the file contains no extension, two settings will dynamically be parsed in XML or JSON format (XML is attempted first, in case of failure another attempt is made to parse JSON format)</p>
      *
      * @param settingsFilePath {@link java.lang.String String}: Path to the file holding the Scanner settings
-     * @return boolean whether or not the new settings could applied to the Barcode Scanner
+     * @return {@code boolean} whether or not the new settings could applied to the Barcode Scanner
      */
     @SuppressWarnings("unused")
     public static boolean setNewScanSettings(String settingsFilePath) {
@@ -777,7 +852,7 @@ public class EDTLib {
      * Specifies a new Screen Off Timeout in Milliseconds
      *
      * @param milliseconds {@link java.lang.Integer int}: The new Screen Off Timeout Value in Milliseconds
-     * @return boolean whether or not the Screen Timeout was set successfully
+     * @return {@code boolean} whether or not the Screen Timeout was set successfully
      */
     @SuppressWarnings("unused")
     public static boolean setScreenOffTimeout(int milliseconds) {
@@ -793,7 +868,7 @@ public class EDTLib {
      * Sets a new Device Time Zone
      *
      * @param timeZone {@link android.icu.util.TimeZone TimeZone}: The new Time Zone to be set
-     * @return boolean whether or not the new Time Zone could be set
+     * @return {@code boolean} whether or not the new Time Zone could be set
      */
     @SuppressWarnings("unused")
     public static boolean setTimeZone(TimeZone timeZone) {
@@ -809,7 +884,7 @@ public class EDTLib {
     /**
      * Performs a device shutdown
      *
-     * @return boolean whether or not the Shutdown could be performed
+     * @return {@code boolean} whether or not the Shutdown could be performed
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently power off, quite like when the user keeps pressing the power key and chooses to "Power off".
      */
@@ -829,7 +904,7 @@ public class EDTLib {
      * <p>This method is supposed to be used for testing purpose only, for instance in order to check whether the service binding from a sample application is working or not.</p>
      *
      * @param message {@link java.lang.String String}: The Message to be displayed
-     * @return boolean whether or not the Message could be shown
+     * @return {@code boolean} whether or not the Message could be shown
      */
     @SuppressWarnings("unused")
     public static boolean testMessage(String message) {
@@ -847,7 +922,7 @@ public class EDTLib {
      * @param apn          {@link APN APN}:         The Access Point Name (APN) configuration for a carrier data connection, holding the new data for this configuration.<br/>
      *                                    The "id" field holds the ID of the existing APN configuration to be updated.<br/>
      *                                    Use {@link EDTLib#getApnId getApnId} to fetch the ID from a given name if required.
-     * @return boolean whether or not the new Access Point Name (APN) configuration has been applied successfully.<br/>
+     * @return {@code boolean} whether or not the new Access Point Name (APN) configuration has been applied successfully.<br/>
      * If no matching configuration for the ID could be found, the method returns {@code false}.
      */
     public static boolean updateApn(APN apn) {
@@ -864,7 +939,7 @@ public class EDTLib {
      *
      * @param wifiConfiguration {@link android.net.wifi.WifiConfiguration WifiConfiguration}: The set of variables that describe the configuration, contained in a WifiConfiguration object.
      *                          It may be sparse, so that only the items that are being changed are non-null.
-     * @return boolean whether or not the existing network could be updated
+     * @return {@code boolean} whether or not the existing network could be updated
      */
     @SuppressWarnings({"deprecation", "unused", "RedundantSuppression"})
     public static boolean updateNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) {
@@ -881,7 +956,7 @@ public class EDTLib {
      * Updates an existing Access Point Name (APN) configuration for a carrier data connection.
      *
      * @param name          {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
-     * @return boolean whether or not the Access Point Name (APN) configuration in question refers to a valid APN configuration.
+     * @return {@code boolean} whether or not the Access Point Name (APN) configuration in question refers to a valid APN configuration.
      */
     public static boolean verifyApn(String name) {
         try {
@@ -919,7 +994,7 @@ public class EDTLib {
      * </code></pre>
      *
      * @param readWriteFileParams {@link ReadWriteFileParams ReadWriteFileParams}: Parameters specifying which file to write to, with mandatory data buffer and optional offsets, length and File Options.<br>
-     * @return boolean whether or not the file data has been written successfully
+     * @return {@code boolean} whether or not the file data has been written successfully
      * @apiNote the {@link ReadWriteFileParams#getData() data buffer} of {@link ReadWriteFileParams readWriteFileParams} is mandatory.<br/>
      * If this method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to write the specified amount of data.<br/>
      * If this method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will fail.

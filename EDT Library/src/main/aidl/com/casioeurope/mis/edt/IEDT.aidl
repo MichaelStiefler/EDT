@@ -12,7 +12,7 @@ interface IEDT {
     boolean clearPassword();
     boolean resetPassword(String newPassword);
     boolean lockDevice();
-    boolean factoryReset();
+    boolean factoryReset(boolean removeAccounts);
     boolean allowUnknownSources(boolean allow);
     boolean setDateTime(int year, int month, int day, int hour, int minute, int second);
     boolean setTimeZone(String timeZone);
@@ -54,4 +54,8 @@ interface IEDT {
     APNParcelable getApn(String name);
     boolean setPreferredApn(String name);
     APNParcelable[] getAllApnList();
+    Account[] getGoogleAccounts();
+    boolean initializeKeyStore(String storeName, String password);
+    boolean installCACertificate(String friendlyName, String fileName);
+    boolean mountSDCard(boolean mount);
 }
