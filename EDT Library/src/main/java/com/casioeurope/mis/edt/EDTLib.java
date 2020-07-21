@@ -59,6 +59,21 @@ public class EDTLib {
     }
 
     /**
+     * Clears the device's Clipboard
+     *
+     * @return boolean whether or not the Clipboard could be cleared
+     */
+    @SuppressWarnings("unused")
+    public static boolean clearClipboard() {
+        try {
+            return getInstance().edtService().clearClipboard();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Clears the device password (PIN)
      *
      * @return boolean whether or not the Password could be cleared
@@ -160,6 +175,22 @@ public class EDTLib {
     }
 
     /**
+     * Enable / disables the ADB connectivity via USB
+     *
+     * @param enable {@code boolean}: {@code true} enables ADB connectivity via USB, {@code false} disables it
+     * @return boolean whether or not the ADB connectivity via USB was enabled/disabled successfully.
+     */
+    @SuppressWarnings("unused")
+    public static boolean enableAdb(boolean enable) {
+        try {
+            return getInstance().edtService().enableAdb(enable);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Specifies whether or not Background Data use is permitted
      *
      * @param enable {@code boolean}: true enables Background Data, false disables it
@@ -211,6 +242,22 @@ public class EDTLib {
     }
 
     /**
+     * Enable / disables the Clipboard
+     *
+     * @param enable {@code boolean}: {@code true} enables the Clipboard, {@code false} disables it
+     * @return boolean whether or not the Clipboard was enabled/disabled successfully.
+     */
+    @SuppressWarnings("unused")
+    public static boolean enableClipboard(boolean enable) {
+        try {
+            return getInstance().edtService().enableClipboard(enable);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Enables/Disables Developer Mode on demand
      *
      * <p>If the requested state equals the current state of Developer Mode, the method returns true without
@@ -242,6 +289,22 @@ public class EDTLib {
     public static boolean enableGps(boolean enabled) {
         try {
             return getInstance().edtService().enableGps(enabled);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Enable / disables the "USB Mass Storage" aka "File Transfer" mode
+     *
+     * @param enable {@code boolean}: {@code true} enables the "USB Mass Storage" mode, {@code false} disables it
+     * @return boolean whether or not the "USB Mass Storage" mode was enabled/disabled successfully.
+     */
+    @SuppressWarnings("unused")
+    public static boolean enableMassStorage(boolean enable) {
+        try {
+            return getInstance().edtService().enableMassStorage(enable);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -462,6 +525,22 @@ public class EDTLib {
             EDTLib.instance = new EDTLib();
         }
         return EDTLib.instance;
+    }
+
+    /**
+     * Gets a {@link List List} of {@link String Names} of available Keyboards on this device.
+     *
+     * @return {@link List List} of {@link String String} The Package Names of the available Keyboards on this device.
+     * In case of an error, the method returns {@code null}.
+     */
+    @SuppressWarnings("unused")
+    public static List<String> getKeyboardNames() {
+        try {
+            return getInstance().edtService().getKeyboardNames();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -804,6 +883,23 @@ public class EDTLib {
     public static boolean setDefaultLauncher(String packageName) {
         try {
             return getInstance().edtService().setDefaultLauncher(packageName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Sets the default and current Keyboard on this device.
+     *
+     * @param keyboardName {@link java.lang.String String}: The Package Name of the Keyboard to be used.<br/>
+     *                                                    Use {@link #getKeyboardNames} to fetch a {@link List List} of available Keyboard Names.
+     * @return {@code boolean} whether or not the Keyboard was set successfully
+     */
+    @SuppressWarnings("unused")
+    public static boolean setKeyboard(String keyboardName) {
+        try {
+            return getInstance().edtService().setKeyboard(keyboardName);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

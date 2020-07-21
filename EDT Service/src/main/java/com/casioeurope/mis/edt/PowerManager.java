@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class PowerManager {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
-    private static String TAG = "EDT_TOOLS (PowerManager)";
+    private static String TAG = "EDT (PowerManager)";
 
     public static final String ACTION_REQUEST_SHUTDOWN_7 = "com.android.intent.action.REQUEST_SHUTDOWN";
     public static final String ACTION_REQUEST_SHUTDOWN_8 = "com.android.internal.intent.action.REQUEST_SHUTDOWN";

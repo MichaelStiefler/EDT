@@ -77,7 +77,7 @@ public class CertificateManager {
             assert keyStore != null;
             Log.d(TAG, "Got keystore " + keyStore.toString());
             // Put(Key, Value)
-            Method putCertificateMethod = keyStoreClass.getMethod("put", String.class, byte[].class);
+            Method putCertificateMethod = keyStoreClass.getMethod("put", String.class, byte[].class); // no such method!
             Log.d(TAG, "Putting...");
             RandomAccessFile file = new RandomAccessFile(fileName, "r");
             //noinspection SpellCheckingInspection

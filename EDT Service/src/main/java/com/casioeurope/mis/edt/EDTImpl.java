@@ -1,12 +1,9 @@
 package com.casioeurope.mis.edt;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerFuture;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.icu.util.Calendar;
-import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -23,7 +20,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class EDTImpl extends IEDT.Stub {
@@ -48,18 +44,18 @@ public class EDTImpl extends IEDT.Stub {
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameofCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameofCurrMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
     private class DisplayToast implements Runnable {
 
         String toastMessage;
 
-        public DisplayToast(String toast){
+        public DisplayToast(String toast) {
             toastMessage = toast;
         }
 
-        public void run(){
+        public void run() {
             Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
         }
     }
@@ -73,7 +69,7 @@ public class EDTImpl extends IEDT.Stub {
      * To be used for testing purpose only.
      *
      * @param message the Message to be displayed
-     * @return        whether or not the Message could be shown
+     * @return whether or not the Message could be shown
      */
     @Override
     public boolean testMessage(String message) {
@@ -94,7 +90,7 @@ public class EDTImpl extends IEDT.Stub {
             return false;
         }
         return PowerManager.shutdown(this.context);
-     }
+    }
 
     @Override
     public boolean reboot() {
@@ -248,7 +244,7 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public String copyFile(String sourceFilePath, String destinationFilePath, List<String> options) {
-        Log.d(TAG, String.format("copyFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options==null?"null":options.toString()));
+        Log.d(TAG, String.format("copyFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
         try {
             CopyOption[] copyOptions = null;
             if (options != null) {
@@ -279,7 +275,7 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public String moveFile(String sourceFilePath, String destinationFilePath, List<String> options) {
-        Log.d(TAG, String.format("moveFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options==null?"null":options.toString()));
+        Log.d(TAG, String.format("moveFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
         try {
             CopyOption[] copyOptions = null;
             if (options != null) {
@@ -343,11 +339,13 @@ public class EDTImpl extends IEDT.Stub {
         }
         return ScanLib.getCurrentScanSettings(settingsFilePath, context);
     }
+
     @Override
     public boolean setNewScanSettings(String settingsFilePath) {
         Log.d(TAG, "setNewScanSettings(" + settingsFilePath + ")");
         return ScanLib.setNewScanSettings(settingsFilePath);
     }
+
     @Override
     public boolean getCurrentAndSetNewScanSettings(String settingsFilePath) {
         Log.d(TAG, "getCurrentAndSetNewScanSettings(" + settingsFilePath + ")");
@@ -367,6 +365,7 @@ public class EDTImpl extends IEDT.Stub {
         }
         return Browser.setDefaultHomePage(homePage, context);
     }
+
     @Override
     public boolean rememberPasswords(boolean enable) {
         Log.d(TAG, "rememberPasswords(" + enable + ")");
@@ -376,6 +375,7 @@ public class EDTImpl extends IEDT.Stub {
         }
         return Browser.rememberPasswords(enable, context);
     }
+
     @Override
     public boolean saveFormData(boolean enable) {
         Log.d(TAG, "saveFormData(" + enable + ")");
@@ -403,7 +403,7 @@ public class EDTImpl extends IEDT.Stub {
             Log.d(TAG, "No Context specified for EDT Tools enableRoaming!");
             return false;
         }
-        return Settings.Global.putInt(context.getContentResolver(), Settings.Global.DATA_ROAMING, enable?1:0);
+        return Settings.Global.putInt(context.getContentResolver(), Settings.Global.DATA_ROAMING, enable ? 1 : 0);
     }
 
     @Override
@@ -448,7 +448,8 @@ public class EDTImpl extends IEDT.Stub {
 
     @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public boolean updateNetwork(WifiConfigurationParcelable wifiConfiguration) {
-        if (wifiConfiguration == null || (wifiConfiguration.SSID == null || wifiConfiguration.SSID.isEmpty()) && wifiConfiguration.networkId < 1) return false;
+        if (wifiConfiguration == null || (wifiConfiguration.SSID == null || wifiConfiguration.SSID.isEmpty()) && wifiConfiguration.networkId < 1)
+            return false;
         Log.d(TAG, "updateNetwork()");
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools updateNetwork!");
@@ -654,5 +655,295 @@ public class EDTImpl extends IEDT.Stub {
             return false;
         }
         return FileTools.mountSDCard(this.context, mount);
+    }
+
+    @Override
+    public boolean enableAdb(boolean enable) {
+        Log.d(TAG, String.format("enableAdb(%b)", enable));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools enableAdb!");
+            return false;
+        }
+        return USBTools.enableAdb(this.context, enable);
+    }
+
+    @Override
+    public boolean enableMassStorage(boolean enable) {
+        Log.d(TAG, String.format("enableMassStorage(%b)", enable));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools enableMassStorage!");
+            return false;
+        }
+        return USBTools.enableMassStorage(this.context, enable);
+    }
+
+    @Override
+    public List<String> getKeyboardNames() {
+        Log.d(TAG, "getKeyboardNames");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools getKeyboardNames!");
+            return null;
+        }
+        return UITools.getKeyboardNames(this.context);
+    }
+
+    @Override
+    public boolean setKeyboard(String keyboardName) {
+        Log.d(TAG, String.format("setKeyboard(%s)", keyboardName));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools setKeyboard(%!");
+            return false;
+        }
+        return UITools.setKeyboard(this.context, keyboardName);
+    }
+
+    @Override
+    public boolean clearClipboard() {
+        Log.d(TAG, "clearClipboard");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools clearClipboard!");
+            return false;
+        }
+        return UITools.clearClipboard(this.context);
+    }
+
+    @Override
+    public boolean enableClipboard(boolean enable) {
+        Log.d(TAG, String.format("enableClipboard(%b)", enable));
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools enableClipboard!");
+            return false;
+        }
+        return UITools.enableClipboard(this.context, enable);
+    }
+
+    @Override
+    public ObjectParcelable invokeMethod(ObjectParcelable obj, String methodName) {
+        return ReflectionManager.doGenericInvokeMethod(obj, methodName, new ObjectParcelable[] {});
+    }
+
+    @Override
+    public ObjectParcelable invokeMethodWithParams(ObjectParcelable obj, String methodName, String[] classParamNames, ObjectParcelable[] params) {
+        return ReflectionManager.doGenericInvokeMethod(obj, methodName, classParamNames, params);
+    }
+
+    @Override
+    public ObjectParcelable invokeMethodStatic(String declaringClassName, String methodName) {
+        return ReflectionManager.doGenericInvokeMethod(declaringClassName, methodName, new ObjectParcelable[] {});
+    }
+
+    @Override
+    public ObjectParcelable invokeMethodStaticWithParams(String declaringClassName, String methodName, String[] classParamNames, ObjectParcelable[] params) {
+        return ReflectionManager.doGenericInvokeMethod(declaringClassName, methodName, classParamNames, params);
+    }
+
+    @Override
+    public ObjectParcelable getValue(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doGenericGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public ObjectParcelable getValueStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doGenericGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public boolean getBoolean(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doBooleanGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public boolean getBooleanStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doBooleanGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public byte getByte(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doByteGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public byte getByteStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doByteGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public char getChar(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doCharGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public char getCharStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doCharGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public double getDouble(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doDoubleGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public double getDoubleStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doDoubleGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public float getFloat(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doFloatGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public float getFloatStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doFloatGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public int getInt(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doIntGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public int getIntStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doIntGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public long getLong(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doLongGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public long getLongStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doLongGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public int getShort(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doShortGetFieldValue(obj, fieldName);
+    }
+
+    @Override
+    public int getShortStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doShortGetFieldValue(declaringClassName, fieldName);
+    }
+
+    @Override
+    public String getType(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doGenericGetFieldType(obj, fieldName);
+    }
+
+    @Override
+    public String getTypeStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doGenericGetFieldType(declaringClassName, fieldName);
+    }
+
+    @Override
+    public String getString(ObjectParcelable obj, String fieldName) {
+        return ReflectionManager.doGetString(obj, fieldName);
+    }
+
+    @Override
+    public String getStringStatic(String declaringClassName, String fieldName) {
+        return ReflectionManager.doGetString(declaringClassName, fieldName);
+    }
+
+    @Override
+    public void setValue(ObjectParcelable obj, String fieldName, ObjectParcelable value) {
+        ReflectionManager.doGenericSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setValueStatic(String declaringClassName, String fieldName, ObjectParcelable value) {
+        ReflectionManager.doGenericSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setBoolean(ObjectParcelable obj, String fieldName, boolean value) {
+        ReflectionManager.doBooleanSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setBooleanStatic(String declaringClassName, String fieldName, boolean value) {
+        ReflectionManager.doBooleanSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setByte(ObjectParcelable obj, String fieldName, byte value) {
+        ReflectionManager.doByteSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setByteStatic(String declaringClassName, String fieldName, byte value) {
+        ReflectionManager.doByteSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setChar(ObjectParcelable obj, String fieldName, char value) {
+        ReflectionManager.doCharSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setCharStatic(String declaringClassName, String fieldName, char value) {
+        ReflectionManager.doCharSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setDouble(ObjectParcelable obj, String fieldName, double value) {
+        ReflectionManager.doDoubleSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setDoubleStatic(String declaringClassName, String fieldName, double value) {
+        ReflectionManager.doDoubleSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setFloat(ObjectParcelable obj, String fieldName, float value) {
+        ReflectionManager.doFloatSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setFloatStatic(String declaringClassName, String fieldName, float value) {
+        ReflectionManager.doFloatSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setInt(ObjectParcelable obj, String fieldName, int value) {
+        ReflectionManager.doIntSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setIntStatic(String declaringClassName, String fieldName, int value) {
+        ReflectionManager.doIntSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setLong(ObjectParcelable obj, String fieldName, long value) {
+        ReflectionManager.doLongSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setLongStatic(String declaringClassName, String fieldName, long value) {
+        ReflectionManager.doLongSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setShort(ObjectParcelable obj, String fieldName, int value) {
+        ReflectionManager.doShortSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setShortStatic(String declaringClassName, String fieldName, int value) {
+        ReflectionManager.doShortSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public void setString(ObjectParcelable obj, String fieldName, String value) {
+        ReflectionManager.doGenericSetFieldValue(obj, fieldName, value);
+    }
+
+    @Override
+    public void setStringStatic(String declaringClassName, String fieldName, String value) {
+        ReflectionManager.doGenericSetFieldValue(declaringClassName, fieldName, value);
     }
 }

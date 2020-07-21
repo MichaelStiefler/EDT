@@ -20,7 +20,7 @@ import static java.nio.file.Files.newOutputStream;
 public class FileTools {
 
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
-    private static String TAG = "EDTFileTools (Implementation)";
+    private static String TAG = "EDT (FileTools)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
