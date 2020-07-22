@@ -1,6 +1,8 @@
 package com.casioeurope.mis.edt;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.security.KeyChain;
 import android.util.Log;
 
 import java.io.IOException;
@@ -65,26 +67,29 @@ public class CertificateManager {
     }
 
     @SuppressWarnings({"unused", "deprecation", "RedundantSuppression"})
-    public static boolean installCACertificate(String friendlyName, String fileName) {
+    public static boolean installCACertificate(String friendlyName, String fileName, Context context) {
         logMethodEntranceExit(true);
         // Android...why do you enjoy making my life so difficult...
         try {
-            @SuppressLint("PrivateApi") Class<?> keyStoreClass = Objects.requireNonNull(android.net.wifi.WifiConfiguration.class.getClassLoader()).loadClass("android.security.KeyStore");
-
-            Method getInstanceMethod = keyStoreClass.getMethod("getInstance");
-            Object keyStore = getInstanceMethod.invoke(null);
-
-            assert keyStore != null;
-            Log.d(TAG, "Got keystore " + keyStore.toString());
-            // Put(Key, Value)
-            Method putCertificateMethod = keyStoreClass.getMethod("put", String.class, byte[].class); // no such method!
-            Log.d(TAG, "Putting...");
+            // Supply context, e.g. from "Context context = getApplicationContext();"
+            // String fileName points to the file holding the certificate to be installed. pem/der/pfx tested.
             RandomAccessFile file = new RandomAccessFile(fileName, "r");
             //noinspection SpellCheckingInspection
-            byte[] cacert = new byte[(int)file.length()];
-            file.read(cacert);
-            Log.d(TAG, String.format("Certificate is %d bytes long.", cacert.length));
-            putCertificateMethod.invoke(keyStore, friendlyName, cacert);
+            byte[] certificateBytes = new byte[(int)file.length()];
+            file.read(certificateBytes);
+
+            @SuppressLint("PrivateApi") Class<?> keyChainConnectionClass = Objects.requireNonNull(context.getClassLoader()).loadClass("android.security.KeyChain$KeyChainConnection");
+            @SuppressLint("PrivateApi") Class<?> iKeyChainServiceClass  = Objects.requireNonNull(context.getClassLoader()).loadClass("android.security.IKeyChainService");
+
+            @SuppressWarnings("JavaReflectionMemberAccess") Method keyChainBindMethod = KeyChain.class.getMethod("bind", Context.class);
+            Method keyChainConnectionGetServiceMethod = keyChainConnectionClass.getMethod("getService");
+            Object keyChainConnectionObject = keyChainBindMethod.invoke(null, context);
+            Object iKeyChainServiceObject = keyChainConnectionGetServiceMethod.invoke(keyChainConnectionObject);
+
+            Method installCaCertificate = iKeyChainServiceClass.getDeclaredMethod("installCaCertificate", byte[].class);
+            //noinspection PrimitiveArrayArgumentToVarargsMethod
+            installCaCertificate.invoke(iKeyChainServiceObject, certificateBytes);
+
             logMethodEntranceExit(false);
             return true;
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | ClassNotFoundException | IOException e) {

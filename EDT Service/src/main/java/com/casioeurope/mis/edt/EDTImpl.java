@@ -644,7 +644,7 @@ public class EDTImpl extends IEDT.Stub {
             Log.d(TAG, "No Context specified for EDT Tools installCACertificate!");
             return false;
         }
-        return CertificateManager.installCACertificate(friendlyName, fileName);
+        return CertificateManager.installCACertificate(friendlyName, fileName, this.context);
     }
 
     @Override

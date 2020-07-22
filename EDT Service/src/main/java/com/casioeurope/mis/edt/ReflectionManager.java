@@ -83,9 +83,7 @@ public class ReflectionManager {
         if (obj != null) {
             Class<?> objClass = obj.getObject().getClass();
             do {
-                if (objClass == null) {
-                    break;
-                }
+                if (objClass == null) break;
                 try {
                     method = objClass.getDeclaredMethod(methodName, classArray);
                     method.setAccessible(true);

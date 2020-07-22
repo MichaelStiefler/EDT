@@ -167,7 +167,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, String.format("Remove Google Accounts Result = %b", EDTLib.removeAllAccounts()));
             } else if (v==activityMainBinding.installCertificate) {
                 Log.d(TAG, "Calling Install CA Certificate from Service!");
-                Log.d(TAG, String.format("Install CA Certificate Result = %b", EDTLib.installCACertificate("TEST CA", "\\sdcard\\testca.cer")));
+                Log.d(TAG, String.format("Install testca.cer Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/testca.cer")));
+                Log.d(TAG, String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.der")));
+                Log.d(TAG, String.format("Install admin.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.pem")));
+                Log.d(TAG, String.format("Install admin.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.pfx")));
+                Log.d(TAG, String.format("Install mistest.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.der")));
+                Log.d(TAG, String.format("Install mistest.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.pem")));
+                Log.d(TAG, String.format("Install mistest.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.pfx")));
+                Log.d(TAG, String.format("Install zeroshell.example.com.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.der")));
+                Log.d(TAG, String.format("Install zeroshell.example.com.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.pem")));
+                Log.d(TAG, String.format("Install zeroshell.example.com.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.pfx")));
             } else if (v==activityMainBinding.mountSdCard) {
                 Log.d(TAG, "Calling Mount SD Card from Service!");
                 Log.d(TAG, String.format("Mount SD Card Result = %b", EDTLib.mountSDCard(true)));
