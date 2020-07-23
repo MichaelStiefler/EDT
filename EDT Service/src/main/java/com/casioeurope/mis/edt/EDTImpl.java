@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.casioeurope.mis.edt.Wifi.Wifi;
 import com.casioeurope.mis.edt.barcodescanner.ScanLib;
 
 import java.io.IOException;

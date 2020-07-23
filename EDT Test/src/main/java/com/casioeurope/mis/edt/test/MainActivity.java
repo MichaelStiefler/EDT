@@ -109,7 +109,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 conf.hiddenSSID = true;
                 conf.preSharedKey = "\"UmfegUmfe\"";
                 //Log.d(TAG, String.format("Add Wifi AccountResult = %b", edtToolsService.addNetwork(conf)));
-                Log.d(TAG, String.format("Add Wifi AccountResult = %b", EDTLib.addNetwork(conf)));
+                boolean retVal = EDTLib.addNetwork(conf);
+                if (retVal) retVal &= EDTLib.connectNetwork("MIS Test");
+                Log.d(TAG, String.format("Add Wifi AccountResult = %b", retVal));
             } else if (v==activityMainBinding.buttonRemoveWifi) {
                 Log.d(TAG, "Calling Remove Wifi Account from Service!");
                 Log.d(TAG, String.format("Remove Wifi Account Result = %b", EDTLib.removeNetwork("MIS Test")));
