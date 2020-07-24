@@ -22,6 +22,7 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("mis.casioeurope.com.casioeurope.mis.etdtoolslibrary.test", appContext.getPackageName());
+        //assertEquals("mis.casioeurope.com.casioeurope.mis.etdtoolslibrary.test", appContext.getPackageName());
+        assertEquals("mis.casioeurope.com.casioeurope.mis.etd.test", appContext.getPackageName());
     }
 }

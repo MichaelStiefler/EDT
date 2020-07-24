@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.security.KeyChain;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.casioeurope.mis.edt.R;
 import com.casioeurope.mis.edt.databinding.ActivityAddDeviceAdminBinding;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class AddDeviceAdminActivity extends /*AppCompatActivity*/ Activity {
@@ -61,19 +64,48 @@ public class AddDeviceAdminActivity extends /*AppCompatActivity*/ Activity {
         Log.v(TAG, "onCreate 04");
         mAdminName = new ComponentName(this, MyAdmin.class);
         Log.v(TAG, "onCreate 05");
+
         if (!mDPM.isAdminActive(mAdminName)) {
             // try to become active – must happen here in this activity, to get result
-            Log.v(TAG, "onCreate 06");
-            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-            Log.v(TAG, "onCreate 07");
-            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
-                    mAdminName);
-            Log.v(TAG, "onCreate 08");
-            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-                    "EDT Tools needs device admin privileges for administrative functionality.");
-            Log.v(TAG, "onCreate 09");
-            startActivityForResult(intent, REQUEST_ADD_DEVICE_ADMIN);
-            Log.v(TAG, "onCreate 10");
+
+
+            try {
+                Log.v(TAG, "onCreate 06b");
+                for (Method m : DevicePolicyManager.class.getDeclaredMethods()) {
+                    String methodDescriptor = "Method " + m.getName() + ", Parameters: ";
+                    for (Class<?> c : m.getParameterTypes()) {
+                        methodDescriptor += c.getName() + " ";
+                    }
+                    Log.v(TAG, methodDescriptor);
+                }
+                //Arrays.stream(DevicePolicyManager.class.getDeclaredMethods()).forEach(s -> Log.v(TAG, String.format("Method: %s, Parameters: %s")));
+                Method setActiveAdminMethod = DevicePolicyManager.class.getDeclaredMethod("setActiveAdmin", ComponentName.class, boolean.class);
+                Log.v(TAG, "onCreate 07b");
+                setActiveAdminMethod.invoke(mDPM, mAdminName, true);
+
+
+                Log.v(TAG, "onCreate 08b");
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            Log.v(TAG, "onCreate 09b");
+
+
+//            Log.v(TAG, "onCreate 06");
+//            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+//            Log.v(TAG, "onCreate 07");
+//            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
+//                    mAdminName);
+//            Log.v(TAG, "onCreate 08");
+//            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+//                    "EDT Tools needs device admin privileges for administrative functionality.");
+//            Log.v(TAG, "onCreate 09");
+//            startActivityForResult(intent, REQUEST_ADD_DEVICE_ADMIN);
+//            Log.v(TAG, "onCreate 10");
         } else {
             // Already is a device administrator, can do security operations now.
             // mDPM.lockNow();
@@ -115,6 +147,7 @@ public class AddDeviceAdminActivity extends /*AppCompatActivity*/ Activity {
         public void onEnabled(Context context, Intent intent) {
             showToast(context, context.getString(R.string.admin_receiver_status_enabled));
         }
+
 
         @Override
         public CharSequence onDisableRequested(Context context, Intent intent) {
