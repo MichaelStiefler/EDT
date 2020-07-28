@@ -12,7 +12,7 @@ public class Camera {
         try {
             DevicePolicyManager manager =
                     (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
-            ComponentName adminName = new ComponentName(context, EDTService.MyAdmin.class);
+            ComponentName adminName = new ComponentName(context, AddDeviceAdminActivity.MyAdmin.class);
             manager.setCameraDisabled(adminName, !enable);
             return true;
         } catch (Exception e) {

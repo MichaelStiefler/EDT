@@ -11,6 +11,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/DeviceLibrary" />
+            <option value="$PROJECT_DIR$/DeviceLibraryDtx400" />
+            <option value="$PROJECT_DIR$/DeviceLibraryItg400" />
+            <option value="$PROJECT_DIR$/DeviceLibraryItg6x0" />
             <option value="$PROJECT_DIR$/EDT Library" />
             <option value="$PROJECT_DIR$/EDT Service" />
             <option value="$PROJECT_DIR$/EDT Test" />

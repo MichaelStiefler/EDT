@@ -35,7 +35,7 @@ interface IEDT {
     boolean enableCameras(boolean enable);
     boolean enableRoaming(boolean enable);
     boolean enableBackgroundData(boolean enable);
-    boolean setScreenOffTimeout(int milliseconds);
+    boolean setScreenLockTimeout(int milliseconds);
     boolean setDefaultLauncher(String packageName);
     boolean addNetwork(in WifiConfigurationParcelable wifiConfiguration);
     boolean updateNetwork(in WifiConfigurationParcelable wifiConfiguration);
@@ -111,4 +111,5 @@ interface IEDT {
     void setShortStatic(String declaringClassName, String fieldName, int value);
     void setString(in ObjectParcelable obj, String fieldName, String value);
     void setStringStatic(String declaringClassName, String fieldName, String value);
+    boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin);
 }

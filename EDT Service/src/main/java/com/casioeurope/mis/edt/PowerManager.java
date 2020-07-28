@@ -2,10 +2,13 @@ package com.casioeurope.mis.edt;
 
 import android.accounts.Account;
 import android.annotation.SuppressLint;
+import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.provider.Settings;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -19,18 +22,18 @@ public class PowerManager {
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
     public static String getApplicationName(Context context) {
@@ -145,5 +148,26 @@ public class PowerManager {
             logMethodEntranceExit(false);
             return false;
         }
+    }
+
+    public static boolean setScreenLockTimeout(Context context, int milliseconds) {
+        try {
+            int currentTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT);
+            if (currentTimeout == milliseconds) return true;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        DevicePolicyManager mDPM = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName mAdminName = new ComponentName(context, AddDeviceAdminActivity.MyAdmin.class);
+        long maximumTimeToLock = mDPM.getMaximumTimeToLock(mAdminName);
+        if (maximumTimeToLock != 0 && maximumTimeToLock < milliseconds) {
+            mDPM.setMaximumTimeToLock(mAdminName, milliseconds);
+        }
+
+        boolean retVal = Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, milliseconds);
+
+        return retVal;
     }
 }

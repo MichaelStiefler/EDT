@@ -416,13 +416,14 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setScreenOffTimeout(int milliseconds) {
-        Log.d(TAG, "setScreenOffTimeout(" + milliseconds + ")");
+    public boolean setScreenLockTimeout(int milliseconds) {
+        Log.d(TAG, "setScreenLockTimeout(" + milliseconds + ")");
         if (this.context == null) {
-            Log.d(TAG, "No Context specified for EDT Tools setScreenOffTimeout!");
+            Log.d(TAG, "No Context specified for EDT Tools setScreenLockTimeout!");
             return false;
         }
-        return Settings.System.putInt(this.context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, milliseconds);
+        return PowerManager.setScreenLockTimeout(this.context, milliseconds);
+        //return Settings.System.putInt(this.context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, milliseconds);
     }
 
     @Override
@@ -457,7 +458,7 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.updateNetwork(wifiConfiguration, this.context);
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
+    @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"})
     public boolean removeNetwork(String ssid) {
         Log.d(TAG, "removeNetwork(" + ssid + ")");
         if (this.context == null) {
@@ -476,7 +477,7 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.removeNetwork(networkId, this.context);
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
+    @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"})
     public boolean connectNetwork(String ssid) {
         Log.d(TAG, "connectNetwork(" + ssid + ")");
         if (this.context == null) {
@@ -944,5 +945,15 @@ public class EDTImpl extends IEDT.Stub {
     @Override
     public void setStringStatic(String declaringClassName, String fieldName, String value) {
         ReflectionManager.doGenericSetFieldValue(declaringClassName, fieldName, value);
+    }
+
+    @Override
+    public boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin) {
+        Log.d(TAG, "enableDeviceAdmin");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools enableDeviceAdmin!");
+            return false;
+        }
+        return Security.enableDeviceAdmin(this.context, packageName, className, makeAdmin);
     }
 }

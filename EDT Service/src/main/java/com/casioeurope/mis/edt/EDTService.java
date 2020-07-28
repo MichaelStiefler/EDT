@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
@@ -11,11 +12,13 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class EDTService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
-    private static String TAG = "EDT_TOOLS (Service)";
+    private static String TAG = "EDT (Service)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -37,12 +40,28 @@ public class EDTService extends Service {
         logMethodEntranceExit(true);
         //Context context = this.getApplicationContext();
         DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
-        ComponentName adminName = new ComponentName(this, MyAdmin.class);
+        ComponentName adminName = new ComponentName(this, AddDeviceAdminActivity.MyAdmin.class);
         logMethodEntranceExit(false);
         return dpm.isAdminActive(adminName);
     }
 
-    public static class MyAdmin extends DeviceAdminReceiver {
+//    public static class MyAdmin extends DeviceAdminReceiver {
+//    }
+
+    private boolean makeDeviceAdmin() {
+        logMethodEntranceExit(true);
+        DevicePolicyManager mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName mAdminName = new ComponentName(this, AddDeviceAdminActivity.MyAdmin.class);
+        try {
+            @SuppressWarnings("JavaReflectionMemberAccess") @SuppressLint("DiscouragedPrivateApi") Method setActiveAdminMethod = DevicePolicyManager.class.getDeclaredMethod("setActiveAdmin", ComponentName.class, boolean.class);
+            setActiveAdminMethod.invoke(mDPM, mAdminName, true);
+            logMethodEntranceExit(false, "makeDeviceAdmin() = true");
+            return true;
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        logMethodEntranceExit(false, "makeDeviceAdmin() = false");
+        return false;
     }
 
     @Nullable
@@ -51,12 +70,16 @@ public class EDTService extends Service {
         logMethodEntranceExit(true);
         if (!isDeviceAdmin()) {
             Log.v(TAG, "isDeviceAdmin() = false");
-            Intent addDeviceAdminActivityIntent = new Intent(getApplicationContext(), AddDeviceAdminActivity.class);
-            startActivity(addDeviceAdminActivityIntent);
+            if (!makeDeviceAdmin()) {
+//                Intent addDeviceAdminActivityIntent = new Intent(getApplicationContext(), AddDeviceAdminActivity.class);
+                Intent addDeviceAdminActivityIntent = new Intent(getApplicationContext(), AddDeviceAdminActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(addDeviceAdminActivityIntent);
+            }
         } else {
             Log.v(TAG, "isDeviceAdmin() = true");
         }
         logMethodEntranceExit(false);
         return new EDTImpl(getApplicationContext());
     }
+
 }

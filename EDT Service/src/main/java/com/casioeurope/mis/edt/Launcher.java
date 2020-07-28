@@ -9,7 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.util.Log;
 
 public class Launcher {
-    private static String TAG = "EDT_TOOLS (Launcher)";
+    private static String TAG = "EDT (Launcher)";
 
     @SuppressWarnings("deprecation")
     public static boolean setDefaultLauncher(String packageName, Context context) {

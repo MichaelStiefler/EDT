@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.test;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.app.Activity;
 import android.icu.util.Calendar;
@@ -13,6 +14,7 @@ import com.casioeurope.mis.edt.EDTLib;
 import com.casioeurope.mis.edt.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
 
+import java.lang.reflect.Field;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -49,6 +51,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = activityMainBinding.getRoot();
         setContentView(view);
+
+//        StringBuilder sb = new StringBuilder(" \n");
+//        final Field[] manifestFields = Manifest.permission.class.getDeclaredFields();
+//        for (final Field field : manifestFields) {
+//            sb.append("<uses-permission android:name=\"android.permission."
+//                    + field.getName() + "\"/>");
+//            sb.append("\n");
+//            if (sb.length() > 1000) {
+//                Log.v(TAG, sb.toString());
+//                sb = new StringBuilder();
+//            }
+//        }
     }
 
     @Override
@@ -185,10 +199,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } else if (v==activityMainBinding.unmountSdCard) {
                 Log.d(TAG, "Calling Unmount SD Card from Service!");
                 Log.d(TAG, String.format("Unmount SD Card Result = %b", EDTLib.mountSDCard(false)));
+            } else if (v==activityMainBinding.screenLockTimeout) {
+                Log.d(TAG, "Calling Set Screen Lock Timeout from Service!");
+                Log.d(TAG, String.format("Set Screen Lock Timeout Result = %b", EDTLib.setScreenLockTimeout(3600000)));
             } else if (v==activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");
                 //Log.d(TAG, String.format("Test Message Result = %b", edtToolsService.testMessage("EDT Tools Test Message!")));
-                Log.d(TAG, String.format("Test Message Result = %b", EDTLib.testMessage("EDT Tools Test Message 2!")));
+                Log.d(TAG, String.format("Test Message Result = %b", EDTLib.testMessage("EDT Tools Test Message!")));
             }
         } catch (Exception e) {
             e.printStackTrace();

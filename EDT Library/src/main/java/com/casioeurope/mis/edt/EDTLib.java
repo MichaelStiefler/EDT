@@ -94,7 +94,7 @@ public class EDTLib {
      * @param ssid {@link java.lang.String String}: The {@link android.net.wifi.WifiConfiguration#SSID SSID} of the network to connect to
      * @return boolean whether or not the connection could be established
      */
-    @SuppressWarnings({"unused", "SpellCheckingInspection"})
+    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
     public static boolean connectNetwork(String ssid) {
         try {
             return getInstance().edtService().connectNetwork(ssid);
@@ -270,6 +270,27 @@ public class EDTLib {
     public static boolean enableDeveloperMode(boolean enabled) {
         try {
             return getInstance().edtService().enableDeveloperMode(enabled);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Enables/Disables Device Admin Mode for specific apps/packages on demand
+     *
+     * <p>Note that you must know both the package name of the app you want to enable/disable device admin mode upon, as well as the Class within that application that implements the DeviceAdminReceiver.<br/>
+     * This is not the same as the Activity class name required to launch the application and would likely need to be acquired from the application developer.</p>
+     *
+     * @param packageName {@link String String}: The package name of the app in question where you want to enable/disable device admin mode upon.
+     * @param className {@link String String}: The class name of the Class within that application that implements the DeviceAdminReceiver.
+     * @param makeAdmin {@code boolean}: true enables device admin mode on the application, false disables it.
+     * @return boolean whether or not Device Admin Mode could be enabled/disabled on the application in question.
+     */
+    @SuppressWarnings({"unused"})
+    public static boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin) {
+        try {
+            return getInstance().edtService().enableDeviceAdmin(packageName, className, makeAdmin);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -780,7 +801,7 @@ public class EDTLib {
      * @param ssid {@link java.lang.String String}: The {@link android.net.wifi.WifiConfiguration#SSID SSID} of the network to be removed
      * @return {@code boolean} whether or not the existing network could be removed
      */
-    @SuppressWarnings({"unused", "SpellCheckingInspection"})
+    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
     public static boolean removeNetwork(String ssid) {
         try {
             return getInstance().edtService().removeNetwork(ssid);
@@ -945,15 +966,15 @@ public class EDTLib {
     }
 
     /**
-     * Specifies a new Screen Off Timeout in Milliseconds
+     * Specifies a new Screen Lock Timeout in Milliseconds
      *
-     * @param milliseconds {@link java.lang.Integer int}: The new Screen Off Timeout Value in Milliseconds
-     * @return {@code boolean} whether or not the Screen Timeout was set successfully
+     * @param milliseconds {@link java.lang.Integer int}: The new Screen Lock Timeout Value in Milliseconds
+     * @return {@code boolean} whether or not the Screen Lock Timeout was set successfully
      */
     @SuppressWarnings("unused")
-    public static boolean setScreenOffTimeout(int milliseconds) {
+    public static boolean setScreenLockTimeout(int milliseconds) {
         try {
-            return getInstance().edtService().setScreenOffTimeout(milliseconds);
+            return getInstance().edtService().setScreenLockTimeout(milliseconds);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
