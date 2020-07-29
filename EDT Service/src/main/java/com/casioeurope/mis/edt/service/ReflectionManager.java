@@ -1,4 +1,6 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
+
+import com.casioeurope.mis.edt.ObjectParcelable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

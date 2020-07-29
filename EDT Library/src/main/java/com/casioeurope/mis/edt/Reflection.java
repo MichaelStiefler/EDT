@@ -11,6 +11,8 @@ import java.util.Arrays;
  * This Class is used to gain access to fields and methods of other classes where the access modifier (private/protected/(none)/public) prohibits access to that field/method.<BR/>
  * Furthermore, using this class methods can be called using the shared "system" user access rights provided by EDT.
  * <p>
+ * <b>NOTE:</b> Use of this API is at your own discretion and risk. You will be fully responsible for the development, functioning, maintenance and service of your Application.<br/>
+ * In no event will CASIO or CASIO Europe GmbH be liable for any special damages, including but not limited to costs of procurement of substitute goods or services or any special, indirect, incidental, exemplary, or consequential damages, including but not limited to lost profits, loss of goodwill, business interruption, or loss of information, of any party, including third parties, regardless of whether such party was advised of the possibility of the foregoing.
  */
 @SuppressWarnings("unused")
 public class Reflection {

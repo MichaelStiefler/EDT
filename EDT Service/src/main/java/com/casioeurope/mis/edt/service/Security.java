@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.annotation.SuppressLint;
 import android.app.admin.DevicePolicyManager;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Security {
     private static String TAG = "EDT (Security)";
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;

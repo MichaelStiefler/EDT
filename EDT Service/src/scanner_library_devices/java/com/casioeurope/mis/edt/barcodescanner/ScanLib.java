@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.barcodescanner;
+package com.casioeurope.mis.edt.service.barcodescanner;
 
 import android.content.Context;
 import android.content.Intent;

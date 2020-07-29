@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.util.Log;
 
 public class Browser {
 
-    private static String TAG = "EDT_TOOLS (Browser)";
+    private static String TAG = "EDT (Browser)";
     private static final String PREF_HOMEPAGE = "homepage";
     private static final String PREF_SAVE_FORMDATA = "save_formdata";
     private static final String PREF_REMEMBER_PASSWORDS = "remember_passwords";

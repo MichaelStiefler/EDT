@@ -1,9 +1,11 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+
+import com.casioeurope.mis.edt.WifiConfigurationParcelable;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -12,22 +14,22 @@ import java.util.Objects;
 @SuppressWarnings({"deprecation", "RedundantSuppression"})
 public class Wifi {
     private static String TAG = "EDT (Wifi)";
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance ? " +" : " -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
     public static boolean enableWifi(boolean enable, Context context) {

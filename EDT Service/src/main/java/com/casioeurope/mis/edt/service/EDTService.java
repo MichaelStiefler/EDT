@@ -1,8 +1,7 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
-import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,23 +16,23 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class EDTService extends Service {
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     private static String TAG = "EDT (Service)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameofCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameofCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameofCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameofCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
     private boolean isDeviceAdmin() {

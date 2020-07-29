@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.barcodescanner;
+package com.casioeurope.mis.edt.service.barcodescanner;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
@@ -7,6 +7,7 @@ import org.simpleframework.xml.Root;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Root
 public class ScannerLibraryProperties {
     @Attribute

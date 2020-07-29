@@ -112,4 +112,12 @@ interface IEDT {
     void setString(in ObjectParcelable obj, String fieldName, String value);
     void setStringStatic(String declaringClassName, String fieldName, String value);
     boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin);
+    boolean installApk(String apkFilename, boolean update);
+    boolean uninstallPackage(String packageName, boolean keepData);
+    boolean clearDataForPackage(String packageName);
+    boolean clearCacheForPackage(String packageName);
+    boolean enableApplication(String packageName);
+    boolean disableApplication(String packageName);
+    boolean enableBatteryOptimization(String packageName);
+    boolean disableBatteryOptimization(String packageName);
 }

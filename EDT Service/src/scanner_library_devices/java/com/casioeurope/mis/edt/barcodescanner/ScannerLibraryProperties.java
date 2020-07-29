@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.barcodescanner;
+package com.casioeurope.mis.edt.service.barcodescanner;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;

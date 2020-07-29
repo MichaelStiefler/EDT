@@ -1,31 +1,33 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
+
+import com.casioeurope.mis.edt.service.BuildConfig;
 
 import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class USBTools {
 
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     private static String TAG = "EDT (USB Tools)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
     @SuppressWarnings("unused")

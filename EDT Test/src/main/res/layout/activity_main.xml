@@ -530,10 +530,122 @@
             android:paddingTop="25dp"
             android:paddingBottom="25dp"
             android:text="Set Screen Lock Timeout"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintBottom_toTopOf="@+id/buttonInstallApp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/unmountSdCard" />
+
+        <Button
+            android:id="@+id/buttonInstallApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Install App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonUninstallApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/screenLockTimeout" />
+
+        <Button
+            android:id="@+id/buttonUninstallApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Uninstall App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClearData"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonInstallApp" />
+
+        <Button
+            android:id="@+id/buttonClearData"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Clear Data"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClearCache"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonUninstallApp" />
+
+        <Button
+            android:id="@+id/buttonClearCache"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Clear Cache"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonClearData" />
+
+        <Button
+            android:id="@+id/buttonEnableApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonClearCache" />
+
+        <Button
+            android:id="@+id/buttonDisableApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableDoze"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableApp" />
+
+        <Button
+            android:id="@+id/buttonEnableDoze"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable Doze Mode"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableDoze"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableApp" />
+
+        <Button
+            android:id="@+id/buttonDisableDoze"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable Doze Mode"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableDoze" />
 
         <Button
             android:id="@+id/buttonTestMessage"
@@ -547,7 +659,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/screenLockTimeout" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableDoze" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

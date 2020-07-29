@@ -31,7 +31,7 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
         /* Use statically configured IP settings. Configuration can be accessed
          * with linkProperties */
         STATIC,
-        /* Use dynamically configured IP settigns */
+        /* Use dynamically configured IP settings */
         DHCP,
         /* no IP details are assigned, this is used to indicate
          * that any existing IP settings should be retained */

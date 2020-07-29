@@ -4,59 +4,52 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class APNParcelable extends APN implements Parcelable {
 
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (APNParcelable)";
-    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
     static final Creator<APNParcelable> CREATOR = new Creator<APNParcelable>() {
         public APNParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
-            APNParcelable apnp = new APNParcelable(new APN());
-            apnp.id = in.readInt();
-            apnp.name = in.readString();
-            apnp.user = in.readString();
-            apnp.password = in.readString();
-            apnp.apn = in.readString();
-            apnp.mcc = in.readString();
-            apnp.mnc = in.readString();
-            apnp.type = in.readString();
-            apnp.server = in.readString();
-            apnp.proxy = in.readString();
-            apnp.port = in.readString();
-            apnp.mmsProxy = in.readString();
-            apnp.mmsPort = in.readString();
-            apnp.mmsc = in.readString();
-            apnp.current = in.readString();
-            apnp.authType = in.readInt();
+            APNParcelable apnParcelable = new APNParcelable(new APN());
+            apnParcelable.id = in.readInt();
+            apnParcelable.name = in.readString();
+            apnParcelable.user = in.readString();
+            apnParcelable.password = in.readString();
+            apnParcelable.apn = in.readString();
+            apnParcelable.mcc = in.readString();
+            apnParcelable.mnc = in.readString();
+            apnParcelable.type = in.readString();
+            apnParcelable.server = in.readString();
+            apnParcelable.proxy = in.readString();
+            apnParcelable.port = in.readString();
+            apnParcelable.mmsProxy = in.readString();
+            apnParcelable.mmsPort = in.readString();
+            apnParcelable.mmsc = in.readString();
+            apnParcelable.current = in.readString();
+            apnParcelable.authType = in.readInt();
             logMethodEntranceExit(false);
-            return apnp;
+            return apnParcelable;
         }
 
         public APNParcelable[] newArray(int size) {

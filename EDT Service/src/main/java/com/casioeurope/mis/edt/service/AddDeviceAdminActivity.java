@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,15 +11,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.casioeurope.mis.edt.databinding.ActivityAddDeviceAdminBinding;
+import com.casioeurope.mis.edt.service.databinding.ActivityAddDeviceAdminBinding;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-public class AddDeviceAdminActivity extends /*AppCompatActivity*/ Activity {
+public class AddDeviceAdminActivity extends Activity {
 
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     private static String TAG = "EDT (AddDeviceAdminActivity)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
@@ -44,7 +44,7 @@ public class AddDeviceAdminActivity extends /*AppCompatActivity*/ Activity {
     protected void onCreate(Bundle savedInstanceState) {
         logMethodEntranceExit(true);
         super.onCreate(savedInstanceState);
-        com.casioeurope.mis.edt.databinding.ActivityAddDeviceAdminBinding activityAddDeviceAdminBinding = ActivityAddDeviceAdminBinding.inflate(getLayoutInflater());
+        com.casioeurope.mis.edt.service.databinding.ActivityAddDeviceAdminBinding activityAddDeviceAdminBinding = ActivityAddDeviceAdminBinding.inflate(getLayoutInflater());
         View view = activityAddDeviceAdminBinding.getRoot();
         setContentView(view);
         //setContentView(R.layout.activity_add_device_admin);

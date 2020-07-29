@@ -11,7 +11,8 @@ import java.util.Arrays;
 
 public class EDTServiceConnection implements ServiceConnection {
 
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
+    @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ServiceConnection)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
@@ -38,8 +39,8 @@ public class EDTServiceConnection implements ServiceConnection {
 
     protected boolean bind(Context context) {
         logMethodEntranceExit(true);
-        context.bindService(new Intent("com.casioeurope.mis.edt.EDTService").setPackage("com.casioeurope.mis.edt")
-                ,this, context.BIND_AUTO_CREATE);
+        context.bindService(new Intent("com.casioeurope.mis.edt.service.EDTService").setPackage("com.casioeurope.mis.edt.service")
+                ,this, Context.BIND_AUTO_CREATE);
         logMethodEntranceExit(false);
         return true;
     }

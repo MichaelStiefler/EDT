@@ -18,25 +18,25 @@ public class ObjectParcelable implements Parcelable {
 
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ObjectParcelable)";
-    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private String objectClassName;
     private Object obj;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
     static final Creator<ObjectParcelable> CREATOR = new Creator<ObjectParcelable>() {

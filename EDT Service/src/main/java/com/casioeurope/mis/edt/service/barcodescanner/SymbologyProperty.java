@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.barcodescanner;
+package com.casioeurope.mis.edt.service.barcodescanner;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
@@ -11,11 +11,13 @@ public class SymbologyProperty {
     @Attribute
     private int value;
 
+    @SuppressWarnings("unused")
     SymbologyProperty() {
         this.id = 0;
         this.value = 0;
     }
 
+    @SuppressWarnings("unused")
     SymbologyProperty(int id, int value) {
         this.id = id;
         this.value = value;

@@ -11,9 +11,11 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class EDTInitProvider extends ContentProvider {
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
+    @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (InitProvider)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
@@ -35,10 +37,7 @@ public class EDTInitProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         logMethodEntranceExit(true);
-        // get the context (Application context)
-        Context context = getContext();
-        // initialize whatever you need
-        EDTServiceConnection.getInstance().bind(context);
+        EDTServiceConnection.getInstance().bind(Objects.requireNonNull(getContext()));
         logMethodEntranceExit(false);
         return true;
     }
@@ -50,38 +49,42 @@ public class EDTInitProvider extends ContentProvider {
             throw new NullPointerException("EDT InitProvider ProviderInfo cannot be null.");
         }
         // So if the authorities equal the library internal ones, the developer forgot to set his applicationId
-        if ("com.casioeurope.mis.edt.initProvider".equals(providerInfo.authority)) {
+        if ("com.casioeurope.mis.edt.service.initProvider".equals(providerInfo.authority)) {
             throw new IllegalStateException("Incorrect provider authority in manifest. Most likely due to a "
-                    + "missing applicationId variable in application\'s build.gradle.");
+                    + "missing applicationId variable in application's build.gradle.");
         }
         super.attachInfo(context, providerInfo);
         logMethodEntranceExit(false);
     }
 
-
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public String getType(Uri uri) {
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;

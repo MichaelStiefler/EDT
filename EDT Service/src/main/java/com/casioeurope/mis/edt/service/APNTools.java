@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -8,27 +8,31 @@ import android.net.Uri;
 import android.provider.Telephony;
 import android.util.Log;
 
+import com.casioeurope.mis.edt.APN;
+import com.casioeurope.mis.edt.APNParcelable;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 public class APNTools {
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (APN)";
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance ? " +" : " -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
     private static final Uri APN_TABLE_URI = Telephony.Carriers.CONTENT_URI;
@@ -91,51 +95,50 @@ public class APNTools {
 
     public static int createNewApn(Context context, APN apn, boolean setAsDefaultAPN) {
         logMethodEntranceExit(true);
-        int apnid = APN.INVALID_APN;
+        int apnId = APN.INVALID_APN;
 
         try {
             if (apn != null) {
-                Log.v(TAG, "APNutils.createNewApn. Reading APN list.");
-                Uri APN_URI = APN_TABLE_URI;
+                Log.v(TAG, "APNTools.createNewApn. Reading APN list.");
                 ContentResolver resolver = context.getContentResolver();
 
-                Log.v(TAG, "APNutils.createNewApn. Creating new registry based on parameters.");
+                Log.v(TAG, "APNTools.createNewApn. Creating new registry based on parameters.");
                 ContentValues values = prepareValues(apn);
 
-                Log.v(TAG, "APNutils.createNewApn. Inserting new APN.");
+                Log.v(TAG, "APNTools.createNewApn. Inserting new APN.");
                 Cursor c = null;
-                Uri newRow = resolver.insert(APN_URI, values);
+                Uri newRow = resolver.insert(APN_TABLE_URI, values);
 
                 if(newRow != null) {
-                    Log.v(TAG, "APNutils.createNewApn. Getting new ID.");
+                    Log.v(TAG, "APNTools.createNewApn. Getting new ID.");
                     c = resolver.query(newRow, null, null, null, null);
 
-                    int tableIndex = c.getColumnIndex("_id");
+                    int tableIndex = Objects.requireNonNull(c).getColumnIndex("_id");
                     c.moveToFirst();
-                    apnid = c.getShort(tableIndex);
+                    apnId = c.getShort(tableIndex);
                 } else
-                    Log.w(TAG, "APNutils.createNewApn. New APN was not found. Inserting failed?");
+                    Log.w(TAG, "APNTools.createNewApn. New APN was not found. Inserting failed?");
 
                 if(c != null){
                     c.close();
                 }
 
-                if (apnid > APN.INVALID_APN && setAsDefaultAPN) {
-                    Log.v(TAG, "APNutils.createNewApn. Setting new APN as default.");
+                if (apnId > APN.INVALID_APN && setAsDefaultAPN) {
+                    Log.v(TAG, "APNTools.createNewApn. Setting new APN as default.");
                     ContentValues v = new ContentValues(1);
-                    v.put("apn_id", apnid);
+                    v.put("apn_id", apnId);
 
                     context.getContentResolver().update(APN_PREFER_URI, v, null, null);
                 }
             } else
-                Log.w(TAG, "APNutils.createNewApn. Invalid apn (null).");
+                Log.w(TAG, "APNTools.createNewApn. Invalid apn (null).");
         } catch (Exception e) {
             Log.e(TAG, "createNewApn: error", e);
         }
 
-        Log.v(TAG, "APNutils.createNewApn. Returning ID " + String.valueOf(apnid));
+        Log.v(TAG, "APNTools.createNewApn. Returning ID " + apnId);
         logMethodEntranceExit(false);
-        return apnid;
+        return apnId;
     }
 
     public static boolean updateApn(Context context, APN apn) {
@@ -143,32 +146,31 @@ public class APNTools {
 
         if (apn != null) {
             try {
-                Log.v(TAG, "APNutils.updateApn. Reading APN list.");
-                Uri APN_URI = APN_TABLE_URI;
+                Log.v(TAG, "APNTools.updateApn Reading APN list.");
                 ContentResolver resolver = context.getContentResolver();
 
-                Log.v(TAG, "APNutils.updateApn. Creating new registry based on parameters.");
+                Log.v(TAG, "APNTools.updateApn Creating new registry based on parameters.");
                 ContentValues values = prepareValues(apn);
 
-                Log.v(TAG, "APNutils.updateApn. Inserting new APN.");
-                int result = resolver.update(APN_URI, values, "_id = " + String.valueOf(apn.getId()), null);
+                Log.v(TAG, "APNTools.updateApn Inserting new APN.");
+                int result = resolver.update(APN_TABLE_URI, values, "_id = " + apn.getId(), null);
 
                 if (result != APN.INVALID_APN) {
-                    Log.v(TAG, "APNutils.updateApn. APN updated.");
+                    Log.v(TAG, "APNTools.updateApn APN updated.");
                     logMethodEntranceExit(false);
                     return true;
                 } else {
-                    Log.w(TAG, "APNutils.updateApn. Invalid ID (" + String.valueOf(apn.getId()) + ").");
+                    Log.w(TAG, "APNTools.updateApn Invalid ID (" + apn.getId() + ").");
                     logMethodEntranceExit(false);
                     return false;
                 }
             } catch (Exception e) {
-                Log.e(TAG, "APNUtils.updateApn error: ", e);
+                Log.e(TAG, "APNTools.updateApn error: ", e);
                 logMethodEntranceExit(false);
                 return false;
             }
         } else {
-            Log.w(TAG, "APNutils.updateApn. Invalid apn (null).");
+            Log.w(TAG, "APNTools.updateApn Invalid apn (null).");
 
             logMethodEntranceExit(false);
             return false;
@@ -185,18 +187,17 @@ public class APNTools {
         logMethodEntranceExit(true);
         int result = APN.INVALID_APN;
 
-        Log.v(TAG, "APNutils.getApn. Looking for APN " + apn);
-        String columns[] = new String[] { "_ID", "NAME" };
+        Log.v(TAG, "APNTools.getApn Looking for APN " + apn);
+        String[] columns = new String[] { "_ID", "NAME" };
         String where = "name = ?";
-        String wargs[] = new String[] { apn };
-        String sortOrder = null;
-        Cursor cur = context.getContentResolver().query(APN_TABLE_URI, columns, where, wargs, sortOrder);
+        String[] selectionArgs = new String[] { apn };
+        Cursor cur = context.getContentResolver().query(APN_TABLE_URI, columns, where, selectionArgs, null);
 
         if (cur != null) {
             int tableIndex = cur.getColumnIndex("_id");
 
             if (cur.moveToFirst()) {
-                Log.v(TAG, "APNutils.getApn. APN found.");
+                Log.v(TAG, "APNTools.getApn APN found.");
                 result = cur.getShort(tableIndex);
             }
 
@@ -204,7 +205,7 @@ public class APNTools {
         }
 
         if (result == APN.INVALID_APN)
-            Log.w(TAG, "APNutils.getApn. APN not found.");
+            Log.w(TAG, "APNTools.getApn APN not found.");
 
         logMethodEntranceExit(false);
         return result;
@@ -212,7 +213,7 @@ public class APNTools {
 
     public static APNParcelable getApn(Context context, String name) {
         logMethodEntranceExit(true);
-        APN apn = Arrays.stream(getAllApnList(context)).filter(a -> a.getName().equals(name)).findFirst().orElse(null);
+        APN apn = Arrays.stream(Objects.requireNonNull(getAllApnList(context))).filter(a -> a.getName().equals(name)).findFirst().orElse(null);
         logMethodEntranceExit(false);
         return apn==null?null:new APNParcelable(apn);
     }
@@ -222,21 +223,20 @@ public class APNTools {
         logMethodEntranceExit(true);
         boolean changed = false;
 
-        Log.v(TAG, "APNutils.setPreferredApn. Looking for APN " + apn);
-        String columns[] = new String[] { "_ID", "NAME" };
+        Log.v(TAG, "APNTools.setPreferredApn. Looking for APN " + apn);
+        String[] columns = new String[] { "_ID", "NAME" };
         String where = "name = ?";
-        String wargs[] = new String[] { apn };
-        String sortOrder = null;
-        Cursor cur = context.getContentResolver().query(APN_TABLE_URI, columns, where, wargs, sortOrder);
+        String[] selectionArgs = new String[] { apn };
+        Cursor cur = context.getContentResolver().query(APN_TABLE_URI, columns, where, selectionArgs, null);
 
         if (cur != null) {
             if (cur.moveToFirst()) {
-                Log.v(TAG, "APNutils.setPreferredApn. APN found. Setting as default.");
+                Log.v(TAG, "APNTools.setPreferredApn. APN found. Setting as default.");
                 ContentValues values = new ContentValues(1);
                 values.put("apn_id", cur.getLong(0));
 
                 if (context.getContentResolver().update(APN_PREFER_URI, values, null, null) == 1) {
-                    Log.v(TAG, "APNutils.setPreferredApn. APN marked as default.");
+                    Log.v(TAG, "APNTools.setPreferredApn. APN marked as default.");
                     changed = true;
                 }
             }
@@ -245,7 +245,7 @@ public class APNTools {
         }
 
         if (!changed)
-            Log.w(TAG, "APNutils.setPreferredApn. APN not found or could not be marked as default.");
+            Log.w(TAG, "APNTools.setPreferredApn. APN not found or could not be marked as default.");
 
         logMethodEntranceExit(false);
         return changed;
@@ -256,13 +256,9 @@ public class APNTools {
         logMethodEntranceExit(true);
         APNParcelable[] result = null;
 
-        Uri contentUri = APN_TABLE_URI;
-
-        Cursor cursor = null;
-        try {
-            cursor = context.getContentResolver().query(contentUri,
-                    new String[]{"name", "_ID", "apn", "mcc", "mnc", "numeric", "user", "password", "server", "proxy",
-                            "port", "mmsproxy", "mmsport", "mmsc", "type", "current", "authtype "}, null, null, null);
+        try (Cursor cursor = context.getContentResolver().query(APN_TABLE_URI,
+                new String[]{"name", "_ID", "apn", "mcc", "mnc", "numeric", "user", "password", "server", "proxy",
+                        "port", "mmsproxy", "mmsport", "mmsc", "type", "current", "authtype "}, null, null, null)) {
             if (cursor != null) {
                 result = new APNParcelable[cursor.getCount()];
                 int i = 0;
@@ -291,9 +287,6 @@ public class APNTools {
             //Handle exceptions here
             logMethodEntranceExit(false);
             return null;
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
 
         logMethodEntranceExit(false);

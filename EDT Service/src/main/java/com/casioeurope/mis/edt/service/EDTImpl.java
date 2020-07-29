@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.accounts.Account;
 import android.app.AlarmManager;
@@ -9,7 +9,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.casioeurope.mis.edt.barcodescanner.ScanLib;
+import com.casioeurope.mis.edt.APN;
+import com.casioeurope.mis.edt.APNParcelable;
+import com.casioeurope.mis.edt.IEDT;
+import com.casioeurope.mis.edt.ObjectParcelable;
+import com.casioeurope.mis.edt.ReadWriteFileParamsParcelable;
+import com.casioeurope.mis.edt.WifiConfigurationParcelable;
+import com.casioeurope.mis.edt.service.barcodescanner.ScanLib;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
@@ -26,24 +32,24 @@ public class EDTImpl extends IEDT.Stub {
     private Context context;
     private Handler handler = new Handler();
 
-    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
-    private static String TAG = "EDT_TOOLS (Implementation)";
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
+    private static String TAG = "EDT (Implementation)";
 
-    @SuppressWarnings({"unused", "SpellCheckingInspection"})
+    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameofCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameofCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameofCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameofCurrMethod + " " + sb.toString() + (entrance ? " +" : " -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
     private class DisplayToast implements Runnable {
@@ -526,7 +532,7 @@ public class EDTImpl extends IEDT.Stub {
         return WirelessManager.enableGps(enable, this.context);
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
+    @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"})
     @Override
     public boolean enableWwan(boolean enable) {
         Log.d(TAG, "enableWwan(" + enable + ")");
@@ -719,7 +725,7 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public ObjectParcelable invokeMethod(ObjectParcelable obj, String methodName) {
-        return ReflectionManager.doGenericInvokeMethod(obj, methodName, new ObjectParcelable[] {});
+        return ReflectionManager.doGenericInvokeMethod(obj, methodName, new ObjectParcelable[]{});
     }
 
     @Override
@@ -729,7 +735,7 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public ObjectParcelable invokeMethodStatic(String declaringClassName, String methodName) {
-        return ReflectionManager.doGenericInvokeMethod(declaringClassName, methodName, new ObjectParcelable[] {});
+        return ReflectionManager.doGenericInvokeMethod(declaringClassName, methodName, new ObjectParcelable[]{});
     }
 
     @Override
@@ -955,5 +961,85 @@ public class EDTImpl extends IEDT.Stub {
             return false;
         }
         return Security.enableDeviceAdmin(this.context, packageName, className, makeAdmin);
+    }
+
+    @Override
+    public boolean installApk(String apkFilename, boolean update) {
+        Log.d(TAG, "installApk");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools installApk!");
+            return false;
+        }
+        return AppManager.installApk(this.context, apkFilename, update);
+    }
+
+    @Override
+    public boolean uninstallPackage(String packageName, boolean keepData) {
+        Log.d(TAG, "uninstallPackage");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools uninstallPackage!");
+            return false;
+        }
+        return AppManager.uninstallPackage(this.context, packageName, keepData);
+    }
+
+    @Override
+    public boolean clearDataForPackage(String packageName) {
+        Log.d(TAG, "clearDataForPackage");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools clearDataForPackage!");
+            return false;
+        }
+        return AppManager.clearDataForPackage(this.context, packageName);
+    }
+
+    @Override
+    public boolean clearCacheForPackage(String packageName) {
+        Log.d(TAG, "clearCacheForPackage");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools clearCacheForPackage!");
+            return false;
+        }
+        return AppManager.clearCacheForPackage(this.context, packageName);
+    }
+
+    @Override
+    public boolean enableApplication(String packageName) {
+        Log.d(TAG, "enableApplication");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools enableApplication!");
+            return false;
+        }
+        return AppManager.enableApplication(this.context, packageName);
+    }
+
+    @Override
+    public boolean disableApplication(String packageName) {
+        Log.d(TAG, "disableApplication");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools disableApplication!");
+            return false;
+        }
+        return AppManager.disableApplication(this.context, packageName);
+    }
+
+    @Override
+    public boolean enableBatteryOptimization(String packageName) {
+        Log.d(TAG, "enableBatteryOptimization");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools enableBatteryOptimization!");
+            return false;
+        }
+        return AppManager.enableBatteryOptimization(this.context, packageName);
+    }
+
+    @Override
+    public boolean disableBatteryOptimization(String packageName) {
+        Log.d(TAG, "disableBatteryOptimization");
+        if (this.context == null) {
+            Log.d(TAG, "No Context specified for EDT Tools disableBatteryOptimization!");
+            return false;
+        }
+        return AppManager.disableBatteryOptimization(this.context, packageName);
     }
 }

@@ -1,20 +1,18 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.service;
 
 import android.accounts.Account;
 import android.annotation.SuppressLint;
-import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.provider.Settings;
 import android.util.Log;
 
 import java.util.Arrays;
 
 public class PowerManager {
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     private static String TAG = "EDT (PowerManager)";
 
     public static final String ACTION_REQUEST_SHUTDOWN_7 = "com.android.intent.action.REQUEST_SHUTDOWN";
@@ -36,15 +34,15 @@ public class PowerManager {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
-    public static String getApplicationName(Context context) {
-        logMethodEntranceExit(true);
-        ApplicationInfo applicationInfo = context.getApplicationInfo();
-        int stringId = applicationInfo.labelRes;
-        logMethodEntranceExit(false);
-        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
-    }
+//    public static String getApplicationName(Context context) {
+//        logMethodEntranceExit(true);
+//        ApplicationInfo applicationInfo = context.getApplicationInfo();
+//        int stringId = applicationInfo.labelRes;
+//        logMethodEntranceExit(false);
+//        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
+//    }
 
-    @SuppressLint("WrongConstant")
+    @SuppressLint({"WrongConstant", "ObsoleteSdkInt"})
     public static boolean shutdown(Context context) {
         logMethodEntranceExit(true);
         try {
@@ -125,12 +123,12 @@ public class PowerManager {
             AccManager.removeAllGoogleAccounts(context);
             Account[] accounts = AccManager.getGoogleAccounts(context);
             if (accounts == null) {
-                Log.e(TAG, String.format("factoryReset(%b) error: Calling getGoogleAccounts() failed!", removeAccounts));
+                Log.e(TAG, "factoryReset(true) error: Calling getGoogleAccounts() failed!");
                 logMethodEntranceExit(false);
                 return false;
             }
             if (accounts.length != 0) {
-                Log.e(TAG, String.format("factoryReset(%b) error: %d Google accounts remained after calling removeAllGoogleAccounts!", removeAccounts, accounts.length));
+                Log.e(TAG, String.format("factoryReset(true) error: %d Google accounts remained after calling removeAllGoogleAccounts!", accounts.length));
                 logMethodEntranceExit(false);
                 return false;
             }
@@ -166,8 +164,6 @@ public class PowerManager {
             mDPM.setMaximumTimeToLock(mAdminName, milliseconds);
         }
 
-        boolean retVal = Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, milliseconds);
-
-        return retVal;
+        return Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, milliseconds);
     }
 }

@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.barcodescanner;
+package com.casioeurope.mis.edt.service.barcodescanner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ScanLib {
 
+    @SuppressWarnings("unused")
     private static final String TAG_SCANSETTINGS = "[CSS]";
 
     public static boolean getCurrentScanSettings(String settingsFilePath, Context context) {
@@ -24,7 +25,7 @@ public class ScanLib {
             getJson = false;
         }
         boolean retVal = false;
-        if (getXml) retVal |= getSettingsXml(fileNameCurrentXml, context);
+        if (getXml) retVal = getSettingsXml(fileNameCurrentXml, context);
         if (getJson) retVal |= getSettingsJson(fileNameCurrentJson, context);
         return retVal;
     }
@@ -54,10 +55,9 @@ public class ScanLib {
             else return true;
         } else if (setJson) {
             return setSettingsJson(fileNameNewJson);
-        } else if (setXml) {
+        } else {
             return setSettingsXml(fileNameNewXml);
         }
-        else return false;
     }
 
     public static boolean getCurrentAndSetNewScanSettings(String settingsFilePath, Context context) {
@@ -66,15 +66,17 @@ public class ScanLib {
         return retVal;
     }
 
+    @SuppressWarnings("unused")
     private static boolean getSettingsJson(String jsonFilePath, Context context) {
         return false;
     }
 
+    @SuppressWarnings("unused")
     private static boolean getSettingsXml(String xmlFilePath, Context context) {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "unused", "RedundantSuppression"})
     private static void scanFile(String path, Context context) {
         Uri contentUri = Uri.fromFile(new File(path));
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -82,14 +84,17 @@ public class ScanLib {
         context.sendBroadcast(mediaScanIntent);
     }
 
+    @SuppressWarnings("unused")
     private static boolean setSettingsJson(String jsonFilePath) {
         return false;
     }
 
+    @SuppressWarnings("unused")
     private static boolean setSettingsXml(String xmlFilePath) {
         return false;
     }
 
+    @SuppressWarnings("unused")
     static int[] getValidSymbologies() {
         List<Integer> validSymbologyIDs = new ArrayList<>();
         return toArray(validSymbologyIDs);

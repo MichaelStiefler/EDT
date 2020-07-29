@@ -17,48 +17,48 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
 
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ReadWriteFileParamsParcelable)";
-    private static final boolean LOG_METHOD_ENTRANCE_EXIT = true;
+    private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
-        String nameOfCurrMethod = Thread.currentThread()
+        String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
-        if (nameOfCurrMethod.startsWith("access$")) { // Inner Class called this method!
-            nameOfCurrMethod = Thread.currentThread()
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
                     .getStackTrace()[4]
                     .getMethodName();
         }
         StringBuilder sb = new StringBuilder(addonTags.length);
         Arrays.stream(addonTags).forEach(sb::append);
 
-        Log.v(TAG, nameOfCurrMethod + " " + sb.toString() + (entrance?" +":" -"));
+        Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
     static final Creator<ReadWriteFileParamsParcelable> CREATOR = new Creator<ReadWriteFileParamsParcelable>() {
         public ReadWriteFileParamsParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
-            ReadWriteFileParamsParcelable rwfpp = new ReadWriteFileParamsParcelable(new ReadWriteFileParams());
-            rwfpp.path = Paths.get(Objects.requireNonNull(in.readString()));
-            rwfpp.data = new byte[in.readInt()];
-            in.readByteArray(rwfpp.data);
-            rwfpp.fileOffset = in.readInt();
-            rwfpp.dataOffset = in.readInt();
-            rwfpp.length = in.readInt();
+            ReadWriteFileParamsParcelable readWriteFileParamsParcelable = new ReadWriteFileParamsParcelable(new ReadWriteFileParams());
+            readWriteFileParamsParcelable.path = Paths.get(Objects.requireNonNull(in.readString()));
+            readWriteFileParamsParcelable.data = new byte[in.readInt()];
+            in.readByteArray(readWriteFileParamsParcelable.data);
+            readWriteFileParamsParcelable.fileOffset = in.readInt();
+            readWriteFileParamsParcelable.dataOffset = in.readInt();
+            readWriteFileParamsParcelable.length = in.readInt();
             @SuppressWarnings("unchecked")
             List<String> optionStrings = (List<String>)in.readArrayList(String.class.getClassLoader());
             if (optionStrings == null)
-                rwfpp.options = null;
+                readWriteFileParamsParcelable.options = null;
             else {
-                rwfpp.options = new ArrayList<>(optionStrings.size());
+                readWriteFileParamsParcelable.options = new ArrayList<>(optionStrings.size());
                 List<String> standardOpenOptionStrings = Arrays.stream(StandardOpenOption.values()).map(Enum::toString).collect(Collectors.toList());
                 List<String> linkOptionStrings = Arrays.stream(LinkOption.values()).map(Enum::toString).collect(Collectors.toList());
                 for (int i = 0; i < optionStrings.size(); i++) {
                     try {
                         if (standardOpenOptionStrings.contains(optionStrings.get(i)))
-                            rwfpp.options.add(StandardOpenOption.valueOf(optionStrings.get(i)));
+                            readWriteFileParamsParcelable.options.add(StandardOpenOption.valueOf(optionStrings.get(i)));
                         else if (linkOptionStrings.contains(optionStrings.get(i)))
-                            rwfpp.options.add(LinkOption.valueOf(optionStrings.get(i)));
+                            readWriteFileParamsParcelable.options.add(LinkOption.valueOf(optionStrings.get(i)));
                         else
                             Log.d(TAG, String.format("OpenOption named \"%s\" unknown, will be ignored!", optionStrings.get(i)));
                     } catch (Exception e) {
@@ -67,7 +67,7 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
                 }
             }
             logMethodEntranceExit(false);
-            return rwfpp;
+            return readWriteFileParamsParcelable;
         }
 
         public ReadWriteFileParamsParcelable[] newArray(int size) {
@@ -75,15 +75,15 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
         }
     };
 
-    public ReadWriteFileParamsParcelable(ReadWriteFileParams rwfp) {
+    public ReadWriteFileParamsParcelable(ReadWriteFileParams readWriteFileParams) {
         super();
         logMethodEntranceExit(true);
-        this.path = rwfp.path;
-        this.data = rwfp.data;
-        this.fileOffset = rwfp.fileOffset;
-        this.dataOffset = rwfp.dataOffset;
-        this.length = rwfp.length;
-        this.options = rwfp.options;
+        this.path = readWriteFileParams.path;
+        this.data = readWriteFileParams.data;
+        this.fileOffset = readWriteFileParams.fileOffset;
+        this.dataOffset = readWriteFileParams.dataOffset;
+        this.length = readWriteFileParams.length;
+        this.options = readWriteFileParams.options;
         logMethodEntranceExit(false);
     }
 

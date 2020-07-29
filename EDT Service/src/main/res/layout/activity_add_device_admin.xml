@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.casioeurope.mis.edt.AddDeviceAdminActivity">
+    tools:context="com.casioeurope.mis.edt.service.AddDeviceAdminActivity">
 </androidx.constraintlayout.widget.ConstraintLayout>
 <!--<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
