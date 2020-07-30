@@ -44,10 +44,16 @@ public class AddDeviceAdminActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         logMethodEntranceExit(true);
         super.onCreate(savedInstanceState);
+        this.doOnCreate();
+        logMethodEntranceExit(false);
+        this.finish();
+    }
+
+    private void doOnCreate() {
+        logMethodEntranceExit(true);
         com.casioeurope.mis.edt.service.databinding.ActivityAddDeviceAdminBinding activityAddDeviceAdminBinding = ActivityAddDeviceAdminBinding.inflate(getLayoutInflater());
         View view = activityAddDeviceAdminBinding.getRoot();
         setContentView(view);
-        //setContentView(R.layout.activity_add_device_admin);
         DevicePolicyManager mDPM = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
         ComponentName mAdminName = new ComponentName(this, MyAdmin.class);
 
@@ -74,11 +80,10 @@ public class AddDeviceAdminActivity extends Activity {
             // Already is a device administrator, can do security operations now.
             Log.v(TAG, "EDT is Device Admin already!");
         }
-
-        // Note: The application should check  the result of the ACTION_ADD_DEVICE_ADMIN. Add below code lines in the onActivityResult() method:
         logMethodEntranceExit(false);
-        this.finish();
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         logMethodEntranceExit(true, "requestCode=" + requestCode + ", resultCode=" + resultCode);
@@ -87,10 +92,15 @@ public class AddDeviceAdminActivity extends Activity {
     }
 
     public static class MyAdmin extends DeviceAdminReceiver {
+       @SuppressWarnings("unused")
+       private CharSequence doOnDisableRequested(Context context, Intent intent) {
+           return context.getString(R.string.admin_receiver_status_disable_warning);
+       }
+
        @SuppressWarnings("NullableProblems")
        @Override
-        public CharSequence onDisableRequested(Context context, Intent intent) {
-            return context.getString(R.string.admin_receiver_status_disable_warning);
-        }
+       public CharSequence onDisableRequested(Context context, Intent intent) {
+            return doOnDisableRequested(context, intent);
+       }
     }
 }
