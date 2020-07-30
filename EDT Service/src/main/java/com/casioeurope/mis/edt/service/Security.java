@@ -37,6 +37,7 @@ public class Security {
         return resetPassword("", context);
     }
 
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public static boolean resetPassword(String newPassword, Context context) {
         logMethodEntranceExit(true, String.format("resetPassword(%s, %s)", newPassword, context.getPackageName()));
         try {

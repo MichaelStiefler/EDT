@@ -40,12 +40,12 @@ public class ScanLib {
             getJson = false;
         }
         boolean retVal = false;
-        if (getXml) retVal |= getSettingsXml(fileNameCurrentXml, context);
+        if (getXml) retVal = getSettingsXml(fileNameCurrentXml, context);
         if (getJson) retVal |= getSettingsJson(fileNameCurrentJson, context);
         return retVal;
     }
 
-    public static boolean setNewScanSettings(String settingsFilePath) {
+    public static boolean setNewScanSettings(String settingsFilePath, @SuppressWarnings("unused") Context context) {
         String fileNameNewJson = "";
         String fileNameNewXml = "";
         boolean setJson = true, setXml = true;
@@ -70,22 +70,21 @@ public class ScanLib {
             else return true;
         } else if (setJson) {
             return setSettingsJson(fileNameNewJson);
-        } else if (setXml) {
+        } else {
             return setSettingsXml(fileNameNewXml);
         }
-        else return false;
     }
 
     public static boolean getCurrentAndSetNewScanSettings(String settingsFilePath, Context context) {
         boolean retVal = getCurrentScanSettings(settingsFilePath, context);
-        retVal &= setNewScanSettings(settingsFilePath);
+        retVal &= setNewScanSettings(settingsFilePath, context);
         return retVal;
     }
 
     private static boolean getSettingsJson(String jsonFilePath, Context context) {
         scanLib = new ScannerLibrary();
         int[] validSymbologies = ScanLib.getValidSymbologies();
-        ScannerLibraryProperties scannerLibraryProperties = ScanLib.getCommonSettings(scanLib);
+        com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties scannerLibraryProperties = ScanLib.getCommonSettings(scanLib);
 
         for (int validSymbology:validSymbologies) {
             scannerLibraryProperties.getSymbologies().add(ScanLib.getSymbologies(scanLib, validSymbology));
@@ -109,13 +108,12 @@ public class ScanLib {
     private static boolean getSettingsXml(String xmlFilePath, Context context) {
         scanLib = new ScannerLibrary();
         int[] validSymbologies = ScanLib.getValidSymbologies();
-        ScannerLibraryProperties scannerLibraryProperties = ScanLib.getCommonSettings(scanLib);
+        com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties scannerLibraryProperties = ScanLib.getCommonSettings(scanLib);
 
         for (int validSymbology:validSymbologies) {
             scannerLibraryProperties.getSymbologies().add(ScanLib.getSymbologies(scanLib, validSymbology));
         }
 
-//        Serializer serializer = new Persister(new org.simpleframework.xml.stream.Format(2, new CamelCaseStyle()));
         Serializer serializer = new Persister();
         File result = new File(xmlFilePath);
         try {
@@ -128,7 +126,7 @@ public class ScanLib {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     private static void scanFile(String path, Context context) {
         Uri contentUri = Uri.fromFile(new File(path));
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -146,10 +144,10 @@ public class ScanLib {
                 return false;
             }
             Reader reader = new FileReader(jsonFilePath);
-            ScannerLibraryProperties scannerLibraryProperties = gson.fromJson(reader, ScannerLibraryProperties.class);
+            com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties scannerLibraryProperties = gson.fromJson(reader, com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties.class);
             reader.close();
             ScanLib.setCommonSettings(scanLib, scannerLibraryProperties);
-            for (Symbology symbology:scannerLibraryProperties.getSymbologies()) {
+            for (com.casioeurope.mis.edt.service.barcodescanner.Symbology symbology:scannerLibraryProperties.getSymbologies()) {
                 ScanLib.setSymbologies(scanLib, symbology);
             }
             return true;
@@ -167,9 +165,9 @@ public class ScanLib {
                 return false;
             }
             Serializer serializer = new Persister();
-            ScannerLibraryProperties scannerLibraryProperties = serializer.read(ScannerLibraryProperties.class, file);
+            com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties scannerLibraryProperties = serializer.read(com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties.class, file);
             ScanLib.setCommonSettings(scanLib, scannerLibraryProperties);
-            for (Symbology symbology:scannerLibraryProperties.getSymbologies()) {
+            for (com.casioeurope.mis.edt.service.barcodescanner.Symbology symbology:scannerLibraryProperties.getSymbologies()) {
                 ScanLib.setSymbologies(scanLib, symbology);
             }
             return true;
@@ -202,23 +200,23 @@ public class ScanLib {
         return ret;
     }
 
-    private static SymbologyProperty getSymbologyProperties(ScannerLibrary scanLib, int symbologyId, int propertyId) {
+    private static com.casioeurope.mis.edt.service.barcodescanner.SymbologyProperty getSymbologyProperties(ScannerLibrary scanLib, int symbologyId, int propertyId) {
         int retVal = scanLib.getSymbologyProperty(symbologyId, propertyId);
         if (retVal == ScannerLibrary.CONSTANT.RETURN.ERROR_PARAMETER
                 || retVal == ScannerLibrary.CONSTANT.RETURN.ERROR_UNSUPPORTED) return null;
-        return new SymbologyProperty(propertyId, retVal);
+        return new com.casioeurope.mis.edt.service.barcodescanner.SymbologyProperty(propertyId, retVal);
     }
 
-    private static void setSymbologyProperties(ScannerLibrary scanLib, Symbology symbology) {
-        for (SymbologyProperty symbologyProperty:symbology.getProperties()) {
+    private static void setSymbologyProperties(ScannerLibrary scanLib, com.casioeurope.mis.edt.service.barcodescanner.Symbology symbology) {
+        for (com.casioeurope.mis.edt.service.barcodescanner.SymbologyProperty symbologyProperty:symbology.getProperties()) {
             int retVal = scanLib.setSymbologyProperty(symbology.getId(), symbologyProperty.getId(), symbologyProperty.getValue());
             if (retVal != ScannerLibrary.CONSTANT.RETURN.SUCCESS)
                 Log.d(TAG_SCANSETTINGS, "setSymbologyProperty(" + symbology.getId() + ", " + symbologyProperty.getId() + ", " + symbologyProperty.getValue() + ") = " + retVal);
         }
     }
 
-    static Symbology getSymbologies(ScannerLibrary scanLib, int symbologyId) {
-        Symbology symbology = new Symbology(symbologyId);
+    static com.casioeurope.mis.edt.service.barcodescanner.Symbology getSymbologies(ScannerLibrary scanLib, int symbologyId) {
+        com.casioeurope.mis.edt.service.barcodescanner.Symbology symbology = new com.casioeurope.mis.edt.service.barcodescanner.Symbology(symbologyId);
 
         int retVal = scanLib.getSymbologyEnable(symbologyId);
         if (retVal != ScannerLibrary.CONSTANT.RETURN.ERROR_UNSUPPORTED
@@ -246,7 +244,7 @@ public class ScanLib {
 
         int propertyId = 0;
 
-        SymbologyProperty symbologyProperty;
+        com.casioeurope.mis.edt.service.barcodescanner.SymbologyProperty symbologyProperty;
 
         do {
             symbologyProperty = getSymbologyProperties(scanLib, symbologyId, propertyId++);
@@ -256,7 +254,7 @@ public class ScanLib {
         return symbology;
     }
 
-    static void setSymbologies(ScannerLibrary scanLib, Symbology symbology) {
+    static void setSymbologies(ScannerLibrary scanLib, com.casioeurope.mis.edt.service.barcodescanner.Symbology symbology) {
 
         int retVal = scanLib.setSymbologyEnable(symbology.getId(), symbology.isEnabled()?ScannerLibrary.CONSTANT.SYMBOLOGY_PARAMETER.ENABLE:ScannerLibrary.CONSTANT.SYMBOLOGY_PARAMETER.DISABLE);
         if (retVal != ScannerLibrary.CONSTANT.RETURN.SUCCESS)
@@ -281,8 +279,8 @@ public class ScanLib {
         setSymbologyProperties(scanLib, symbology);
     }
 
-    static ScannerLibraryProperties getCommonSettings(ScannerLibrary scanLib) {
-        ScannerLibraryProperties scannerLibraryProperties = new ScannerLibraryProperties();
+    static com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties getCommonSettings(ScannerLibrary scanLib) {
+        com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties scannerLibraryProperties = new com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties();
         int retVal = scanLib.getNotificationLED();
         if (retVal != ScannerLibrary.CONSTANT.RETURN.ERROR_UNSUPPORTED)
             scannerLibraryProperties.setNotificationLED(retVal);
@@ -371,7 +369,7 @@ public class ScanLib {
         return scannerLibraryProperties;
     }
 
-    static void setCommonSettings(ScannerLibrary scanLib, ScannerLibraryProperties scannerLibraryProperties) {
+    static void setCommonSettings(ScannerLibrary scanLib, com.casioeurope.mis.edt.service.barcodescanner.ScannerLibraryProperties scannerLibraryProperties) {
         int retVal = scanLib.setNotificationLED(scannerLibraryProperties.getNotificationLED());
         if (retVal != ScannerLibrary.CONSTANT.RETURN.SUCCESS)
             Log.d(TAG_SCANSETTINGS, "setNotificationLED(" + scannerLibraryProperties.getNotificationLED() + ") = " + retVal);

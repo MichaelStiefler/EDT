@@ -172,10 +172,15 @@ public class EDTLib {
      * @return {@link java.nio.file.Path Path} to the target file or {@link javax.lang.model.type.NullType null} if operation failed
      * @apiNote This method follows the specification of the Android API {@link java.nio.file.Files#copy(Path, Path, CopyOption...) copy} method.<br/>
      * It's purpose is to give user applications the ability to copy files which are out of reach for non-system apps.
+     * @apiNote Requires Android O (Android 8) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code null}.
      * @since 1.00
      */
     @SuppressWarnings({"unused", "JavadocReference"})
     public static Path copyFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            return null;
+        }
         try {
             List<String> copyOptionStrings = options == null ? null : Arrays.stream(options).map(Object::toString).collect(Collectors.toList());
             String retVal = getInstance().edtService().copyFile(sourceFilePath.toString(), destinationFilePath.toString(), copyOptionStrings);
@@ -209,6 +214,8 @@ public class EDTLib {
      *
      * @param filePath {@link java.lang.String String}: Path (including name) of the file to be removed
      * @return boolean whether or not the file has been removed successfully
+     * @apiNote Requires Android O (Android 8) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
     @SuppressWarnings("unused")
@@ -489,6 +496,8 @@ public class EDTLib {
      *
      * @param enabled {@code boolean}: true enables WWAN, false disables it
      * @return boolean whether or not WWAN could be enabled/disabled
+     * @apiNote Requires Android O (Android 8) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
     @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
@@ -772,10 +781,15 @@ public class EDTLib {
      * @return {@link java.nio.file.Path Path} to the target file or {@link javax.lang.model.type.NullType null} if operation failed
      * @apiNote This method follows the specification of the Android API {@link java.nio.file.Files#move(Path, Path, CopyOption...) move} method.<br/>
      * It's purpose is to give user applications the ability to move files which are out of reach for non-system apps.
+     * @apiNote Requires Android O (Android 8) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code null}.
      * @since 1.00
      */
     @SuppressWarnings({"unused", "JavadocReference"})
     public static Path moveFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            return null;
+        }
         try {
             List<String> copyOptionStrings = options == null ? null : Arrays.stream(options).map(Object::toString).collect(Collectors.toList());
             String retVal = getInstance().edtService().moveFile(sourceFilePath.toString(), destinationFilePath.toString(), copyOptionStrings);
@@ -817,6 +831,8 @@ public class EDTLib {
      * @apiNote the {@link ReadWriteFileParams#getData() data buffer} of {@link ReadWriteFileParams readWriteFileParams} is optional.<br/>
      * If this method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
      * If this method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
+     * @apiNote Requires Android O (Android 8) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @see ReadWriteFileParams ReadWriteFileParams for further details.
      * @since 1.00
      */
@@ -1007,10 +1023,15 @@ public class EDTLib {
      *
      * @param date {@link java.util.Date Date}: The Date and Time to be set
      * @return {@code boolean} whether or not the new Date/Time could be set
+     * @apiNote Requires Android N (Android 7) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
     @SuppressWarnings("unused")
     public static boolean setDateTime(Date date) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
+            return false;
+        }
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
@@ -1137,10 +1158,15 @@ public class EDTLib {
      *
      * @param timeZone {@link android.icu.util.TimeZone TimeZone}: The new Time Zone to be set
      * @return {@code boolean} whether or not the new Time Zone could be set
+     * @apiNote Requires Android N (Android 7) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
     @SuppressWarnings("unused")
     public static boolean setTimeZone(TimeZone timeZone) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
+            return false;
+        }
         try {
             // Convert TimeZone to String because AIDL can handle limited data types only
             return getInstance().edtService().setTimeZone(timeZone.getDisplayName());
@@ -1292,6 +1318,8 @@ public class EDTLib {
      * @apiNote the {@link ReadWriteFileParams#getData() data buffer} of {@link ReadWriteFileParams readWriteFileParams} is mandatory.<br/>
      * If this method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to write the specified amount of data.<br/>
      * If this method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will fail.
+     * @apiNote Requires Android O (Android 8) or later.<br/>
+     * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @see ReadWriteFileParams ReadWriteFileParams for further details.
      * @since 1.00
      */

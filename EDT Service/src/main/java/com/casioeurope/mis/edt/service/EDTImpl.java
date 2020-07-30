@@ -3,7 +3,7 @@ package com.casioeurope.mis.edt.service;
 import android.accounts.Account;
 import android.app.AlarmManager;
 import android.content.Context;
-import android.icu.util.Calendar;
+import java.util.Calendar;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class EDTImpl extends IEDT.Stub {
 
     private Context context;
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     private Handler handler = new Handler();
 
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
@@ -249,7 +250,11 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public String copyFile(String sourceFilePath, String destinationFilePath, List<String> options) {
-        Log.d(TAG, String.format("copyFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+        logMethodEntranceExit(true, String.format("copyFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            logMethodEntranceExit(false, String.format("copyFile(%s, %s, %s) = null", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+            return null;
+        }
         try {
             CopyOption[] copyOptions = null;
             if (options != null) {
@@ -280,7 +285,11 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public String moveFile(String sourceFilePath, String destinationFilePath, List<String> options) {
-        Log.d(TAG, String.format("moveFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+        logMethodEntranceExit(true, String.format("moveFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            logMethodEntranceExit(false, String.format("moveFile(%s, %s, %s) = null", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+            return null;
+        }
         try {
             CopyOption[] copyOptions = null;
             if (options != null) {
@@ -311,7 +320,11 @@ public class EDTImpl extends IEDT.Stub {
 
     @Override
     public boolean deleteFile(String filePath) {
-        Log.d(TAG, "deleteFile(" + filePath + ")");
+        logMethodEntranceExit(true, "deleteFile(" + filePath + ")");
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            logMethodEntranceExit(false, "deleteFile(" + filePath + ") = false");
+            return false;
+        }
         try {
             return Files.deleteIfExists(Paths.get(filePath));
         } catch (IOException e) {
@@ -342,13 +355,13 @@ public class EDTImpl extends IEDT.Stub {
             Log.d(TAG, "No Context specified for EDT Tools getCurrentScanSettings!");
             return false;
         }
-        return ScanLib.getCurrentScanSettings(settingsFilePath, context);
+        return ScanLib.getCurrentScanSettings(settingsFilePath, this.context);
     }
 
     @Override
     public boolean setNewScanSettings(String settingsFilePath) {
         Log.d(TAG, "setNewScanSettings(" + settingsFilePath + ")");
-        return ScanLib.setNewScanSettings(settingsFilePath);
+        return ScanLib.setNewScanSettings(settingsFilePath, this.context);
     }
 
     @Override

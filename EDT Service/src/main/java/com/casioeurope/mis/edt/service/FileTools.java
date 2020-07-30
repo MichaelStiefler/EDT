@@ -42,6 +42,10 @@ public class FileTools {
 
     public static boolean readFile(ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
         logMethodEntranceExit(true);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            logMethodEntranceExit(false);
+            return false;
+        }
         Log.d(TAG, String.format("readFile(%s)", readWriteFileParamsParcelable.getPath().toString()));
         InputStream is = null;
         try {
@@ -84,6 +88,10 @@ public class FileTools {
 
     public static boolean writeFile(ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
         logMethodEntranceExit(true);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            logMethodEntranceExit(false);
+            return false;
+        }
         Log.d(TAG, String.format("writeFile(%s)", readWriteFileParamsParcelable.getPath().toString()));
         OutputStream os = null;
         if (readWriteFileParamsParcelable.getData() == null) {

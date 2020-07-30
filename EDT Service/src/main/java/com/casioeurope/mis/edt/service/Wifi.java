@@ -36,7 +36,7 @@ public class Wifi {
         logMethodEntranceExit(true, String.format(Locale.getDefault(), "enableWifi(%s, %s)", enable, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             retVal=wManager.setWifiEnabled(enable);
         } catch (Exception e) {
             Log.d(TAG, "Error in enableWifi():");
@@ -51,7 +51,7 @@ public class Wifi {
         logMethodEntranceExit(true, String.format(Locale.getDefault(), "addNetwork(%s, %s)", wifiConfigurationParcelable==null?"null":wifiConfigurationParcelable.SSID, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             android.net.wifi.WifiConfiguration wifiConfiguration = Objects.requireNonNull(wifiConfigurationParcelable).getWifiConfiguration();
             retVal = (wifiManager.addNetwork(wifiConfiguration) != -1);
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class Wifi {
             logMethodEntranceExit(true, String.format(Locale.getDefault(), "updateNetwork(%s, %s)", wifiConfigurationParcelable.SSID, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             android.net.wifi.WifiConfiguration wifiConfiguration = Objects.requireNonNull(wifiConfigurationParcelable).getWifiConfiguration();
             retVal = (wifiManager.updateNetwork(wifiConfiguration) != -1);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class Wifi {
         logMethodEntranceExit(true, String.format(Locale.getDefault(), "removeNetwork(%s, %s)", ssid, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             outerloop:
             //noinspection ConstantConditions
             do {
@@ -121,7 +121,7 @@ public class Wifi {
         logMethodEntranceExit(true, String.format(Locale.getDefault(), "removeNetwork(%d, %s)", networkId, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             retVal = wifiManager.removeNetwork(networkId);
         } catch (Exception e) {
             Log.d(TAG, "Error in removeNetwork():");
@@ -137,7 +137,7 @@ public class Wifi {
         logMethodEntranceExit(true, String.format(Locale.getDefault(), "connectNetwork(%s, %s)", ssid, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             outerloop:
             //noinspection ConstantConditions
             do {
@@ -165,7 +165,7 @@ public class Wifi {
         logMethodEntranceExit(true, String.format(Locale.getDefault(), "connectNetwork(%d, %s)", networkId, context==null?"null":context.getPackageName()));
         boolean retVal;
         try {
-            WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
+            @SuppressLint("WifiManagerLeak") WifiManager wifiManager = (WifiManager) Objects.requireNonNull(context).getSystemService(Context.WIFI_SERVICE);
             retVal = wifiManager.enableNetwork(networkId, true);
             retVal &= wifiManager.reconnect();
         } catch (Exception e) {

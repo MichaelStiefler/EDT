@@ -38,6 +38,10 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
     static final Creator<ReadWriteFileParamsParcelable> CREATOR = new Creator<ReadWriteFileParamsParcelable>() {
         public ReadWriteFileParamsParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                logMethodEntranceExit(false);
+                return null;
+            }
             ReadWriteFileParamsParcelable readWriteFileParamsParcelable = new ReadWriteFileParamsParcelable(new ReadWriteFileParams());
             readWriteFileParamsParcelable.path = Paths.get(Objects.requireNonNull(in.readString()));
             readWriteFileParamsParcelable.data = new byte[in.readInt()];

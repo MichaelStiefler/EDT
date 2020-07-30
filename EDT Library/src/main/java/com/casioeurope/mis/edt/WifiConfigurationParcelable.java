@@ -7,7 +7,7 @@ import android.os.Parcelable;
 
 import java.util.BitSet;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "RedundantSuppression"})
 public class WifiConfigurationParcelable extends android.net.wifi.WifiConfiguration implements Parcelable {
 
     private static BitSet readBitSet(Parcel src) {
@@ -67,7 +67,9 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
         this.allowedProtocols = conf.allowedProtocols;
         this.enterpriseConfig = conf.enterpriseConfig;
         this.hiddenSSID = conf.hiddenSSID;
-        this.isHomeProviderNetwork = conf.isHomeProviderNetwork;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            this.isHomeProviderNetwork = conf.isHomeProviderNetwork;
+        }
         this.networkId = conf.networkId;
         this.preSharedKey = conf.preSharedKey;
         this.priority = conf.priority;
@@ -117,7 +119,9 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
         conf.allowedProtocols = this.allowedProtocols;
         conf.enterpriseConfig = this.enterpriseConfig;
         conf.hiddenSSID = this.hiddenSSID;
-        conf.isHomeProviderNetwork = this.isHomeProviderNetwork;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            conf.isHomeProviderNetwork = this.isHomeProviderNetwork;
+        }
         conf.networkId = this.networkId;
         conf.preSharedKey = this.preSharedKey;
         conf.priority = this.priority;

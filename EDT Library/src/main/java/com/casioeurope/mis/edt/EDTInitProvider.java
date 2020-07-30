@@ -34,16 +34,21 @@ public class EDTInitProvider extends ContentProvider {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance?" +":" -"));
     }
 
+    private void doOnCreate() {
+        logMethodEntranceExit(true);
+        EDTServiceConnection.getInstance().bind(Objects.requireNonNull(getContext()));
+        logMethodEntranceExit(false);
+    }
+
     @Override
     public boolean onCreate() {
         logMethodEntranceExit(true);
-        EDTServiceConnection.getInstance().bind(Objects.requireNonNull(getContext()));
+        this.doOnCreate();
         logMethodEntranceExit(false);
         return true;
     }
 
-    @Override
-    public void attachInfo(Context context, ProviderInfo providerInfo) {
+    private void doAttachInfo(ProviderInfo providerInfo) {
         logMethodEntranceExit(true);
         if (providerInfo == null) {
             throw new NullPointerException("EDT InitProvider ProviderInfo cannot be null.");
@@ -53,6 +58,13 @@ public class EDTInitProvider extends ContentProvider {
             throw new IllegalStateException("Incorrect provider authority in manifest. Most likely due to a "
                     + "missing applicationId variable in application's build.gradle.");
         }
+        logMethodEntranceExit(false);
+    }
+
+    @Override
+    public void attachInfo(Context context, ProviderInfo providerInfo) {
+        logMethodEntranceExit(true);
+        this.doAttachInfo(providerInfo);
         super.attachInfo(context, providerInfo);
         logMethodEntranceExit(false);
     }

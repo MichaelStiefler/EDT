@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
  *
  * <p>Use {@link ReadWriteFileParams.Builder} to create new instances.</p>
  *
+ * @apiNote Requires Android O (Android 8) or later.<br/>
+ * Using the ReadWriteFileParams class on a device running an earlier version of Android is useless since any method using this class is supported on Android O (Android 8) or later only.
  * @version 1.00
  * @since 1.00
  */

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.casioeurope.mis.edt.service.BuildConfig;
-
 import java.util.Arrays;
 
 @SuppressWarnings("unused")

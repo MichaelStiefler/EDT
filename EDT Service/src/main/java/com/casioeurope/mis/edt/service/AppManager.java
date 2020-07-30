@@ -104,9 +104,13 @@ public class AppManager {
     @SuppressLint("SdCardPath")
     public static boolean clearCacheForPackage(Context context, String packageName) {
         logMethodEntranceExit(true, String.format("clearCacheForPackage(%s, %s)", context.getPackageName(), packageName));
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
+            logMethodEntranceExit(false, String.format("clearDataForPackage(%s, %s) = false", context.getPackageName(), packageName));
+            return false;
+        }
         try {
             StorageManager storage = context.getSystemService(StorageManager.class);
-            List<StorageVolume> volumes=storage.getStorageVolumes();
+            List<StorageVolume> volumes = storage.getStorageVolumes();
             @SuppressWarnings("JavaReflectionMemberAccess") Method getPath = StorageVolume.class.getMethod("getPath");
             List<String> storageVolumePaths = volumes.stream().map(v -> {
                 try {
@@ -122,7 +126,7 @@ public class AppManager {
                 removeCache(String.format("%s/data/data/%s/", storageVolumePath, packageName));
                 removeCache(String.format("%s/data/%s/", storageVolumePath, packageName));
             }
-
+            logMethodEntranceExit(false, String.format("clearDataForPackage(%s, %s) = true", context.getPackageName(), packageName));
             return true;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

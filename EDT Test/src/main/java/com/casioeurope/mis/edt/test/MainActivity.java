@@ -13,7 +13,6 @@ import com.casioeurope.mis.edt.EDTLib;
 import com.casioeurope.mis.edt.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
 
-import java.lang.reflect.Method;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -122,10 +121,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 EDTLib.testMessage(result);
                 Log.d(TAG, result);
             } else if (v==activityMainBinding.buttonSetTimeZone) {
-                Log.d(TAG, "Calling Set TimeZone from Service!");
-                String result = String.format("Set TimeZone Result = %b", EDTLib.setTimeZone(TimeZone.getTimeZone("Europe/Berlin")));
-                EDTLib.testMessage(result);
-                Log.d(TAG, result);
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
+                    EDTLib.testMessage("setting the Time Zone requires Android N (7) or later!");
+                } else {
+                    Log.d(TAG, "Calling Set TimeZone from Service!");
+                    String result = String.format("Set TimeZone Result = %b", EDTLib.setTimeZone(TimeZone.getTimeZone("Europe/Berlin")));
+                    EDTLib.testMessage(result);
+                    Log.d(TAG, result);
+                }
             } else if (v==activityMainBinding.buttonRemoveAllGoogleAccounts) {
                 Log.d(TAG, "Calling Remove all Google Accounts from Service!");
                 String result = String.format("Remove all Google Accounts Result = %b", EDTLib.removeAllGoogleAccounts());
@@ -216,22 +219,34 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 EDTLib.testMessage(result);
                 Log.d(TAG, result);
             } else if (v==activityMainBinding.buttonCopyFile) {
-                Log.d(TAG, "Calling Copy File from Service!");
-                String result = String.format("Copy File Result = %b", EDTLib.copyFile(Paths.get("/sdcard/Download/devinfo.html"), Paths.get("/sdcard/Download/devinfo1.html"), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES, LinkOption.NOFOLLOW_LINKS));
-                EDTLib.testMessage(result);
-                Log.d(TAG, result);
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                    EDTLib.testMessage("copying Files requires Android O (8) or later!");
+                } else {
+                    Log.d(TAG, "Calling Copy File from Service!");
+                    String result = String.format("Copy File Result = %b", EDTLib.copyFile(Paths.get("/sdcard/Download/devinfo.html"), Paths.get("/sdcard/Download/devinfo1.html"), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES, LinkOption.NOFOLLOW_LINKS));
+                    EDTLib.testMessage(result);
+                    Log.d(TAG, result);
+                }
             } else if (v==activityMainBinding.buttonMoveFile) {
-                Log.d(TAG, "Calling Move File from Service!");
-                String result = String.format("Move File Result = %b", EDTLib.moveFile(Paths.get("/sdcard/Download/devinfo1.html"), Paths.get("/sdcard/Download/devinfo2.html")));
-                EDTLib.testMessage(result);
-                Log.d(TAG, result);
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                    EDTLib.testMessage("moving Files requires Android O (8) or later!");
+                } else {
+                    Log.d(TAG, "Calling Move File from Service!");
+                    String result = String.format("Move File Result = %b", EDTLib.moveFile(Paths.get("/sdcard/Download/devinfo1.html"), Paths.get("/sdcard/Download/devinfo2.html")));
+                    EDTLib.testMessage(result);
+                    Log.d(TAG, result);
+                }
             } else if (v==activityMainBinding.buttonReadFile) {
-                Log.d(TAG, "Calling Read File from Service!");
-                byte[] testData = new byte[4096];
-                ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html")).setData(testData).setFileOffset(1).setDataOffset(2).setLength(100).setOptions(StandardOpenOption.READ).build();
-                String result = String.format("Read File Result = %b", EDTLib.readFile(readWriteFileParams));
-                EDTLib.testMessage(result);
-                Log.d(TAG, result);
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                    EDTLib.testMessage("reading Files requires Android O (8) or later!");
+                } else {
+                    Log.d(TAG, "Calling Read File from Service!");
+                    byte[] testData = new byte[4096];
+                    ReadWriteFileParams readWriteFileParams = ReadWriteFileParams.setPath(Paths.get("/sdcard/Download/devinfo.html")).setData(testData).setFileOffset(1).setDataOffset(2).setLength(100).setOptions(StandardOpenOption.READ).build();
+                    String result = String.format("Read File Result = %b", EDTLib.readFile(readWriteFileParams));
+                    EDTLib.testMessage(result);
+                    Log.d(TAG, result);
+                }
             } else if (v==activityMainBinding.getApnList) {
                 Log.d(TAG, "Calling Get All APN List from Service!");
                 APN[] apnArray = EDTLib.getAllApnList();

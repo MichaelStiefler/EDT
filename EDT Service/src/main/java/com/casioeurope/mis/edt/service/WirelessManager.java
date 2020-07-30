@@ -6,6 +6,7 @@ import android.location.LocationManager;
 import android.nfc.NfcAdapter;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -98,7 +99,7 @@ public class WirelessManager {
             if (provider == null || !provider.contains(LocationManager.GPS_PROVIDER)) return true;
             List<String>providers = new ArrayList<>(Arrays.asList(provider.split(",")));
             providers.remove(LocationManager.GPS_PROVIDER);
-            provider = String.join(", ", providers);
+            provider = TextUtils.join(", ", providers);
             try {
                 Settings.Secure.putString (context.getContentResolver(),
                         Settings.Secure.LOCATION_PROVIDERS_ALLOWED,
@@ -115,6 +116,10 @@ public class WirelessManager {
 
     public static boolean enableWwan(boolean enable, Context context) {
         logMethodEntranceExit(true);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            logMethodEntranceExit(false);
+            return false;
+        }
         try {
             TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager == null) return false;

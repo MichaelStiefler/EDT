@@ -63,14 +63,11 @@ public class EDTService extends Service {
         return false;
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
+    private IBinder doOnBind(@SuppressWarnings("unused") Intent intent) {
         logMethodEntranceExit(true);
         if (!isDeviceAdmin()) {
             Log.v(TAG, "isDeviceAdmin() = false");
             if (!makeDeviceAdmin()) {
-//                Intent addDeviceAdminActivityIntent = new Intent(getApplicationContext(), AddDeviceAdminActivity.class);
                 Intent addDeviceAdminActivityIntent = new Intent(getApplicationContext(), AddDeviceAdminActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(addDeviceAdminActivityIntent);
             }
@@ -79,6 +76,14 @@ public class EDTService extends Service {
         }
         logMethodEntranceExit(false);
         return new EDTImpl(getApplicationContext());
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        logMethodEntranceExit(true);
+        logMethodEntranceExit(false);
+        return doOnBind(intent);
     }
 
 }
