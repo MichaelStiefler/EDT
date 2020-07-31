@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.casioeurope.mis.edt">
+
+    <application>
+        <provider
+            android:authorities="${applicationId}.eDTinitProvider"
+            android:exported="false"
+            android:enabled="true"
+            android:name=".EDTInitProvider" />
+    </application>
+</manifest>

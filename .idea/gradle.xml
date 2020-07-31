@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="PLATFORM" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/DeviceLibrary" />
+            <option value="$PROJECT_DIR$/DeviceLibraryDtx400" />
+            <option value="$PROJECT_DIR$/DeviceLibraryItg400" />
+            <option value="$PROJECT_DIR$/DeviceLibraryItg6x0" />
+            <option value="$PROJECT_DIR$/EDT Library" />
+            <option value="$PROJECT_DIR$/EDT Service" />
+            <option value="$PROJECT_DIR$/EDT Test" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.casioeurope.mis.edt.test.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.casioeurope.mis.edt.test.MainActivity"> -->
+
+        <Button
+            android:id="@+id/buttonReboot"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Reboot"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRebootRecovery"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRebootRecovery"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Reboot (Recovery)"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRebootFactory"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonReboot" />
+
+        <Button
+            android:id="@+id/buttonRebootFactory"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Wipe (Factory Reset)"
+            app:layout_constraintBottom_toTopOf="@+id/buttonShutdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRebootRecovery" />
+
+        <Button
+            android:id="@+id/buttonShutdown"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Shutdown"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClearPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRebootFactory" />
+
+        <Button
+            android:id="@+id/buttonClearPassword"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Clear Password"
+            app:layout_constraintBottom_toTopOf="@+id/buttonResetPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonShutdown" />
+
+        <Button
+            android:id="@+id/buttonResetPassword"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Reset Password (1234)"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLockDevice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonClearPassword" />
+
+        <Button
+            android:id="@+id/buttonLockDevice"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Lock Device"
+            app:layout_constraintBottom_toTopOf="@+id/buttonAllowUnknownSources"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonResetPassword" />
+
+        <Button
+            android:id="@+id/buttonAllowUnknownSources"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Allow Unknown Sources"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisallowUnknownSources"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonLockDevice" />
+
+        <Button
+            android:id="@+id/buttonDisallowUnknownSources"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disallow Unknown Sources"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSetDateTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonAllowUnknownSources" />
+
+        <Button
+            android:id="@+id/buttonSetDateTime"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Set Date/Time"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSetTimeZone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisallowUnknownSources" />
+
+        <Button
+            android:id="@+id/buttonSetTimeZone"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Set TimeZone"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRemoveAllGoogleAccounts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSetDateTime" />
+
+        <Button
+            android:id="@+id/buttonRemoveAllGoogleAccounts"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Remove all Google Accounts"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRemoveAllAccounts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSetTimeZone" />
+
+        <Button
+            android:id="@+id/buttonRemoveAllAccounts"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Remove all Accounts"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableWifi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRemoveAllGoogleAccounts" />
+
+        <Button
+            android:id="@+id/buttonEnableWifi"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable Wifi"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableWifi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRemoveAllAccounts" />
+
+        <Button
+            android:id="@+id/buttonDisableWifi"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable Wifi"
+            app:layout_constraintBottom_toTopOf="@+id/buttonAddWifi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableWifi" />
+
+        <Button
+            android:id="@+id/buttonAddWifi"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Add Wifi"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRemoveWifi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableWifi" />
+
+        <Button
+            android:id="@+id/buttonRemoveWifi"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Remove Wifi"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableBluetooth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonAddWifi" />
+
+        <Button
+            android:id="@+id/buttonEnableBluetooth"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable Bluetooth"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableBluetooth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRemoveWifi" />
+
+        <Button
+            android:id="@+id/buttonDisableBluetooth"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable Bluetooth"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableNfc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableBluetooth" />
+
+        <Button
+            android:id="@+id/buttonEnableNfc"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable NFC"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableNfc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableBluetooth" />
+
+        <Button
+            android:id="@+id/buttonDisableNfc"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable NFC"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableGps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableNfc" />
+
+        <Button
+            android:id="@+id/buttonEnableGps"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable GPS"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableGps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableNfc" />
+
+        <Button
+            android:id="@+id/buttonDisableGps"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable GPS"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableWwan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableGps" />
+
+        <Button
+            android:id="@+id/buttonEnableWwan"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable WWAN"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableWwan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableGps" />
+
+        <Button
+            android:id="@+id/buttonDisableWwan"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable WWAN"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableDeveloperMode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableWwan" />
+
+        <Button
+            android:id="@+id/buttonEnableDeveloperMode"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable Developer Mode"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableDeveloperMode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableWwan" />
+
+        <Button
+            android:id="@+id/buttonDisableDeveloperMode"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable Developer Mode"
+            app:layout_constraintBottom_toTopOf="@+id/buttonCopyFile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableDeveloperMode" />
+
+        <Button
+            android:id="@+id/buttonCopyFile"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Copy File"
+            app:layout_constraintBottom_toTopOf="@+id/buttonMoveFile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableDeveloperMode" />
+
+        <Button
+            android:id="@+id/buttonMoveFile"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Move File"
+            app:layout_constraintBottom_toTopOf="@+id/buttonReadFile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonCopyFile" />
+
+        <Button
+            android:id="@+id/buttonReadFile"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Read File"
+            app:layout_constraintBottom_toTopOf="@+id/getApnList"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonMoveFile" />
+
+        <Button
+            android:id="@+id/getApnList"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Get All APNs"
+            app:layout_constraintBottom_toTopOf="@+id/getGoogleAccounts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonReadFile" />
+
+        <Button
+            android:id="@+id/getGoogleAccounts"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Get All Google Accounts"
+            app:layout_constraintBottom_toTopOf="@+id/removeGoogleAccounts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/getApnList" />
+
+        <Button
+            android:id="@+id/removeGoogleAccounts"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Remove All Google Accounts"
+            app:layout_constraintBottom_toTopOf="@+id/installCertificate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/getGoogleAccounts" />
+
+        <Button
+            android:id="@+id/installCertificate"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Install Certificate"
+            app:layout_constraintBottom_toTopOf="@+id/mountSdCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/removeGoogleAccounts" />
+
+        <Button
+            android:id="@+id/mountSdCard"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Mount SD Card"
+            app:layout_constraintBottom_toTopOf="@+id/unmountSdCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/installCertificate" />
+
+        <Button
+            android:id="@+id/unmountSdCard"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Unmount SD Card"
+            app:layout_constraintBottom_toTopOf="@+id/screenLockTimeout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mountSdCard" />
+
+        <Button
+            android:id="@+id/screenLockTimeout"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Set Screen Lock Timeout"
+            app:layout_constraintBottom_toTopOf="@+id/buttonInstallApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/unmountSdCard" />
+
+        <Button
+            android:id="@+id/buttonInstallApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Install App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonUninstallApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/screenLockTimeout" />
+
+        <Button
+            android:id="@+id/buttonUninstallApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Uninstall App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClearData"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonInstallApp" />
+
+        <Button
+            android:id="@+id/buttonClearData"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Clear Data"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClearCache"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonUninstallApp" />
+
+        <Button
+            android:id="@+id/buttonClearCache"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Clear Cache"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonClearData" />
+
+        <Button
+            android:id="@+id/buttonEnableApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableApp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonClearCache" />
+
+        <Button
+            android:id="@+id/buttonDisableApp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable App"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnableDoze"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableApp" />
+
+        <Button
+            android:id="@+id/buttonEnableDoze"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Enable Doze Mode"
+            app:layout_constraintBottom_toTopOf="@+id/buttonDisableDoze"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableApp" />
+
+        <Button
+            android:id="@+id/buttonDisableDoze"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Disable Doze Mode"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnableDoze" />
+
+        <Button
+            android:id="@+id/buttonTestMessage"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:text="Test Message"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDisableDoze" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
