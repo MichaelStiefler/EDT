@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId 'com.casioeurope.mis.edt.service'
+        applicationId 'jp.co.casio.edt.service'
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 100001
@@ -93,15 +93,15 @@ repositories {
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     itg400Implementation project(path: ':DeviceLibraryItg400')
     itg600Implementation project(path: ':DeviceLibraryItg6x0')
     itg650Implementation project(path: ':DeviceLibraryItg6x0')
     dtx400Implementation project(path: ':DeviceLibraryDtx400')
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation project(path: ':EDT Library')
     implementation group: 'commons-io', name: 'commons-io', version: '20030203.000550'
     implementation('org.simpleframework:simple-xml:2.7.1') {

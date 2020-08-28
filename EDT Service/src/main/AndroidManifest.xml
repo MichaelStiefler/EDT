@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.casioeurope.mis.edt.service"
+    package="jp.co.casio.edt.service"
     android:sharedUserId="android.uid.system">
 
-    <!--    package="com.casioeurope.mis.edt.service"
+    <!--    package="jp.co.casio.edt.service"
         android:sharedUserId="android.uid.system"> -->
-    <!--    package="com.casioeurope.mis.edt.service"> -->
+    <!--    package="jp.co.casio.edt.service"> -->
 
     <uses-permission android:name="android.permission.ACCEPT_HANDOVER" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -146,6 +146,7 @@
     <uses-permission
         android:name="android.permission.BIND_CARRIER_SERVICES"
         tools:ignore="ProtectedPermissions" />
+    <!--suppress DeprecatedClassUsageInspection -->
     <uses-permission
         android:name="android.permission.BIND_CHOOSER_TARGET_SERVICE"
         tools:ignore="ProtectedPermissions" />
@@ -1091,18 +1092,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
-            android:name="com.casioeurope.mis.edt.service.AddDeviceAdminActivity"
-            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"></activity>
+            android:name="jp.co.casio.edt.service.AddDeviceAdminActivity"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" />
 
         <service
-            android:name="com.casioeurope.mis.edt.service.EDTService"
+            android:name="jp.co.casio.edt.service.EDTService"
             tools:ignore="ExportedService">
             <intent-filter>
-                <action android:name="com.casioeurope.mis.edt.service.EDTService" />
+                <action android:name="jp.co.casio.edt.service.EDTService" />
             </intent-filter>
         </service>
         <receiver
-            android:name="com.casioeurope.mis.edt.service.AddDeviceAdminActivity$MyAdmin"
+            android:name="jp.co.casio.edt.service.AddDeviceAdminActivity$MyAdmin"
             android:label="EDT Tools Device Admin"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
