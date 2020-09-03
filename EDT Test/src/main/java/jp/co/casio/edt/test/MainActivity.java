@@ -13,7 +13,9 @@ import jp.co.casio.edt.EDTLib;
 import jp.co.casio.edt.ReadWriteFileParams;
 import jp.co.casio.edt.test.databinding.ActivityMainBinding;
 
+import java.nio.file.CopyOption;
 import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -268,16 +270,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.installCertificate) {
                 Log.d(TAG, "Calling Install CA Certificate from Service!");
-                String result = String.format("Install testca.cer Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/testca.cer"));
-                result += "\n" + String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.der"));
-                result += "\n" + String.format("Install admin.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.pem"));
-                result += "\n" + String.format("Install admin.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.pfx"));
-                result += "\n" + String.format("Install mistest.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.der"));
-                result += "\n" + String.format("Install mistest.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.pem"));
-                result += "\n" + String.format("Install mistest.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.pfx"));
-                result += "\n" + String.format("Install zeroshell.example.com.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.der"));
-                result += "\n" + String.format("Install zeroshell.example.com.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.pem"));
-                result += "\n" + String.format("Install zeroshell.example.com.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.pfx"));
+                String result = String.format("Install casio-europe.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/casio-europe.pem"));
+//                result += "\n" + String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.p7b"));
+//                result += "\n" + String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.crt"));
+//                String result = String.format("Install testca.cer Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/testca.cer"));
+//                result += "\n" + String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.der"));
+//                result += "\n" + String.format("Install admin.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.pem"));
+//                result += "\n" + String.format("Install admin.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/admin.pfx"));
+//                result += "\n" + String.format("Install mistest.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.der"));
+//                result += "\n" + String.format("Install mistest.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.pem"));
+//                result += "\n" + String.format("Install mistest.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.pfx"));
+//                result += "\n" + String.format("Install zeroshell.example.com.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.der"));
+//                result += "\n" + String.format("Install zeroshell.example.com.pem Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.pem"));
+//                result += "\n" + String.format("Install zeroshell.example.com.pfx Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/zeroshell.example.com.pfx"));
                 EDTLib.testMessage(result);
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.mountSdCard) {
@@ -297,12 +302,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonInstallApp) {
                 Log.d(TAG, "Calling Install App from Service!");
-                String result = String.format("Install App Result = %b", EDTLib.installApk("/sdcard/OSUpdateService.apk", false));
+//                String result = String.format("Install App Result = %b", EDTLib.installApk("/sdcard/OSUpdateService.apk", false));
+               // String result = String.format("Install App Result = %b", EDTLib.installApk("/sdcard/ScanDemo_ET-L10.apk", false));
+                String result = String.format("Install App Result = %b", EDTLib.installApk("/sdcard/NFC Tools PRO 8.0.apk", false));
                 EDTLib.testMessage(result);
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonUninstallApp) {
                 Log.d(TAG, "Calling Uninstall App from Service!");
-                String result = String.format("Uninstall App Result = %b", EDTLib.uninstallPackage("jp.casio.ht.osupdateservice", false));
+//                String result = String.format("Uninstall App Result = %b", EDTLib.uninstallPackage("casio.de.scandemo_et_l10", false));
+                String result = String.format("Uninstall App Result = %b", EDTLib.uninstallPackage("com.wakdev.nfctools.pro"));
+                Runtime.getRuntime().exec("pm uninstall 'casio.de.scandemo_et_l10'");
                 EDTLib.testMessage(result);
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonClearData) {

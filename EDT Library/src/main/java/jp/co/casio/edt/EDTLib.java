@@ -1256,14 +1256,13 @@ public class EDTLib {
      * Uninstalls an app by it's package name.
      *
      * @param packageName {@link java.lang.String String}: Package Name of the App to be uninstalled.
-     * @param keepData    {@code boolean}: Whether or not to keep the data and cache directories around after package removal
      * @return {@code boolean} whether or not the app could be uninstalled successfully.
      * @since 1.00
      */
     @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean uninstallPackage(String packageName, boolean keepData) {
+    public static boolean uninstallPackage(String packageName) {
         try {
-            return getInstance().edtService().uninstallPackage(packageName, keepData);
+            return getInstance().edtService().uninstallPackage(packageName);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
