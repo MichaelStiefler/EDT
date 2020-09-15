@@ -23,11 +23,11 @@ android {
     }
 
     defaultConfig {
-        applicationId 'jp.co.casio.edt.service'
+        applicationId 'com.casioeurope.mis.edt.service'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 101001
-        versionName '1.01'
+        versionCode 102001
+        versionName '1.02'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

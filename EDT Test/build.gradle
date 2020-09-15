@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 // Load keystore
-def keystorePropertiesFile = rootProject.file("../keystore.properties");
+def keystorePropertiesFile = rootProject.file("../keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
@@ -23,11 +23,11 @@ android {
     }
 
     defaultConfig {
-        applicationId 'jp.co.casio.edt.test'
+        applicationId 'com.casioeurope.mis.edt.test'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 101001
-        versionName "1.01"
+        versionCode 102001
+        versionName "1.02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
