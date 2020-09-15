@@ -1,4 +1,4 @@
-package com.casioeurope.mis.cdl;
+package com.casioeurope.mis.edt;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package com.casioeurope.mis.cdl;
+package com.casioeurope.mis.edt;
 
 interface ISystemLibrary {
      String getCASIOSerial();

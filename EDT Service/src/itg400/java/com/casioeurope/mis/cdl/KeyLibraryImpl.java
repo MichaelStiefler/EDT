@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class KeyLibraryImpl {
+@SuppressWarnings({"unused", "RedundantSuppression"})
+public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     private static volatile jp.casio.ht.devicelibrary.KeyLibrary jpInstance;
-    private static volatile KeyLibraryImpl instance;
 
     private static final List<Integer> keyCodesItG400 = new ArrayList<>(
             Arrays.asList(278, 277)
@@ -30,20 +30,16 @@ public class KeyLibraryImpl {
         return jpInstance;
     }
 
-    private static KeyLibraryImpl getInstance() {
-        if (instance == null) {
-            synchronized (KeyLibraryImpl.class) {
-                if (instance == null) {
-                    instance = new KeyLibraryImpl();
-                }
-            }
-        }
-        return instance;
-    }
-
     private KeyLibraryImpl() {
     }
 
+    private jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo(ApplicationInfo theAppInfo) {
+        jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo = new jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo();
+        appInfo.packageName = theAppInfo.packageName;
+        appInfo.activityName = theAppInfo.activityName;
+        return appInfo;
+    }
+	
     private static int setUserKeyCode(int nID, int KeyCode) throws RemoteException {
         int itG600Dtx400KeyCodeIndex;
         if ((itG600Dtx400KeyCodeIndex = keyCodesItG600Dtx400.indexOf(KeyCode)) != -1) {
@@ -72,22 +68,23 @@ public class KeyLibraryImpl {
         throw new RemoteException("int setFnDefaultKeyCode(int nID) not supported on IT-G400 devices!");
     }
 
-    public static int setLaunchApplication(int nID, jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo) throws RemoteException {
-        return getJpInstance().setLaunchApplication(nID, appInfo);
+    public int setLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
+        return getJpInstance().setLaunchApplication(nID, appInfo(appInfo));
     }
 
-    public static int getLaunchApplication(int nID, jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo) throws RemoteException {
-        return getJpInstance().getLaunchApplication(nID, appInfo);
+    public int getLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
+        return getJpInstance().getLaunchApplication(nID, appInfo(appInfo));
     }
+
     public static int clearLaunchApplication(int nID) throws RemoteException {
         return getJpInstance().clearLaunchApplication(nID);
     }
 
-    public static int setFnLaunchApplication(int nID, jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo) throws RemoteException {
+    public static int setFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         throw new RemoteException("int setFnLaunchApplication(int nID, ApplicationInfo appInfo) not supported on IT-G400 devices!");
     }
 
-    public static int getFnLaunchApplication(int nID, jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo) throws RemoteException {
+    public static int getFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         throw new RemoteException("int getFnLaunchApplication(int nID, ApplicationInfo appInfo) not supported on IT-G400 devices!");
     }
     public static int clearFnLaunchApplication(int nID) throws RemoteException {

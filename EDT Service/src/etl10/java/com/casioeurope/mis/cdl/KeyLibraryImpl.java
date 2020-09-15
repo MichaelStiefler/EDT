@@ -31,22 +31,22 @@ public class KeyLibraryImpl {
         throw new RemoteException("int setFnDefaultKeyCode(int nID) not supported on ET-L10 devices!");
     }
 
-    public static int setLaunchApplication(int nID, Object appInfo) throws RemoteException {
+    public static int setLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         throw new RemoteException("int setLaunchApplication(int nID, ApplicationInfo appInfo) not supported on ET-L10 devices!");
     }
 
-    public static int getLaunchApplication(int nID, Object appInfo) throws RemoteException {
+    public static int getLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         throw new RemoteException("int getLaunchApplication(int nID, ApplicationInfo appInfo) not supported on ET-L10 devices!");
     }
     public static int clearLaunchApplication(int nID) throws RemoteException {
         throw new RemoteException("int clearLaunchApplication(int nID) not supported on ET-L10 devices!");
     }
 
-    public static int setFnLaunchApplication(int nID, Object appInfo) throws RemoteException {
+    public static int setFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         throw new RemoteException("int setFnLaunchApplication(int nID, ApplicationInfo appInfo) not supported on ET-L10 devices!");
     }
 
-    public static int getFnLaunchApplication(int nID, Object appInfo) throws RemoteException {
+    public static int getFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         throw new RemoteException("int getFnLaunchApplication(int nID, ApplicationInfo appInfo) not supported on ET-L10 devices!");
     }
     public static int clearFnLaunchApplication(int nID) throws RemoteException {

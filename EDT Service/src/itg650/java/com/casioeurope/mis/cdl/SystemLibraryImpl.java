@@ -1,15 +1,11 @@
-package com.casioeurope.mis.cdl;
+package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
 
-import com.casioeurope.mis.cdl.ISystemLibrary;
-
-import jp.casio.ht.devicelibrary.SystemLibrary;
-
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class SystemLibraryImpl extends ISystemLibrary.Stub {
 
     private static volatile jp.casio.ht.devicelibrary.SystemLibrary jpInstance;
-    private static volatile SystemLibraryImpl instance;
 
     private static jp.casio.ht.devicelibrary.SystemLibrary getJpInstance() {
         if (jpInstance == null) {
@@ -20,17 +16,6 @@ public class SystemLibraryImpl extends ISystemLibrary.Stub {
             }
         }
         return jpInstance;
-    }
-
-    private static SystemLibraryImpl getInstance() {
-        if (instance == null) {
-            synchronized (SystemLibrary.class) {
-                if (instance == null) {
-                    instance = new SystemLibraryImpl();
-                }
-            }
-        }
-        return instance;
     }
 
     private SystemLibraryImpl() {

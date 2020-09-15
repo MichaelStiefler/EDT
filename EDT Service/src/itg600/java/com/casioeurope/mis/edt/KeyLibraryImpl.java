@@ -1,4 +1,4 @@
-package com.casioeurope.mis.cdl;
+package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
 
@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class KeyLibraryImpl {
+@SuppressWarnings({"unused", "RedundantSuppression"})
+public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     private static volatile jp.casio.ht.devicelibrary.KeyLibrary jpInstance;
-    private static volatile KeyLibraryImpl instance;
 
     private static final List<Integer> keyCodesItG400 = new ArrayList<>(
             Arrays.asList(278, 277)
@@ -30,24 +30,13 @@ public class KeyLibraryImpl {
         return jpInstance;
     }
 
-    private static KeyLibraryImpl getInstance() {
-        if (instance == null) {
-            synchronized (KeyLibraryImpl.class) {
-                if (instance == null) {
-                    instance = new KeyLibraryImpl();
-                }
-            }
-        }
-        return instance;
-    }
-
     private KeyLibraryImpl() {
     }
 
-    private static jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo(ApplicationInfo theAppInfo) {
+    private jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo(ApplicationInfo theAppInfo) {
         jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo appInfo = new jp.casio.ht.devicelibrary.KeyLibrary.ApplicationInfo();
-        appInfo.packageName = new String(theAppInfo.packageName);
-        appInfo.activityName = new String(theAppInfo.activityName);
+        appInfo.packageName = theAppInfo.packageName;
+        appInfo.activityName = theAppInfo.activityName;
         return appInfo;
     }
 
@@ -90,6 +79,7 @@ public class KeyLibraryImpl {
     public int getLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         return getJpInstance().getLaunchApplication(nID, appInfo(appInfo));
     }
+	
     public int clearLaunchApplication(int nID) throws RemoteException {
         return getJpInstance().clearLaunchApplication(nID);
     }
@@ -101,6 +91,7 @@ public class KeyLibraryImpl {
     public int getFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException {
         return getJpInstance().getFnLaunchApplication(nID, appInfo(appInfo));
     }
+	
     public int clearFnLaunchApplication(int nID) throws RemoteException {
         return getJpInstance().clearFnLaunchApplication(nID);
     }

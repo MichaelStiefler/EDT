@@ -7,9 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.casioeurope.mis.cdl.IKeyLibrary;
-import com.casioeurope.mis.cdl.ISystemLibrary;
-
 import java.util.Arrays;
 
 public class EDTServiceConnection implements ServiceConnection {
@@ -35,17 +32,17 @@ public class EDTServiceConnection implements ServiceConnection {
     }
 
     private IEDT edtService;
-    private ISystemLibrary cdlServiceSystemLibrary;
-    private IKeyLibrary cdlServiceKeyLibrary;
+    private ISystemLibrary edtServiceSystemLibrary;
+    private IKeyLibrary edtServiceKeyLibrary;
 
     public IEDT getEDTService() {
         return this.edtService;
     }
     public ISystemLibrary getSystemLibrary() {
-        return this.cdlServiceSystemLibrary;
+        return this.edtServiceSystemLibrary;
     }
     public IKeyLibrary getKeyLibrary() {
-        return this.cdlServiceKeyLibrary;
+        return this.edtServiceKeyLibrary;
     }
 
     protected boolean bind(Context context) {
@@ -60,8 +57,8 @@ public class EDTServiceConnection implements ServiceConnection {
     public void onServiceConnected(ComponentName name, IBinder service) {
         logMethodEntranceExit(true);
         edtService = IEDT.Stub.asInterface(service);
-        cdlServiceSystemLibrary = ISystemLibrary.Stub.asInterface(service);
-        cdlServiceKeyLibrary = IKeyLibrary.Stub.asInterface(service);
+        edtServiceSystemLibrary = ISystemLibrary.Stub.asInterface(service);
+        edtServiceKeyLibrary = IKeyLibrary.Stub.asInterface(service);
         logMethodEntranceExit(false);
     }
 
@@ -73,7 +70,7 @@ public class EDTServiceConnection implements ServiceConnection {
 
     private static EDTServiceConnection instance;
 
-    public static EDTServiceConnection getInstance() {
+    protected static EDTServiceConnection getInstance() {
         if (EDTServiceConnection.instance == null) {
             EDTServiceConnection.instance = new EDTServiceConnection();
         }
