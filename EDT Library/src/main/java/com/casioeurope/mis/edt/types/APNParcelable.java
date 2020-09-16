@@ -1,8 +1,10 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.casioeurope.mis.edt.BuildConfig;
 
 import java.util.Arrays;
 
@@ -28,7 +30,7 @@ public class APNParcelable extends APN implements Parcelable {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    static final Creator<APNParcelable> CREATOR = new Creator<APNParcelable>() {
+    public static final Creator<APNParcelable> CREATOR = new Creator<APNParcelable>() {
         public APNParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
             APNParcelable apnParcelable = new APNParcelable(new APN());

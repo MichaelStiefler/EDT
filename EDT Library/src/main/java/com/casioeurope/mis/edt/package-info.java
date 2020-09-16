@@ -1,9 +1,7 @@
 /**
- * <center><img src="{@docRoot}/resources/casio_logo.svg"><br/><div style="font-size:400%;">Enterprise Developer Tools</div><br/>
- * <div style="font-size:200%;">for Android Devices</div><br/>
- * <div style="color:grey;">Version 1.02</div></center>
- *
- * @implNote Add the .aar and .aidl files to your project accordingly
+ * <center><div style="font-family:'Eurostile';src: url('{@docRoot}/resources/EurostileExtended-Black.eot');src: url('{@docRoot}/resources/EurostileExtended-Black.eot?#iefix') format('embedded-opentype'),url('{@docRoot}/resources/EurostileExtended-Black.woff2') format('woff2'),url('{@docRoot}/resources/EurostileExtended-Black.woff') format('woff'),url('{@docRoot}/resources/EurostileExtended-Black.svg#EurostileExtended-Black') format('svg');font-display: swap;font-size:480%;color:#003296;">CASIO</div>
+ * <div style="font-size:300%;">Enterprise Developer Tools</div>
+ * <div style="color:grey;font-size:150%;"><b>Main Package</b></div><br/>
  */
 
 package com.casioeurope.mis.edt;

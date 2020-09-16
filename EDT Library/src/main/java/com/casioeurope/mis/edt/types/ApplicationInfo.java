@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,7 +12,7 @@ public class ApplicationInfo implements Parcelable {
         this.activityName = "";
     }
 
-    static final Creator<ApplicationInfo> CREATOR = new Creator<ApplicationInfo>() {
+    public static final Creator<ApplicationInfo> CREATOR = new Creator<ApplicationInfo>() {
         public ApplicationInfo createFromParcel(Parcel in) {
             ApplicationInfo applicationInfo = new ApplicationInfo();
             applicationInfo.packageName = in.readString();

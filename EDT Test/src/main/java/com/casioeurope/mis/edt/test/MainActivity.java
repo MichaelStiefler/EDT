@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.casioeurope.mis.edt.APN;
+import com.casioeurope.mis.edt.types.APN;
 import com.casioeurope.mis.edt.EDTLib;
-import com.casioeurope.mis.edt.ReadWriteFileParams;
+import com.casioeurope.mis.edt.types.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
 
 import java.nio.file.LinkOption;

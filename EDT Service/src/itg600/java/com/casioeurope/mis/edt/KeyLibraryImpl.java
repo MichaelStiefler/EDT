@@ -2,6 +2,8 @@ package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
 
+import com.casioeurope.mis.edt.types.ApplicationInfo;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

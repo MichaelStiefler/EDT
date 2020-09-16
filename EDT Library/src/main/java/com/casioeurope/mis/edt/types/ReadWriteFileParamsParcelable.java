@@ -1,8 +1,10 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.casioeurope.mis.edt.BuildConfig;
 
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
@@ -35,7 +37,7 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    static final Creator<ReadWriteFileParamsParcelable> CREATOR = new Creator<ReadWriteFileParamsParcelable>() {
+    public static final Creator<ReadWriteFileParamsParcelable> CREATOR = new Creator<ReadWriteFileParamsParcelable>() {
         public ReadWriteFileParamsParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later

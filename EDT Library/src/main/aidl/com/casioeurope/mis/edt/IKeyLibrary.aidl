@@ -1,5 +1,5 @@
 package com.casioeurope.mis.edt;
-import com.casioeurope.mis.edt.IParcelableTypes;
+import com.casioeurope.mis.edt.types.IParcelableTypes;
 
 interface IKeyLibrary {
     int getUserKeyCode(int nID);

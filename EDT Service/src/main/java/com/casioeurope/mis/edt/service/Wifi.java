@@ -5,7 +5,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import com.casioeurope.mis.edt.WifiConfigurationParcelable;
+import com.casioeurope.mis.edt.types.WifiConfigurationParcelable;
 
 import java.util.Arrays;
 import java.util.Locale;

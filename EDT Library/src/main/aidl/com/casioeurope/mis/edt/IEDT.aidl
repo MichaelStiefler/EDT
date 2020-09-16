@@ -1,6 +1,6 @@
 // IEDT.aidl
 package com.casioeurope.mis.edt;
-import com.casioeurope.mis.edt.IParcelableTypes;
+import com.casioeurope.mis.edt.types.IParcelableTypes;
 
 interface IEDT {
     boolean testMessage(String message);

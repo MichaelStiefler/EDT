@@ -1,8 +1,10 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.casioeurope.mis.edt.BuildConfig;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,7 +41,7 @@ public class ObjectParcelable implements Parcelable {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    static final Creator<ObjectParcelable> CREATOR = new Creator<ObjectParcelable>() {
+    public static final Creator<ObjectParcelable> CREATOR = new Creator<ObjectParcelable>() {
         public ObjectParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
             String objectClassName = in.readString();

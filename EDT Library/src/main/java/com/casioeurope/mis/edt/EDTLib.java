@@ -5,6 +5,12 @@ import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
 import android.os.RemoteException;
 
+import com.casioeurope.mis.edt.types.APN;
+import com.casioeurope.mis.edt.types.APNParcelable;
+import com.casioeurope.mis.edt.types.ReadWriteFileParams;
+import com.casioeurope.mis.edt.types.ReadWriteFileParamsParcelable;
+import com.casioeurope.mis.edt.types.WifiConfigurationParcelable;
+
 import java.nio.file.CopyOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +23,7 @@ import java.util.stream.Collectors;
  * The <b>CASIO Enterprise Developer Tools Library</b> Main Class<br/><br/>
  * This Class holds all static methods required for a Developer to easily access methods and properties of the device where system access rights are required.<br/><br/>
  *
- * @version 1.00
+ * @version 1.02
  * @since 1.00
  */
 public class EDTLib {

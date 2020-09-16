@@ -1,6 +1,9 @@
-package com.casioeurope.mis.edt;
+package com.casioeurope.mis.edt.types;
 
 import android.util.Log;
+
+import com.casioeurope.mis.edt.BuildConfig;
+import com.casioeurope.mis.edt.EDTLib;
 
 import java.nio.file.OpenOption;
 import java.nio.file.Path;

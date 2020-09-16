@@ -8,12 +8,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.casioeurope.mis.edt.APN;
-import com.casioeurope.mis.edt.APNParcelable;
+import com.casioeurope.mis.edt.types.APN;
+import com.casioeurope.mis.edt.types.APNParcelable;
 import com.casioeurope.mis.edt.IEDT;
-import com.casioeurope.mis.edt.ObjectParcelable;
-import com.casioeurope.mis.edt.ReadWriteFileParamsParcelable;
-import com.casioeurope.mis.edt.WifiConfigurationParcelable;
+import com.casioeurope.mis.edt.types.ObjectParcelable;
+import com.casioeurope.mis.edt.types.ReadWriteFileParamsParcelable;
+import com.casioeurope.mis.edt.types.WifiConfigurationParcelable;
 import com.casioeurope.mis.edt.service.barcodescanner.ScanLib;
 
 import java.io.IOException;
