@@ -3,7 +3,7 @@ package com.casioeurope.mis.edt.types;
 import android.util.Log;
 
 import com.casioeurope.mis.edt.BuildConfig;
-import com.casioeurope.mis.edt.EDTLib;
+import com.casioeurope.mis.edt.EDTLibrary;
 
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -14,9 +14,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * A set of parameters used to hand over to the {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} methods of the CASIO Enterprise Developer Tools
+ * A set of parameters used to hand over to the {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} and {@link EDTLibrary#writeFile(ReadWriteFileParams) writeFile} methods of the CASIO Enterprise Developer Tools
  *
- * <p>Since {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} methods use a variable set of parameters with overlapping parameter types, overloading methods or using variable argument lists isn't feasible.<br/>
+ * <p>Since {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} and {@link EDTLibrary#writeFile(ReadWriteFileParams) writeFile} methods use a variable set of parameters with overlapping parameter types, overloading methods or using variable argument lists isn't feasible.<br/>
  * Instead, instances of this class hold sets of all required parameters for these methods.</p>
  *
  * <p>Use {@link ReadWriteFileParams.Builder} to create new instances.</p>
@@ -91,12 +91,12 @@ public class ReadWriteFileParams {
     }
 
     /**
-     * Returns the buffer holding the data from/for {@link EDTLib#readFile(ReadWriteFileParams) readFile} and {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} methods.
+     * Returns the buffer holding the data from/for {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} and {@link EDTLibrary#writeFile(ReadWriteFileParams) writeFile} methods.
      *
-     * <p>When using the {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} method, providing a data buffer (and data accordingly, logically) is mandatory.<br/>
-     * In contrast, when using the {@link EDTLib#readFile(ReadWriteFileParams) readFile} method, providing a data buffer is optional.<br/>
-     * If {@link EDTLib#readFile(ReadWriteFileParams) readFile} method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
-     * If {@link EDTLib#readFile(ReadWriteFileParams) readFile} method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
+     * <p>When using the {@link EDTLibrary#writeFile(ReadWriteFileParams) writeFile} method, providing a data buffer (and data accordingly, logically) is mandatory.<br/>
+     * In contrast, when using the {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} method, providing a data buffer is optional.<br/>
+     * If {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
+     * If {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
      * </p>
      *
      * @return {@link java.lang.reflect.Array Array} of {@link java.lang.Byte Bytes}: The buffer holding the data to be read or written, or {@code null} if no buffer is provided.
@@ -220,10 +220,10 @@ public class ReadWriteFileParams {
         /**
          * Adds a buffer holding the data to be read/written, using <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder pattern</a> method chaining.
          *
-         * <p>When using the {@link EDTLib#writeFile(ReadWriteFileParams) writeFile} method, providing a data buffer (and data accordingly, logically) is mandatory.<br/>
-         * In contrast, when using the {@link EDTLib#readFile(ReadWriteFileParams) readFile} method, providing a data buffer is optional.<br/>
-         * If {@link EDTLib#readFile(ReadWriteFileParams) readFile} method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
-         * If {@link EDTLib#readFile(ReadWriteFileParams) readFile} method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
+         * <p>When using the {@link EDTLibrary#writeFile(ReadWriteFileParams) writeFile} method, providing a data buffer (and data accordingly, logically) is mandatory.<br/>
+         * In contrast, when using the {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} method, providing a data buffer is optional.<br/>
+         * If {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
+         * If {@link EDTLibrary#readFile(ReadWriteFileParams) readFile} method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
          * </p>
          *
          * @param data {@link java.lang.reflect.Array Array} of {@link java.lang.Byte Bytes}: Buffer holding the data to be read/written.

@@ -5,7 +5,7 @@ interface ISystemLibrary {
     boolean isMethodSupported(String methodBigInteger);
     boolean isMethodNameSupported(String methodName);
     String getCASIOSerial(out BooleanParcelable unsupported);
-    String getModelName();
-    boolean getNavigationBarState();
-    void setNavigationBarState(boolean state);
+    String getModelName(out BooleanParcelable unsupported);
+    boolean getNavigationBarState(out BooleanParcelable unsupported);
+    void setNavigationBarState(boolean state, out BooleanParcelable unsupported);
 }

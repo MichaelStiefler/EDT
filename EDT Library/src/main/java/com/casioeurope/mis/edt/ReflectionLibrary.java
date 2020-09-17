@@ -7,7 +7,7 @@ import com.casioeurope.mis.edt.types.ObjectParcelable;
 import java.util.Arrays;
 
 /**
- * Reflection API Class of the CASIO Enterprise Developer Tools
+ * The <b>CASIO Enterprise Developer Tools</b> Reflection Library<br/><br/>
  *
  * <p>
  * This Class is used to gain access to fields and methods of other classes where the access modifier (private/protected/(none)/public) prohibits access to that field/method.<BR/>
@@ -17,11 +17,11 @@ import java.util.Arrays;
  * In no event will CASIO or CASIO Europe GmbH be liable for any special damages, including but not limited to costs of procurement of substitute goods or services or any special, indirect, incidental, exemplary, or consequential damages, including but not limited to lost profits, loss of goodwill, business interruption, or loss of information, of any party, including third parties, regardless of whether such party was advised of the possibility of the foregoing.
  */
 @SuppressWarnings({"unused", "RedundantSuppression"})
-public class Reflection {
+public class ReflectionLibrary {
 
-    private static Reflection instance;
+    private static ReflectionLibrary instance;
 
-    private Reflection() {
+    private ReflectionLibrary() {
     }
 
     // *****************************************************************************************************************************************************************************************************
@@ -228,11 +228,11 @@ public class Reflection {
         return 0;
     }
 
-    private static Reflection getInstance() {
-        if (Reflection.instance == null) {
-            Reflection.instance = new Reflection();
+    private static ReflectionLibrary getInstance() {
+        if (ReflectionLibrary.instance == null) {
+            ReflectionLibrary.instance = new ReflectionLibrary();
         }
-        return Reflection.instance;
+        return ReflectionLibrary.instance;
     }
 
     /**

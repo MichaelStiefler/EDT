@@ -3,7 +3,7 @@ package com.casioeurope.mis.edt.types;
 import android.util.Log;
 
 import com.casioeurope.mis.edt.BuildConfig;
-import com.casioeurope.mis.edt.EDTLib;
+import com.casioeurope.mis.edt.EDTLibrary;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -12,13 +12,13 @@ import java.util.Objects;
  * A set of parameters used to hand over to the Access Point Name (APN) configuration related methods of the CASIO Enterprise Developer Tools:
  *
  * <p><ul>
- * <li>{@link EDTLib#createNewApn(APN, boolean) createNewApn}</li>
- * <li>{@link EDTLib#getAllApnList() getAllApnList}</li>
- * <li>{@link EDTLib#getApn(String) getApn}</li>
- * <li>{@link EDTLib#getApnId(String) getApnId}</li>
- * <li>{@link EDTLib#setPreferredApn(String) setPreferredApn}</li>
- * <li>{@link EDTLib#updateApn(APN) updateApn}</li>
- * <li>{@link EDTLib#verifyApn(String) verifyApn}</li>
+ * <li>{@link EDTLibrary#createNewApn(APN, boolean) createNewApn}</li>
+ * <li>{@link EDTLibrary#getAllApnList() getAllApnList}</li>
+ * <li>{@link EDTLibrary#getApn(String) getApn}</li>
+ * <li>{@link EDTLibrary#getApnId(String) getApnId}</li>
+ * <li>{@link EDTLibrary#setPreferredApn(String) setPreferredApn}</li>
+ * <li>{@link EDTLibrary#updateApn(APN) updateApn}</li>
+ * <li>{@link EDTLibrary#verifyApn(String) verifyApn}</li>
  * </ul></p>
  *
  * <p>Since the above mentioned methods use a variable set of parameters with overlapping parameter types, overloading methods or using variable argument lists isn't feasible.<br/>

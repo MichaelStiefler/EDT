@@ -20,24 +20,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The <b>CASIO Enterprise Developer Tools Library</b> Main Class<br/><br/>
+ * The <b>CASIO Enterprise Developer Tools</b> Main Library<br/><br/>
+ *
+ * <p>
  * This Class holds all static methods required for a Developer to easily access methods and properties of the device where system access rights are required.<br/><br/>
  *
  * @version 1.02
  * @since 1.00
  */
-public class EDTLib {
+public class EDTLibrary {
 
-    private static EDTLib instance;
+    private static EDTLibrary instance;
 
-    private EDTLib() {
+    private EDTLibrary() {
     }
 
-    private static EDTLib getInstance() {
-        if (EDTLib.instance == null) {
-            EDTLib.instance = new EDTLib();
+    private static EDTLibrary getInstance() {
+        if (EDTLibrary.instance == null) {
+            EDTLibrary.instance = new EDTLibrary();
         }
-        return EDTLib.instance;
+        return EDTLibrary.instance;
     }
 
     private IEDT edtService() {
@@ -1229,7 +1231,7 @@ public class EDTLib {
      *
      * @param apn {@link APN APN}:         The Access Point Name (APN) configuration for a carrier data connection, holding the new data for this configuration.<br/>
      *            The "id" field holds the ID of the existing APN configuration to be updated.<br/>
-     *            Use {@link EDTLib#getApnId getApnId} to fetch the ID from a given name if required.
+     *            Use {@link EDTLibrary#getApnId getApnId} to fetch the ID from a given name if required.
      * @return {@code boolean} whether or not the new Access Point Name (APN) configuration has been applied successfully.<br/>
      * If no matching configuration for the ID could be found, the method returns {@code false}.
      * @since 1.00

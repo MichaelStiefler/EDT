@@ -32,18 +32,22 @@ public class SystemLibraryImpl extends ISystemLibrary.Stub {
     }
 
     public String getCASIOSerial(BooleanParcelable unsupported) throws RemoteException {
-       return getJpInstance().getCASIOSerial();
+        unsupported.setValue(false);
+        return getJpInstance().getCASIOSerial();
     }
 
-    public String getModelName() throws RemoteException {
+    public String getModelName(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
         return getJpInstance().getModelName();
     }
 
-    public boolean getNavigationBarState() throws RemoteException {
+    public boolean getNavigationBarState(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
         return getJpInstance().getNavigationBarState();
     }
 
-    public void setNavigationBarState(boolean state) throws RemoteException {
+    public void setNavigationBarState(boolean state, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
         getJpInstance().setNavigationBarState(state);
     }
 
