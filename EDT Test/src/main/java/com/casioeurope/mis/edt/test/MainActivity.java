@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.casioeurope.mis.edt.EDTLibrary;
+import com.casioeurope.mis.edt.SystemLibrary;
 import com.casioeurope.mis.edt.types.APN;
 import com.casioeurope.mis.edt.types.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
@@ -341,6 +342,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, "Calling Disable Doze Mode from Service!");
                 String result = String.format("Disable Doze Mode Result = %b", EDTLibrary.enableBatteryOptimization("com.android.chrome", false));
                 EDTLibrary.testMessage(result);
+                Log.d(TAG, result);
+            } else if (v == activityMainBinding.buttonShowSerialNumber) {
+                Log.d(TAG, "Calling getCASIOSerial from System Library!");
+                String result = String.format("Serial Number = %s\r\nModel Name=%s", SystemLibrary.getCASIOSerial(), SystemLibrary.getModelName());
+                EDTLibrary.testMessage(result);
+                SystemLibrary.setNavigationBarState(false);
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");

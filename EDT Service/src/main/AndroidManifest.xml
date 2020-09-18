@@ -1102,6 +1102,20 @@
                 <action android:name="com.casioeurope.mis.edt.service.EDTService" />
             </intent-filter>
         </service>
+        <service
+            android:name="com.casioeurope.mis.edt.service.SystemLibraryService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.casioeurope.mis.edt.service.SystemLibraryService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.casioeurope.mis.edt.service.KeyLibraryService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.casioeurope.mis.edt.service.KeyLibraryService" />
+            </intent-filter>
+        </service>
         <receiver
             android:name="com.casioeurope.mis.edt.service.AddDeviceAdminActivity$MyAdmin"
             android:label="EDT Tools Device Admin"

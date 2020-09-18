@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class EDTService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (Service)";
+    private static String TAG = "EDT (EDTService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;

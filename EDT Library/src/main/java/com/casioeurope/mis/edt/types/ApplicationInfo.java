@@ -1,39 +1,33 @@
 package com.casioeurope.mis.edt.types;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class ApplicationInfo implements Parcelable {
+/**
+ * Application information class for use in {@link com.casioeurope.mis.edt.KeyLibrary} methods
+ */
+public class ApplicationInfo {
+    /**
+     * Class name of the launch application.
+     */
     public String activityName;
+    /**
+     * Package name of the launch application.
+     */
     public String packageName;
 
+    /**
+     * Create a instance of the ApplicationInfo class.
+     */
     public ApplicationInfo() {
-        this.packageName = "";
         this.activityName = "";
+        this.packageName = "";
     }
 
-    public static final Creator<ApplicationInfo> CREATOR = new Creator<ApplicationInfo>() {
-        public ApplicationInfo createFromParcel(Parcel in) {
-            ApplicationInfo applicationInfo = new ApplicationInfo();
-            applicationInfo.packageName = in.readString();
-            applicationInfo.activityName = in.readString();
-            return applicationInfo;
-        }
-
-        public ApplicationInfo[] newArray(int size) {
-            return new ApplicationInfo[size];
-        }
-    };
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.packageName);
-        parcel.writeString(this.activityName);
+    /**
+     * Create a instance of the ApplicationInfo class with custom parameters given for {@link #packageName} and {@link #activityName}.
+     * @param packageName {@link String}: Package name of the launch application.
+     * @param activityName {@link String}: Class name of the launch application.
+     */
+    public ApplicationInfo(String packageName, String activityName) {
+        this.packageName = packageName;
+        this.activityName = activityName;
     }
 }

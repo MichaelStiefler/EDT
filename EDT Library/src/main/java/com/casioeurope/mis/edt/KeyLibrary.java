@@ -3,6 +3,7 @@ package com.casioeurope.mis.edt;
 import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.types.ApplicationInfo;
+import com.casioeurope.mis.edt.types.ApplicationInfoParcelable;
 import com.casioeurope.mis.edt.types.BooleanParcelable;
 
 import java.math.BigInteger;
@@ -423,7 +424,9 @@ public class KeyLibrary {
      */
     public static int setLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
         BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().edtServiceKeyLibrary().setLaunchApplication(nID, appInfo, unsupported);
+        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
+        int retVal=getInstance().edtServiceKeyLibrary().setLaunchApplication(nID, appInfoParcelable, unsupported);
+        appInfoParcelable.copyTo(appInfo);
         checkMethodUnsupported(unsupported);
         return retVal;
     }
@@ -442,7 +445,9 @@ public class KeyLibrary {
      */
     public static int getLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
         BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().edtServiceKeyLibrary().getLaunchApplication(nID, appInfo, unsupported);
+        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
+        int retVal=getInstance().edtServiceKeyLibrary().getLaunchApplication(nID, appInfoParcelable, unsupported);
+        appInfoParcelable.copyTo(appInfo);
         checkMethodUnsupported(unsupported);
         return retVal;
     }
@@ -481,7 +486,9 @@ public class KeyLibrary {
      */
     public static int setFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
         BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().edtServiceKeyLibrary().setFnLaunchApplication(nID, appInfo, unsupported);
+        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
+        int retVal=getInstance().edtServiceKeyLibrary().setFnLaunchApplication(nID, appInfoParcelable, unsupported);
+        appInfoParcelable.copyTo(appInfo);
         checkMethodUnsupported(unsupported);
         return retVal;
     }
@@ -500,7 +507,9 @@ public class KeyLibrary {
      */
     public static int getFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
         BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().edtServiceKeyLibrary().getFnLaunchApplication(nID, appInfo, unsupported);
+        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
+        int retVal=getInstance().edtServiceKeyLibrary().getFnLaunchApplication(nID, appInfoParcelable, unsupported);
+        appInfoParcelable.copyTo(appInfo);
         checkMethodUnsupported(unsupported);
         return retVal;
     }
