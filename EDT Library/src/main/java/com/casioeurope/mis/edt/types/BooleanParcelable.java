@@ -8,7 +8,7 @@ import com.casioeurope.mis.edt.BuildConfig;
 
 import java.util.Arrays;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class BooleanParcelable implements Parcelable {
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (BooleanParcelable)";

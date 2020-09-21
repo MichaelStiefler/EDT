@@ -215,57 +215,61 @@ public class KeyLibrary {
              */
             public static final int SUCCESS = 0;
         }
+
+        /**
+         * Methods of the {@link KeyLibrary} class, used e.g. to check availability of said methods using {@link #isMethodSupported(BigInteger)} method.
+         */
+        public static class METHOD {
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setUserKeyCode(int, int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_SETUSERKEYCODE = new BigInteger("000000000001", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getUserKeyCode(int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_GETUSERKEYCODE = new BigInteger("000000000010", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setDefaultKeyCode(int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_SETDEFAULTKEYCODE = new BigInteger("000000000100", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setFnUserKeyCode(int, int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_SETFNUSERKEYCODE = new BigInteger("000000001000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getFnUserKeyCode(int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_GETFNUSERKEYCODE = new BigInteger("000000010000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setFnDefaultKeyCode(int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_SETFNDEFAULTKEYCODE = new BigInteger("000000100000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_SETLAUNCHAPPLICATION = new BigInteger("000001000000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_GETLAUNCHAPPLICATION = new BigInteger("000010000000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #clearLaunchApplication(int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_CLEARLAUNCHAPPLICATION = new BigInteger("000100000000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setFnLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_SETFNLAUNCHAPPLICATION = new BigInteger("001000000000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getFnLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_GETFNLAUNCHAPPLICATION = new BigInteger("010000000000", 2);
+            /**
+             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #clearFnLaunchApplication(int)} method is supported on the currently active device
+             */
+            public static final BigInteger METHOD_CLEARFNLAUNCHAPPLICATION = new BigInteger("100000000000", 2);
+        }
     }
-
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setUserKeyCode(int, int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_SETUSERKEYCODE = new BigInteger("000000000001", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getUserKeyCode(int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_GETUSERKEYCODE = new BigInteger("000000000010", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setDefaultKeyCode(int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_SETDEFAULTKEYCODE = new BigInteger("000000000100", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setFnUserKeyCode(int, int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_SETFNUSERKEYCODE = new BigInteger("000000001000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getFnUserKeyCode(int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_GETFNUSERKEYCODE = new BigInteger("000000010000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setFnDefaultKeyCode(int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_SETFNDEFAULTKEYCODE = new BigInteger("000000100000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_SETLAUNCHAPPLICATION = new BigInteger("000001000000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_GETLAUNCHAPPLICATION = new BigInteger("000010000000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #clearLaunchApplication(int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_CLEARLAUNCHAPPLICATION = new BigInteger("000100000000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setFnLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_SETFNLAUNCHAPPLICATION = new BigInteger("001000000000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getFnLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_GETFNLAUNCHAPPLICATION = new BigInteger("010000000000", 2);
-    /**
-     * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #clearFnLaunchApplication(int)} method is supported on the currently active device
-     */
-    public static final BigInteger METHOD_CLEARFNLAUNCHAPPLICATION = new BigInteger("100000000000", 2);
-
 
     private static KeyLibrary instance;
 
@@ -346,7 +350,7 @@ public class KeyLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
-    private static int setFnUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
+    public static int setFnUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
         BooleanParcelable unsupported = new BooleanParcelable();
         int retVal=getInstance().edtServiceKeyLibrary().setFnUserKeyCode(nID, KeyCode, unsupported);
         checkMethodUnsupported(unsupported);
@@ -367,7 +371,7 @@ public class KeyLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
-    private static int setUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
+    public static int setUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
         BooleanParcelable unsupported = new BooleanParcelable();
         int retVal=getInstance().edtServiceKeyLibrary().setUserKeyCode(nID, KeyCode, unsupported);
         checkMethodUnsupported(unsupported);

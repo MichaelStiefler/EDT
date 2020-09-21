@@ -35,6 +35,7 @@ public class EDTServiceConnection implements ServiceConnection {
     private IEDT edtService;
     private ISystemLibrary edtServiceSystemLibrary;
     private IKeyLibrary edtServiceKeyLibrary;
+    private IScannerLibrary edtServiceScannerLibrary;
 
     public IEDT getEDTService() {
         return this.edtService;
@@ -45,7 +46,11 @@ public class EDTServiceConnection implements ServiceConnection {
     public IKeyLibrary getKeyLibrary() {
         return this.edtServiceKeyLibrary;
     }
+    public IScannerLibrary getScannerLibrary() {
+        return this.edtServiceScannerLibrary;
+    }
 
+    @SuppressWarnings("UnusedReturnValue")
     protected boolean bind(Context context) {
         logMethodEntranceExit(true);
         context.bindService(new Intent("com.casioeurope.mis.edt.service.EDTService").setPackage("com.casioeurope.mis.edt.service")
@@ -54,10 +59,13 @@ public class EDTServiceConnection implements ServiceConnection {
                 , this, Context.BIND_AUTO_CREATE);
         context.bindService(new Intent("com.casioeurope.mis.edt.service.KeyLibraryService").setPackage("com.casioeurope.mis.edt.service")
                 , this, Context.BIND_AUTO_CREATE);
+        context.bindService(new Intent("com.casioeurope.mis.edt.service.ScannerLibraryService").setPackage("com.casioeurope.mis.edt.service")
+                , this, Context.BIND_AUTO_CREATE);
         logMethodEntranceExit(false);
         return true;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         try {
@@ -72,6 +80,8 @@ public class EDTServiceConnection implements ServiceConnection {
                 edtServiceSystemLibrary = ISystemLibrary.Stub.asInterface(service);
             } else if (service.getInterfaceDescriptor().equals(IKeyLibrary.class.getName())) {
                 edtServiceKeyLibrary = IKeyLibrary.Stub.asInterface(service);
+            } else if (service.getInterfaceDescriptor().equals(IScannerLibrary.class.getName())) {
+                edtServiceScannerLibrary = IScannerLibrary.Stub.asInterface(service);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

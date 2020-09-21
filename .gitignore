@@ -32,3 +32,8 @@
 /.idea/
 /gradle/wrapper/gradle-wrapper.properties
 /EDT Library/javadoc/
+/EDT Library/Docs/
+/EDT Library/font/
+/EDT Library/libs/
+/EDT Library/old/
+/EDT Library/reference/
