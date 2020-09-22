@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.types;
+package com.casioeurope.mis.edt.type;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -76,10 +76,6 @@ public class BooleanParcelable implements Parcelable {
     }
 
     public boolean getValue() {
-        return this.value;
-    }
-
-    public boolean isUnsupported() {
         return this.value;
     }
 

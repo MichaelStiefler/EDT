@@ -3,7 +3,7 @@ package com.casioeurope.mis.edt.service;
 import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.ISystemLibrary;
-import com.casioeurope.mis.edt.types.BooleanParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
 
 import java.math.BigInteger;
 import java.util.Arrays;

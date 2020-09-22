@@ -2,7 +2,7 @@ package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
 
-import com.casioeurope.mis.edt.types.BooleanParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
 
 import java.math.BigInteger;
 
@@ -37,7 +37,7 @@ public class SystemLibrary {
 
     private static void checkMethodUnsupported(BooleanParcelable unsupported) throws UnsupportedOperationException {
         if (unsupported == null) return;
-        if (!unsupported.isUnsupported()) return;
+        if (!unsupported.getValue()) return;
         String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();

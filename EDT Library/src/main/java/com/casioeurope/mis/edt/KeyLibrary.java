@@ -2,9 +2,9 @@ package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
 
-import com.casioeurope.mis.edt.types.ApplicationInfo;
-import com.casioeurope.mis.edt.types.ApplicationInfoParcelable;
-import com.casioeurope.mis.edt.types.BooleanParcelable;
+import com.casioeurope.mis.edt.type.ApplicationInfo;
+import com.casioeurope.mis.edt.type.ApplicationInfoParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
 
 import java.math.BigInteger;
 
@@ -278,7 +278,7 @@ public class KeyLibrary {
 
     private static void checkMethodUnsupported(BooleanParcelable unsupported) throws UnsupportedOperationException {
         if (unsupported == null) return;
-        if (!unsupported.isUnsupported()) return;
+        if (!unsupported.getValue()) return;
         String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();

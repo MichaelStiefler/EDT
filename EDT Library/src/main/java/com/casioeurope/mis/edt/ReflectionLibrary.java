@@ -2,7 +2,7 @@ package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
 
-import com.casioeurope.mis.edt.types.ObjectParcelable;
+import com.casioeurope.mis.edt.type.ObjectParcelable;
 
 import java.util.Arrays;
 

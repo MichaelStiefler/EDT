@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.provider.Telephony;
 import android.util.Log;
 
-import com.casioeurope.mis.edt.types.APN;
-import com.casioeurope.mis.edt.types.APNParcelable;
+import com.casioeurope.mis.edt.type.APN;
+import com.casioeurope.mis.edt.type.APNParcelable;
 
 import java.util.Arrays;
 import java.util.Objects;

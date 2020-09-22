@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.casioeurope.mis.edt.types.ReadWriteFileParamsParcelable;
+import com.casioeurope.mis.edt.type.ReadWriteFileParamsParcelable;
 
 import org.apache.commons.io.IOUtil;
 

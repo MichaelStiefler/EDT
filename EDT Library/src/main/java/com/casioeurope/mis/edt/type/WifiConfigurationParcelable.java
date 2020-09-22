@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.types;
+package com.casioeurope.mis.edt.type;
 
 import android.annotation.SuppressLint;
 import android.net.LinkProperties;

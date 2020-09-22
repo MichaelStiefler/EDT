@@ -11,3 +11,11 @@
 /packages
 /sourcefiles
 /PDF/
+/Docs/
+/font/
+/libs/
+/old/
+/reference/
+
+# DashO Cache Directory
+.dasho/

@@ -3,9 +3,10 @@ package com.casioeurope.mis.edt;
 import android.graphics.Rect;
 import android.os.RemoteException;
 
-import com.casioeurope.mis.edt.types.BooleanParcelable;
-import com.casioeurope.mis.edt.types.ScanResult;
-import com.casioeurope.mis.edt.types.ScanResultParcelable;
+import com.casioeurope.mis.edt.constant.ScannerLibraryConstant;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
+import com.casioeurope.mis.edt.type.ScanResult;
+import com.casioeurope.mis.edt.type.ScanResultParcelable;
 
 import java.math.BigInteger;
 
@@ -18,701 +19,6 @@ import java.math.BigInteger;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class ScannerLibrary {
 
-    /**
-     * Constants used in the {@link ScannerLibrary} class.
-     */
-    public static class CONSTANT {
-
-        /**
-         * List of centering window mode constants. Used to Enable / disable centering window mode.
-         */
-        public static class CENTERING_WINDOW_MODE {
-            /**
-             * Disable "Centering window mode"
-             */
-            public static final int DISABLE = 0;
-            /**
-             * Enable "Centering window mode"
-             */
-            public static final int ENABLE = 1;
-        }
-
-        /**
-         * List of control constants. Controls the barcode scanner by software.
-         */
-        public static class CONTROL {
-            /**
-             * Aimer is turned off.
-             */
-            public static final int AIMER_OFF = 0;
-            /**
-             * Aimer is turned on.
-             */
-            public static final int AIMER_ON = 1;
-            /**
-             * Illumination is turned off.
-             */
-            public static final int ILLUMINATION_OFF = 0;
-            /**
-             * Illumination is turned on.
-             */
-            public static final int ILLUMINATION_ON = 1;
-            /**
-             * Trigger key is released virtually.
-             */
-            public static final int TRIGGER_OFF = 0;
-            /**
-             * Trigger key is pressed virtually.
-             */
-            public static final int TRIGGER_ON = 1;
-        }
-
-        /**
-         * List of black and white reverse mode constants. Set black-and-white inverted barcode read enable / disable.
-         */
-        public static class INVERSE {
-            /**
-             * Read normal barcode and black-and-white reversing bar code.
-             */
-            public static final int AUTO = 2;
-            /**
-             * Only normal bar code (barcode printed in black on white background) is read.
-             */
-            public static final int DISABLE = 0;
-            /**
-             * Only black-and-white reversed barcode (barcode printed in black on black background) is read.
-             */
-            public static final int ENABLE = 1;
-        }
-
-        /**
-         * List of highlight mode constants. Enable / disable highlight mode of laser.
-         */
-        public static class LASER_HIGHLIGHT_MODE {
-            /**
-             * Disable "Highlight mode"
-             */
-            public static final int DISABLE = 0;
-            /**
-             * Enable "Highlight mode"
-             */
-            public static final int ENABLE = 1;
-        }
-
-        /**
-         * List of light mode constants. Set the illumination and the Aimer operation that light up when scanning, shooting still images and streaming.
-         */
-        public static class LIGHT_MODE {
-            /**
-             * Aimer lights up.
-             */
-            public static final int AIMER_ON = 1;
-            /**
-             * Illumination and Aimer does not light up.
-             */
-            public static final int ALL_OFF = 0;
-            /**
-             * Illumination and Aimer lights up.
-             */
-            public static final int ALL_ON = 3;
-            /**
-             * Illumination lights up.
-             */
-            public static final int ILLUMINATION_ON = 2;
-        }
-
-        /**
-         * List of notification constants. Sets notification behavior when bar code is read.
-         */
-        public static class NOTIFICATION {
-            /**
-             * The notification LED not lights up in success and failure scanning.
-             */
-            public static final int LED_OFF = 0;
-            /**
-             * The notification LED turns on GREEN in success scanning, and RED in failure scanning.
-             */
-            public static final int LED_ON = 1;
-            /**
-             * The notification sound does not vibrate in success and failure scanning.
-             */
-            public static final int SOUND_ALL_OFF = 0;
-            /**
-             * The notification sound sounds in success and failure scanning.
-             */
-            public static final int SOUND_ALL_ON = 3;
-            /**
-             * The notification sound sounds in failure scanning.
-             */
-            public static final int SOUND_FAIL_ON = 1;
-            /**
-             * The notification sound sounds in success scanning.
-             */
-            public static final int SOUND_SUCCESS_ON = 2;
-            /**
-             * The notification vibrator does not vibrate in success and failure scanning.
-             */
-            public static final int VIBRATOR_ALL_OFF = 0;
-            /**
-             * The notification vibrator vibrates in success and failure scanning.
-             */
-            public static final int VIBRATOR_ALL_ON = 3;
-            /**
-             * The notification vibrator vibrates in failure scanning.
-             */
-            public static final int VIBRATOR_FAIL_ON = 1;
-            /**
-             * The notification vibrator vibrates in success scanning.
-             */
-            public static final int VIBRATOR_SUCCESS_ON = 2;
-        }
-
-        /**
-         * List of output type constants. Sets the output type of the reading result.
-         */
-        public static class OUTPUT {
-            /**
-             * Broadcast output
-             */
-            public static final int BROADCAST = 3;
-            /**
-             * Clipboard output
-             */
-            public static final int CLIP = 0;
-            /**
-             * Keyboard output
-             */
-            public static final int KEY = 1;
-            /**
-             * User message output
-             */
-            public static final int USER = 2;
-        }
-
-        /**
-         * List of resolution constants. Controls the resolution for streaming.
-         */
-        public static class RESOLUTION {
-            /**
-             * Full resolution of the barcode scanner.
-             */
-            public static final int FULL = 0;
-            /**
-             * 1/16 of full resolution.
-             */
-            public static final int ONE_SIXTEENTH = 2;
-            /**
-             * 1/4 of full resolution.
-             */
-            public static final int QUARTER = 1;
-        }
-
-        /**
-         * List of return value constants. Check execution result of member function with return value constant.
-         */
-        public static class RETURN {
-            /**
-             * Non-open error. It returns when a function is called with the barcode scanner not open.
-             */
-            public static final int ERROR_NOTOPENED = -3;
-            /**
-             * Parameter error. It returns when the parameter specified as the argument is illegal.
-             */
-            public static final int ERROR_PARAMETER = -2;
-            /**
-             * Unsupported error. It returns if the function is not supported.
-             */
-            public static final int ERROR_UNSUPPORTED = -1;
-            /**
-             * Successful completion. It returns when the function terminates normally.
-             */
-            public static final int SUCCESS = 0;
-        }
-
-        /**
-         * List of "Suffix constants". Sets the qualifier to be appended to the end of the reading result.
-         */
-        public static class SUFFIX {
-            /**
-             * Add LF (0x0A)
-             */
-            public static final int LF = 1;
-            /**
-             * no suffix
-             */
-            public static final int NONE = 0;
-            /**
-             * Add TAB (0x09)
-             */
-            public static final int TAB = 2;
-            /**
-             * Add TAB+LF (0x09, 0x0A)
-             */
-            public static final int TAB_LF = 3;
-        }
-
-        /**
-         * List of swing width constants. Set swing width of laser.
-         */
-        public static class SWING_WIDTH {
-            /**
-             * Swing width MAX
-             */
-            public static final int MAX = 0;
-            /**
-             * Swing width WIDE
-             */
-            public static final int MIDDLE = 2;
-            /**
-             * Swing width MIDDLE
-             */
-            public static final int NARROW = 3;
-            /**
-             * Swing width NARROW
-             */
-            public static final int WIDE = 1;
-        }
-
-        /**
-         * List of SymbologyID constants. Used to specify the SymbologyID of each barcode.
-         */
-        public static class SYMBOLOGY {
-            /**
-             * All Barcode Types
-             */
-            public static final int ALL = 999;
-            /**
-             * Aztec
-             */
-            public static final int AZTEC = 1;
-            /**
-             * Codabar
-             */
-            public static final int CODABAR = 2;
-            /**
-             * Codablock F
-             */
-            public static final int CODABLOCKF = 3;
-            /**
-             * Code 128
-             */
-            public static final int CODE128 = 4;
-            /**
-             * Code 32
-             */
-            public static final int CODE32 = 5;
-            /**
-             * Code 39
-             */
-            public static final int CODE39 = 6;
-            /**
-             * Code 93
-             */
-            public static final int CODE93 = 7;
-            /**
-             * Composite
-             */
-            public static final int COMPOSITE = 8;
-            /**
-             * DataMatrix
-             */
-            public static final int DATAMATRIX = 9;
-            /**
-             * EAN 13
-             */
-            public static final int EAN13 = 10;
-            /**
-             * EAN 8
-             */
-            public static final int EAN8 = 11;
-            /**
-             * GS1 128 (EAN 128)
-             */
-            public static final int GS1_128 = 12;
-            /**
-             * GS1 DataBar (RSS)
-             */
-            public static final int GS1_DATABAR = 13;
-            /**
-             * Han Xin
-             */
-            public static final int HANXIN = 14;
-            /**
-             * ISBT
-             */
-            public static final int ISBT = 16;
-            /**
-             * ITF (Interleaved 2 of 5)
-             */
-            public static final int ITF = 15;
-            /**
-             * Maxicode
-             */
-            public static final int MAXICODE = 17;
-            /**
-             * Micro PDF
-             */
-            public static final int MICRO_PDF = 18;
-            /**
-             * MSI
-             */
-            public static final int MSI = 19;
-            /**
-             * PDF 417
-             */
-            public static final int PDF417 = 20;
-            /**
-             * QR Code/ Micro QR Code
-             */
-            public static final int QR = 21;
-            /**
-             * UPC-A
-             */
-            public static final int UPCA = 22;
-            /**
-             * UPC-E (UPC-E0 / UPC-E1)
-             */
-            public static final int UPCE = 23;
-        }
-
-        /**
-         * List of symbol parameter constants. Set barcode read enable / disable.
-         */
-        public static class SYMBOLOGY_PARAMETER {
-            /**
-             * Read disable.
-             */
-            public static final int DISABLE = 0;
-            /**
-             * Read enable.
-             */
-            public static final int ENABLE = 1;
-        }
-
-        /**
-         * List of Trigger key constants. Set trigger key enable / disable.
-         */
-        public static class TRIGGERKEY {
-            /**
-             * Trigger key disable
-             */
-            public static final int DISABLE = 0;
-            /**
-             * Trigger key enable
-             */
-            public static final int ENABLE = 1;
-        }
-
-        /**
-         * List of Trigger key mode constants. Set the action when trigger key is pressed.
-         */
-        public static class TRIGGER_MODE {
-            /**
-             * Continuous reading. Scanning continuously during trigger key is pressed.
-             */
-            public static final int CONTINUOUS = 1;
-            /**
-             * Multi-step reading. This method is for scanning a specified number of barcodes. Once scanning for the specified number of bar codes has been completed, the scanner closes and will not scan again until reopened.
-             * Also, the same bar codes that have been scanned previously cannot be scanned again.
-             */
-            public static final int MULTI_STEP = 2;
-            /**
-             * Normal reading. Scan is performed every time the trigger key is pressed
-             */
-            public static final int NORMAL = 0;
-            /**
-             * Package reading. Scanning continuously reads multiple symbols until when the Trigger key is released and then outputs a result of reading all the symbols.
-             */
-            public static final int PACKAGE = 3;
-        }
-
-        /**
-         * Methods of the {@link ScannerLibrary} class, used e.g. to check availability of said methods using {@link #isMethodSupported(BigInteger)} method.
-         */
-        public static class METHOD {
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #openScanner()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_OPENSCANNER = new BigInteger("0000000000000000000000000000000000000000000000000000000000000000000001", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #closeScanner()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_CLOSESCANNER = new BigInteger("0000000000000000000000000000000000000000000000000000000000000000000010", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #isScannerOpen()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_ISSCANNEROPEN = new BigInteger("0000000000000000000000000000000000000000000000000000000000000000000100", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setDefaultAll()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETDEFAULTALL = new BigInteger("0000000000000000000000000000000000000000000000000000000000000000001000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getAPIVersion()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETAPIVERSION = new BigInteger("0000000000000000000000000000000000000000000000000000000000000000010000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getModuleVersion()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETMODULEVERSION = new BigInteger("0000000000000000000000000000000000000000000000000000000000000000100000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getScanResult(ScanResult)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSCANRESULT = new BigInteger("0000000000000000000000000000000000000000000000000000000000000001000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setNotificationLED(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETNOTIFICATIONLED = new BigInteger("0000000000000000000000000000000000000000000000000000000000000010000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getNotificationLED()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETNOTIFICATIONLED = new BigInteger("0000000000000000000000000000000000000000000000000000000000000100000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setNotificationVibrator(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETNOTIFICATIONVIBRATOR = new BigInteger("0000000000000000000000000000000000000000000000000000000000001000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getNotificationVibrator()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETNOTIFICATIONVIBRATOR = new BigInteger("0000000000000000000000000000000000000000000000000000000000010000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setNotificationSound(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETNOTIFICATIONSOUND = new BigInteger("0000000000000000000000000000000000000000000000000000000000100000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getNotificationSound()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETNOTIFICATIONSOUND = new BigInteger("0000000000000000000000000000000000000000000000000000000001000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setLightMode(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETLIGHTMODE = new BigInteger("0000000000000000000000000000000000000000000000000000000010000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getLightMode()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETLIGHTMODE = new BigInteger("0000000000000000000000000000000000000000000000000000000100000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #turnAimerOn(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_TURNAIMERON = new BigInteger("0000000000000000000000000000000000000000000000000000001000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #turnIlluminationOn(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_TURNILLUMINATIONON = new BigInteger("0000000000000000000000000000000000000000000000000000010000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getImageDataSize()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETIMAGEDATASIZE = new BigInteger("0000000000000000000000000000000000000000000000000000100000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #captureImage(byte[])} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_CAPTUREIMAGE = new BigInteger("0000000000000000000000000000000000000000000000000001000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getStreamDataSize()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSTREAMDATASIZE = new BigInteger("0000000000000000000000000000000000000000000000000010000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getStreamDataSize(Rect, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSTREAMDATASIZE2 = new BigInteger("0000000000000000000000000000000000000000000000000100000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #initializeStream(Rect, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_INITIALIZESTREAM = new BigInteger("0000000000000000000000000000000000000000000000001000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #startStream()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_STARTSTREAM = new BigInteger("0000000000000000000000000000000000000000000000010000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #readStream(byte[])} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_READSTREAM = new BigInteger("0000000000000000000000000000000000000000000000100000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #stopStream()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_STOPSTREAM = new BigInteger("0000000000000000000000000000000000000000000001000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #deinitializeStream()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_DEINITIALIZESTREAM = new BigInteger("0000000000000000000000000000000000000000000010000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setSymbologyEnable(int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSYMBOLOGYENABLE = new BigInteger("0000000000000000000000000000000000000000000100000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyEnable(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYENABLE = new BigInteger("0000000000000000000000000000000000000000001000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyMaxDefault(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYMAXDEFAULT = new BigInteger("0000000000000000000000000000000000000000010000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyMinDefault(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYMINDEFAULT = new BigInteger("0000000000000000000000000000000000000000100000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setSymbologyMax(int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSYMBOLOGYMAX = new BigInteger("0000000000000000000000000000000000000001000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyMax(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYMAX = new BigInteger("0000000000000000000000000000000000000010000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setSymbologyMin(int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSYMBOLOGYMIN = new BigInteger("0000000000000000000000000000000000000100000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyMin(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYMIN = new BigInteger("0000000000000000000000000000000000001000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setSymbologyCheckCount(int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSYMBOLOGYCHECKCOUNT = new BigInteger("0000000000000000000000000000000000010000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyCheckCount(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYCHECKCOUNT = new BigInteger("0000000000000000000000000000000000100000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setSymbologyProperty(int, int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSYMBOLOGYPROPERTY = new BigInteger("0000000000000000000000000000000001000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSymbologyProperty(int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSYMBOLOGYPROPERTY = new BigInteger("0000000000000000000000000000000010000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setOutputType(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETOUTPUTTYPE = new BigInteger("0000000000000000000000000000000100000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getOutputType()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETOUTPUTTYPE = new BigInteger("0000000000000000000000000000001000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setSuffix(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSUFFIX = new BigInteger("0000000000000000000000000000010000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getSuffix()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSUFFIX = new BigInteger("0000000000000000000000000000100000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setInverseMode(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETINVERSEMODE = new BigInteger("0000000000000000000000000001000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getInverseMode()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETINVERSEMODE = new BigInteger("0000000000000000000000000010000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setTriggerKeyEnable(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETTRIGGERKEYENABLE = new BigInteger("0000000000000000000000000100000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getTriggerKeyEnable()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETTRIGGERKEYENABLE = new BigInteger("0000000000000000000000001000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setTriggerKeyMode(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETTRIGGERKEYMODE = new BigInteger("0000000000000000000000010000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getTriggerKeyMode()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETTRIGGERKEYMODE = new BigInteger("0000000000000000000000100000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setNumberOfBarcodes(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETNUMBEROFBARCODES = new BigInteger("0000000000000000000001000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getNumberOfBarcodes()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETNUMBEROFBARCODES = new BigInteger("0000000000000000000010000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setDelimiter(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETDELIMITER = new BigInteger("0000000000000000000100000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getDelimiter()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETDELIMITER = new BigInteger("0000000000000000001000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setTriggerKeyTimeout(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETTRIGGERKEYTIMEOUT = new BigInteger("0000000000000000010000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getTriggerKeyTimeout()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETTRIGGERKEYTIMEOUT = new BigInteger("0000000000000000100000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setTriggerKeyOn(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETTRIGGERKEYON = new BigInteger("0000000000000001000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setScannerAPO(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETSCANNERAPO = new BigInteger("0000000000000010000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getScannerAPO()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETSCANNERAPO = new BigInteger("0000000000000100000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setCenteringWindow(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETCENTERINGWINDOW = new BigInteger("0000000000001000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getCenteringWindow()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETCENTERINGWINDOW = new BigInteger("0000000000010000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setDetectionAreaSize(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETDETECTIONAREASIZE = new BigInteger("0000000000100000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getDetectionAreaSize()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETDETECTIONAREASIZE = new BigInteger("0000000001000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setLaserSwingWidth(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETLASERSWINGWIDTH = new BigInteger("0000000010000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getLaserSwingWidth()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETLASERSWINGWIDTH = new BigInteger("0000000100000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setLaserHighlightMode(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETLASERHIGHLIGHTMODE = new BigInteger("0000001000000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getLaserHighlightMode()} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETLASERHIGHLIGHTMODE = new BigInteger("0000010000000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setInternalParameter(byte[])} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETINTERNALPARAMETER = new BigInteger("0000100000000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setInternalParameter(int, int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETINTERNALPARAMETER2 = new BigInteger("0001000000000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #setInternalParameter(int, int[], int[])} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_SETINTERNALPARAMETER3 = new BigInteger("0010000000000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getInternalParameter(int)} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETINTERNALPARAMETER = new BigInteger("0100000000000000000000000000000000000000000000000000000000000000000000", 2);
-            /**
-             * Constant to be used with {@link #isMethodSupported(BigInteger)} in order to check whether the {@link #getInternalParameter(int[], int[])} method is supported on the currently active device
-             */
-            public static final BigInteger METHOD_GETINTERNALPARAMETER2 = new BigInteger("1000000000000000000000000000000000000000000000000000000000000000000000", 2);
-        }
-    }
-
     private static ScannerLibrary instance;
 
     private ScannerLibrary() {
@@ -720,7 +26,7 @@ public class ScannerLibrary {
 
     private static void checkMethodUnsupported(BooleanParcelable unsupported) throws UnsupportedOperationException {
         if (unsupported == null) return;
-        if (!unsupported.isUnsupported()) return;
+        if (!unsupported.getValue()) return;
         String nameOfCurrentMethod = Thread.currentThread()
                 .getStackTrace()[3]
                 .getMethodName();
@@ -729,7 +35,13 @@ public class ScannerLibrary {
                     .getStackTrace()[4]
                     .getMethodName();
         }
-        throw new UnsupportedOperationException("Method \"" + nameOfCurrentMethod + "\" is not supported on this device type!");
+        checkMethodUnsupported(nameOfCurrentMethod, unsupported);
+    }
+
+    private static void checkMethodUnsupported(String methodName, BooleanParcelable unsupported) throws UnsupportedOperationException {
+        if (unsupported == null) return;
+        if (!unsupported.getValue()) return;
+        throw new UnsupportedOperationException("Method \"" + methodName + "\" is not supported on this device type!");
     }
 
     private static ScannerLibrary getInstance() {
@@ -776,32 +88,26 @@ public class ScannerLibrary {
      * Call this function when the application starts.<br/>
      * If you call Scanner Library’s function before open the barcode scanner, it may not work correctly.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int openScanner() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().openScanner(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.openScanner();
     }
 
     /**
      * Close the barcode scanner.<br/>
      * Call this function when the application terminates.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int closeScanner() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().closeScanner(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.closeScanner();
     }
 
     /**
@@ -813,25 +119,19 @@ public class ScannerLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static boolean isScannerOpen() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        boolean retVal = getInstance().edtServiceScannerLibrary().isScannerOpen(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.isScannerOpen();
     }
 
     /**
      * Return all barcode scanner settings to default.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setDefaultAll() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setDefaultAll(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setDefaultAll();
     }
 
     /**
@@ -842,10 +142,7 @@ public class ScannerLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static String getAPIVersion() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        String retVal = getInstance().edtServiceScannerLibrary().getAPIVersion(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getAPIVersion();
     }
 
     /**
@@ -856,10 +153,7 @@ public class ScannerLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static String getModuleVersion() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        String retVal = getInstance().edtServiceScannerLibrary().getModuleVersion(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getModuleVersion();
     }
 
     /**
@@ -871,649 +165,1306 @@ public class ScannerLibrary {
      *
      * @param scanResult {@link ScanResult}: Specify the {@link ScanResult ScanResult} class object to store the Scan Result.<br/>
      * For the member variable of the ScanReslt class, refer to the {@link ScanResult ScanResult class}.
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        ScanResultParcelable scanResultParcelable = new ScanResultParcelable(scanResult);
-        int retVal = getInstance().edtServiceScannerLibrary().getScanResult(scanResultParcelable, unsupported);
-        scanResultParcelable.copyTo(scanResult);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getScanResult(scanResult);
     }
 
     /**
      * Set the behavior of the notification LED.
+     *
      * @param led {@code int}: The behavior of the notification LED<br/>
-     *            {@link ScannerLibrary.CONSTANT.NOTIFICATION#LED_OFF LED_OFF}: The notification LED not lights up in success and failure scanning.<br/>
-     *            {@link ScannerLibrary.CONSTANT.NOTIFICATION#LED_ON LED_ON}: notification LED turns on GREEN in success scanning, and RED in failure scanning.
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     *            {@link ScannerLibraryConstant.NOTIFICATION#LED_OFF LED_OFF}: The notification LED not lights up in success and failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#LED_ON LED_ON}: notification LED turns on GREEN in success scanning, and RED in failure scanning.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setNotificationLED(int led) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setNotificationLED(led, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setNotificationLED(led);
     }
 
     /**
      * Get the behavior of the notification LED.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.NOTIFICATION#LED_OFF LED_OFF}: The notification LED not lights up in success and failure scanning.<br/>
-     *            {@link ScannerLibrary.CONSTANT.NOTIFICATION#LED_ON LED_ON}: notification LED turns on GREEN in success scanning, and RED in failure scanning.<br/>
-     *            {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.NOTIFICATION#LED_OFF LED_OFF}: The notification LED not lights up in success and failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#LED_ON LED_ON}: notification LED turns on GREEN in success scanning, and RED in failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getNotificationLED() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getNotificationLED(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setNotificationVibrator(int vibrator) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setNotificationVibrator(vibrator, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getNotificationLED();
     }
 
     /**
+     * Set the behavior of the notification vibrator.
      *
+     * @param vibrator {@code int}: The behavior of the notification vibrator<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_ALL_OFF VIBRATOR_ALL_OFF}: The notification vibrator does not vibrate in success and failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_FAIL_ON VIBRATOR_FAIL_ON}: The notification vibrator vibrates in failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_SUCCESS_ON VIBRATOR_SUCCESS_ON}: The notification vibrator vibrates in success scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_ALL_ON VIBRATOR_ALL_ON}: The notification vibrator vibrates in success and failure scanning.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setNotificationVibrator(int vibrator) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setNotificationVibrator(vibrator);
+    }
+
+    /**
+     * Get the behavior of the notification vibrator.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_ALL_OFF VIBRATOR_ALL_OFF}: The notification vibrator does not vibrate in success and failure scanning. (default)<br/>
+     *             {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_FAIL_ON VIBRATOR_FAIL_ON}: The notification vibrator vibrates in failure scanning.<br/>
+     *             {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_SUCCESS_ON VIBRATOR_SUCCESS_ON}: The notification vibrator vibrates in success scanning.<br/>
+     *             {@link ScannerLibraryConstant.NOTIFICATION#VIBRATOR_ALL_ON VIBRATOR_ALL_ON}: The notification vibrator vibrates in success and failure scanning.<br/>
+     *             {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getNotificationVibrator() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getNotificationVibrator(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setNotificationSound(int sound) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setNotificationSound(sound, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getNotificationVibrator();
     }
 
     /**
+     * Set the behavior of the notification sound.
      *
+     * @param sound {@code int}: The behavior of the notification sound<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#SOUND_ALL_OFF SOUND_ALL_OFF}: The notification sound does not sounds in success and failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#SOUND_FAIL_ON SOUND_FAIL_ON}: The notification sound sounds in failure scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#SOUND_SUCCESS_ON SOUND_SUCCESS_ON}: The notification sound sounds in success scanning.<br/>
+     *            {@link ScannerLibraryConstant.NOTIFICATION#SOUND_ALL_ON SOUND_ALL_ON}: The notification sound sounds in success and failure scanning.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setNotificationSound(int sound) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setNotificationSound(sound);
+    }
+
+    /**
+     * Get the behavior of the notification sound.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.NOTIFICATION#SOUND_ALL_OFF SOUND_ALL_OFF}: The notification sound does not sounds in success and failure scanning.<br/>
+     *             {@link ScannerLibraryConstant.NOTIFICATION#SOUND_FAIL_ON SOUND_FAIL_ON}: The notification sound sounds in failure scanning.<br/>
+     *             {@link ScannerLibraryConstant.NOTIFICATION#SOUND_SUCCESS_ON SOUND_SUCCESS_ON}: The notification sound sounds in success scanning.<br/>
+     *             {@link ScannerLibraryConstant.NOTIFICATION#SOUND_ALL_ON SOUND_ALL_ON}: The notification sound sounds in success and failure scanning. (default)<br/>
+     *             {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getNotificationSound() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getNotificationSound(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setLightMode(int lightMode) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setLightMode(lightMode, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getNotificationSound();
     }
 
     /**
+     * Set the light mode.<br/>
+     * Set the action of Illumination and Aimer when you will scan, capture image, stream.<br/>
+     * Specify {@link ScannerLibraryConstant.LIGHT_MODE#ALL_ON ALL_ON} when scanning.<br/>
+     * If specify other parameters, reading performance decreased.
      *
+     * @param lightMode {@code int}: Light mode<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#ALL_OFF ALL_OFF}: Illumination and Aimer does not light up<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#AIMER_ON AIMER_ON}: Aimer lights up<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#ILLUMINATION_ON ILLUMINATION_ON}: Illumination lights up<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#ALL_ON ALL_ON}: Illumination and Aimer lights up
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setLightMode(int lightMode) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setLightMode(lightMode);
+    }
+
+    /**
+     * Get the light mode.<br/>
+     * Get the action of Illumination and Aimer behavior when you will scan, capture image, stream.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.LIGHT_MODE#ALL_OFF ALL_OFF}: Illumination and Aimer does not light up<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#AIMER_ON AIMER_ON}: Aimer lights up<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#ILLUMINATION_ON ILLUMINATION_ON}: Illumination lights up (default)<br/>
+     *            {@link ScannerLibraryConstant.LIGHT_MODE#ALL_ON ALL_ON}: Illumination and Aimer lights up<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getLightMode() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getLightMode(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int turnAimerOn(int aimerOn) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().turnAimerOn(aimerOn, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int turnIlluminationOn(int illuminationOn) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().turnIlluminationOn(illuminationOn, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getLightMode();
     }
 
     /**
+     * Control the behavior of the aimer by software.
      *
+     * @param aimerOn {@code int}: The behavior of the aimer<br/>
+     *            {@link ScannerLibraryConstant.CONTROL#AIMER_OFF AIMER_OFF}: Aimer is turned off<br/>
+     *            {@link ScannerLibraryConstant.CONTROL#AIMER_ON AIMER_ON}: Aimer is turned on
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int turnAimerOn(int aimerOn) throws RemoteException, UnsupportedOperationException {
+        return Implementation.turnAimerOn(aimerOn);
+    }
+
+    /**
+     * Control the behavior of the illumination by software.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @param illuminationOn {@code int}: The behavior of the illumination<br/>
+     *            {@link ScannerLibraryConstant.CONTROL#ILLUMINATION_OFF ILLUMINATION_OFF}: Illumination is turned off<br/>
+     *            {@link ScannerLibraryConstant.CONTROL#ILLUMINATION_ON ILLUMINATION_ON}: Illumination is turned on
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int turnIlluminationOn(int illuminationOn) throws RemoteException, UnsupportedOperationException {
+        return Implementation.turnIlluminationOn(illuminationOn);
+   }
+
+    /**
+     * Get the size of the data required for capturing image.
+     *
+     * @return {@code int}: Return the data sizes for image capturing on success.<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getImageDataSize() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getImageDataSize(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().captureImage(buffer, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getImageDataSize();
     }
 
     /**
+     * Capture the image.
      *
+     * @param buffer {@code byte[]}: Buffer to store image data.<br/>
+     *                       Allocate the area necessary for storing image data.<br/>
+     *                       For the detail, refer to {@link #getImageDataSize getImageDataSize}.
+     * @return {@code int}: Return the captured image data size on success.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_NOTOPENED ERROR_NOTOPENED}: Not opened error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+        return Implementation.captureImage(buffer);
+    }
+
+    /**
+     * Get the size of data required for streaming. Use this function if do not change the streaming area or resolution.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: Return the data sizes for streaming on success.<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getStreamDataSize() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getStreamDataSize(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getStreamDataSize2(rectangle, resolution, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int initializeStream(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().initializeStream(rectangle, resolution, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getStreamDataSize();
     }
 
     /**
+     * Get the size of data required for streaming. Use this function if change the streaming area or resolution.
      *
+     * @param rectangle {@link android.graphics.Rect Rect}: Streaming area.<br/>
+     *                                                    Specify the resolution for streaming.<br/>
+     *                                                    The origin is the upper left, the top and bottom specify 0-799, the left and right specify 0-1279. Specify the height and width of the area so that they are multiples of 2 when specifying 1/4 resolution and multiples of 4 when specifying 1/16 resolution.
+     * @param resolution {@code int}: Resolution.<br/>
+     *                               Specify the resolution for streaming.<br/>
+     *                               {@link ScannerLibraryConstant.RESOLUTION#FULL FULL}: Full resolution<br/>
+     *                               {@link ScannerLibraryConstant.RESOLUTION#QUARTER QUARTER}: 1/4 resolution<br/>
+     *                               {@link ScannerLibraryConstant.RESOLUTION#ONE_SIXTEENTH ONE_SIXTEENTH}: 1/16 resolution
+     * @return {@code int}: Return the data sizes for streaming on success.<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getStreamDataSize(rectangle, resolution);
+    }
+
+    /**
+     * Initialization processing for streaming. Use this function if change the streaming area or resolution.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @param rectangle {@link android.graphics.Rect Rect}: Streaming area.<br/>
+     *                                                    Specify the resolution for streaming.<br/>
+     *                                                    The origin is the upper left, the top and bottom specify 0-799, the left and right specify 0-1279. Specify the height and width of the area so that they are multiples of 2 when specifying 1/4 resolution and multiples of 4 when specifying 1/16 resolution.
+     * @param resolution {@code int}: Resolution.<br/>
+     *                               Specify the resolution for streaming.<br/>
+     *                               {@link ScannerLibraryConstant.RESOLUTION#FULL FULL}: Full resolution<br/>
+     *                               {@link ScannerLibraryConstant.RESOLUTION#QUARTER QUARTER}: 1/4 resolution<br/>
+     *                               {@link ScannerLibraryConstant.RESOLUTION#ONE_SIXTEENTH ONE_SIXTEENTH}: 1/16 resolution
+     * @return {@code int}: Return the data sizes for streaming on success.<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int initializeStream(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
+        return Implementation.initializeStream(rectangle, resolution);
+    }
+
+    /**
+     * Start streaming.
+     *
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int startStream() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().startStream(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().readStream(buffer, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.startStream();
     }
 
     /**
+     * Read the stream data.<br/>
+     * To realize preview, call this function continuously.
      *
+     * @param buffer {@code byte[]}: Buffer to store stream data.<br/>
+     *                       Allocate the area necessary for storing stream data.<br/>
+     *                       For the detail, refer to {@link #getStreamDataSize() getStreamDataSize()} or {@link #getStreamDataSize(Rect, int)  getStreamDataSize(Rect, int)}.
+     * @return {@code int}: Return the acquired stream data sizes on success.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+        return Implementation.readStream(buffer);
+    }
+
+    /**
+     * Stop streaming.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int stopStream() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().stopStream(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.stopStream();
     }
 
     /**
+     * Deinitialization processing for streaming. Use this function if changed the streaming area or resolution.
      *
-     *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int deinitializeStream() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().deinitializeStream(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setSymbologyEnable(int symbologyID, int enable) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setSymbologyEnable(symbologyID, enable, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyEnable(symbologyID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMaxDefault(symbologyID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMinDefault(symbologyID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setSymbologyMax(int symbologyID, int max) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setSymbologyMax(symbologyID, max, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMax(symbologyID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setSymbologyMin(int symbologyID, int min) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setSymbologyMin(symbologyID, min, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMin(symbologyID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setSymbologyCheckCount(int symbologyID, int checkCount) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setSymbologyCheckCount(symbologyID, checkCount, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyCheckCount(symbologyID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setSymbologyProperty(int symbologyID, int propertyNo, int propertySetting) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setSymbologyProperty(symbologyID, propertyNo, propertySetting, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSymbologyProperty(symbologyID, propertyNo, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setOutputType(int outputType) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setOutputType(outputType, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.deinitializeStream();
     }
 
     /**
+     * Set reading enable/disable of the specified barcode.
      *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                               For the SymbologyID of each barcode, refer to the Code identification table.<br/>
+     *                               When {@link ScannerLibraryConstant.SYMBOLOGY#ALL ALL} is specified, all barcodes are enabled/disabled.
+     * @param enable {@code int}: Reading enable/disable
+     *                          {@link ScannerLibraryConstant.SYMBOLOGY_PARAMETER#ENABLE ENABLE}: Read enable<br/>
+     *                          {@link ScannerLibraryConstant.SYMBOLOGY_PARAMETER#DISABLE DISABLE}: Read disable
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setSymbologyEnable(int symbologyID, int enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setSymbologyEnable(symbologyID, enable);
+    }
+
+    /**
+     * Get reading enable/disable of the specified barcode.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                For the SymbologyID of each barcode, refer to the Code identification table.
+     * @return {@code int}: {@link ScannerLibraryConstant.SYMBOLOGY_PARAMETER#ENABLE ENABLE}: Read enable<br/>
+     *            {@link ScannerLibraryConstant.SYMBOLOGY_PARAMETER#DISABLE DISABLE}: Read disable<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyEnable(symbologyID);
+    }
+
+    /**
+     * Get the default reading maximum number of digits of the specified barcode.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                For the SymbologyID of each barcode, refer to the Code identification table.
+     * @return {@code int}: Return default reading maximum number of digits on success.<br/>
+     *            If you specified the barcode that the number of digits can not be changed (i.e. {@link ScannerLibraryConstant.SYMBOLOGY#EAN13 EAN13} etc.), return 0.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyMaxDefault(symbologyID);
+    }
+
+    /**
+     * Get the default reading minimum number of digits of the specified barcode.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                For the SymbologyID of each barcode, refer to the Code identification table.
+     * @return {@code int}: Return default reading minimum number of digits on success.<br/>
+     *            If you specified the barcode that the number of digits can not be changed (i.e. {@link ScannerLibraryConstant.SYMBOLOGY#EAN13 EAN13} etc.), return 0.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyMinDefault(symbologyID);
+    }
+
+    /**
+     * Set the reading maximum number of digits of the specified barcode.<br/>
+     * Barcodes larger than the set number of digits are not read.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                               For the SymbologyID of each barcode, refer to the Code identification table.<br/>
+     *                               When {@link ScannerLibraryConstant.SYMBOLOGY#ALL ALL} is specified, all barcodes are enabled/disabled.
+     * @param max {@code int}: reading maximum number of digits.<br/>
+     *                       For the number of digits that can be set, refer to Reading digits.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setSymbologyMax(int symbologyID, int max) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setSymbologyMax(symbologyID, max);
+    }
+
+    /**
+     * Get the reading maximum number of digits of the specified barcode.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                For the SymbologyID of each barcode, refer to the Code identification table.
+     * @return {@code int}: Return reading maximum number of digits on success.<br/>
+     *            If you specified the barcode that the number of digits can not be changed (i.e. {@link ScannerLibraryConstant.SYMBOLOGY#EAN13 EAN13} etc.), return 0.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyMax(symbologyID);
+    }
+
+    /**
+     * Set the reading minimum number of digits of the specified barcode.<br/>
+     * Barcodes less than the set number of digits are not read.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                               For the SymbologyID of each barcode, refer to the Code identification table.<br/>
+     *                               When {@link ScannerLibraryConstant.SYMBOLOGY#ALL ALL} is specified, all barcodes are enabled/disabled.
+     * @param min {@code int}: reading minimum number of digits.<br/>
+     *                       For the number of digits that can be set, refer to Reading digits.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setSymbologyMin(int symbologyID, int min) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setSymbologyMin(symbologyID, min);
+    }
+
+    /**
+     * Get the reading minimum number of digits of the specified barcode.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                For the SymbologyID of each barcode, refer to the Code identification table.
+     * @return {@code int}: Return reading minimum number of digits on success.<br/>
+     *            If you specified the barcode that the number of digits can not be changed (i.e. {@link ScannerLibraryConstant.SYMBOLOGY#EAN13 EAN13} etc.), return 0.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyMin(symbologyID);
+    }
+
+    /**
+     * Set the value of check count of the specified barcode.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                               For the SymbologyID of each barcode, refer to the Code identification table.<br/>
+     *                               The barcodes that can be set to the number of check count on IT-G600 are {@link ScannerLibraryConstant.SYMBOLOGY#CODABAR Codabar}Codabar, {@link ScannerLibraryConstant.SYMBOLOGY#CODE128 Code 128}, {@link ScannerLibraryConstant.SYMBOLOGY#CODE39 Code 39}, {@link ScannerLibraryConstant.SYMBOLOGY#PDF417 PDF 417}, {@link ScannerLibraryConstant.SYMBOLOGY#QR QR}.
+     * @param checkCount {@code int}: Check count<br/>
+     *            Specify the check count between 0 and 10. If you specified 0, do not match the result.<br/>
+     *            Increasing the number of check count has the effect of reducing the misreading rate.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setSymbologyCheckCount(int symbologyID, int checkCount) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setSymbologyCheckCount(symbologyID, checkCount);
+    }
+
+    /**
+     * Get the value of check count of the specified barcode.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                For the SymbologyID of each barcode, refer to the Code identification table.
+     * @return {@code int}: Return the value of check count on success.<br/>
+     *                      The barcodes that can be set to the number of check count on IT-G600 are {@link ScannerLibraryConstant.SYMBOLOGY#CODABAR Codabar}Codabar, {@link ScannerLibraryConstant.SYMBOLOGY#CODE128 Code 128}, {@link ScannerLibraryConstant.SYMBOLOGY#CODE39 Code 39}, {@link ScannerLibraryConstant.SYMBOLOGY#PDF417 PDF 417}, {@link ScannerLibraryConstant.SYMBOLOGY#QR QR}.
+     *                      If you specified the barcode where the number of check count can not be changed (i.e. {@link ScannerLibraryConstant.SYMBOLOGY#EAN13 EAN13} etc.), return 0.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyCheckCount(symbologyID);
+    }
+
+    /**
+     * Set the value of property setting of the specified barcode.<br/>
+     * Specify property number and set value to change.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                 For the SymbologyID of each barcode, refer to the Code identification table.
+     * @param propertyNo {@code int}: Property number<br/>
+     *                                 Specify the property number.<br/>
+     *                                 For the property number, refer to Property of barcode.
+     * @param propertySetting {@code int}: Setting value for property<br/>
+     *                                 Set the property setting value.<br/>
+     *                                 For the property number, refer to Property of barcode.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setSymbologyProperty(int symbologyID, int propertyNo, int propertySetting) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setSymbologyProperty(symbologyID, propertyNo, propertySetting);
+    }
+
+    /**
+     * Get the value of property setting of the specified barcode.<br/>
+     * Specify property number and set value to change.
+     *
+     * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
+     *                                 For the SymbologyID of each barcode, refer to the Code identification table.
+     * @param propertyNo {@code int}: Property number<br/>
+     *                                 Specify the property number.<br/>
+     *                                 For the property number, refer to Property of barcode.
+     * @return {@code int}: Return the value of property setting on success.
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getSymbologyProperty(symbologyID, propertyNo);
+    }
+
+    /**
+     * Set the output type of the scan result.
+     *
+     * @param outputType {@code int}: The output type of the scan result<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#CLIP CLIP}: Clipboard output<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#KEY KEY}: Keyboard output<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#USER USER}: User message output<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#BROADCAST BROADCAST}: Broadcast output
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Intent issued when user message output setting is enabled is "device.common.USERMSG".<br/>
+     *          Intent issued when broadcast output setting is enabled is "casio.intent.action.BROADCAST". To receive the intent, install the IntentManager.<br/>
+     *          For detail of the intent refer to Output type control.
+     */
+    public static int setOutputType(int outputType) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setOutputType(outputType);
+    }
+
+    /**
+     * Get the output type of the scan result.
+     *
+     * @return {@code int}: {@link ScannerLibraryConstant.OUTPUT#CLIP CLIP}: Clipboard output<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#KEY KEY}: Keyboard output<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#USER USER}: User message output<br/>
+     *            {@link ScannerLibraryConstant.OUTPUT#BROADCAST BROADCAST}: Broadcast output
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getOutputType() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getOutputType(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setSuffix(int suffix) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setSuffix(suffix, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getOutputType();
     }
 
     /**
+     * Set the suffix type added at the end of the scan result.
      *
+     * @param suffix {@code int}: Suffix to be added.<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#NONE NONE}: no suffix<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#LF LF}: LF (0x0A)<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#TAB TAB}: TAB (0x09)<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#TAB_LF TAB_LF}: TAB+LF (0x09, 0x0A)
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setSuffix(int suffix) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setSuffix(suffix);
+    }
+
+    /**
+     * Get the suffix type added at the end of the scan result.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.SUFFIX#NONE NONE}: no suffix<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#LF LF}: LF (0x0A)<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#TAB TAB}: TAB (0x09)<br/>
+     *            {@link ScannerLibraryConstant.SUFFIX#TAB_LF TAB_LF}: TAB+LF (0x09, 0x0A)
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getSuffix() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getSuffix(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
-    }
-
-    public static int setInverseMode(int inverseMode) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setInverseMode(inverseMode, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getSuffix();
     }
 
     /**
+     * Set the inverse barcode reading mode.
      *
+     * @param inverseMode {@code int}: Inverse barcode reading mode.<br/>
+     *            {@link ScannerLibraryConstant.INVERSE#DISABLE DISABLE}: Only Normal barcode can read<br/>
+     *            {@link ScannerLibraryConstant.INVERSE#ENABLE ENABLE}: Only Inverse barcode can read<br/>
+     *            {@link ScannerLibraryConstant.INVERSE#AUTO AUTO}: Normal and Inverse barcode can read
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int setInverseMode(int inverseMode) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setInverseMode(inverseMode);
+    }
+
+    /**
+     * Get the inverse barcode reading mode.
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.INVERSE#DISABLE DISABLE}: Only Normal barcode can read<br/>
+     *            {@link ScannerLibraryConstant.INVERSE#ENABLE ENABLE}: Only Inverse barcode can read<br/>
+     *            {@link ScannerLibraryConstant.INVERSE#AUTO AUTO}: Normal and Inverse barcode can read
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getInverseMode() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getInverseMode(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getInverseMode();
     }
 
     public static int setTriggerKeyEnable(int triggerKeyEnable) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyEnable(triggerKeyEnable, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setTriggerKeyEnable(triggerKeyEnable);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getTriggerKeyEnable() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyEnable(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getTriggerKeyEnable();
     }
 
     public static int setTriggerKeyMode(int triggerKeyMode) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyMode(triggerKeyMode, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setTriggerKeyMode(triggerKeyMode);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getTriggerKeyMode() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyMode(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getTriggerKeyMode();
     }
 
     public static int setNumberOfBarcodes(int numberOfBarcodes) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setNumberOfBarcodes(numberOfBarcodes, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setNumberOfBarcodes(numberOfBarcodes);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getNumberOfBarcodes() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getNumberOfBarcodes(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getNumberOfBarcodes();
     }
 
     public static int setDelimiter(int delimiter) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setDelimiter(delimiter, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setDelimiter(delimiter);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getDelimiter() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getDelimiter(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getDelimiter();
     }
 
     public static int setTriggerKeyTimeout(int triggerKeyTimeout) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyTimeout(triggerKeyTimeout, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setTriggerKeyTimeout(triggerKeyTimeout);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getTriggerKeyTimeout() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyTimeout(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getTriggerKeyTimeout();
     }
 
     public static int setTriggerKeyOn(int triggerKeyOn) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyOn(triggerKeyOn, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setTriggerKeyOn(triggerKeyOn);
     }
 
     public static int setScannerAPO(int scannerAPOTime) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setScannerAPO(scannerAPOTime, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setScannerAPO(scannerAPOTime);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getScannerAPO() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getScannerAPO(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getScannerAPO();
     }
 
     public static int setCenteringWindow(int centeringWindow) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setCenteringWindow(centeringWindow, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setCenteringWindow(centeringWindow);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getCenteringWindow() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getCenteringWindow(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getCenteringWindow();
     }
 
     public static int setDetectionAreaSize(int detectionAreaSize) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setDetectionAreaSize(detectionAreaSize, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setDetectionAreaSize(detectionAreaSize);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getDetectionAreaSize() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getDetectionAreaSize(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getDetectionAreaSize();
     }
 
     public static int setLaserSwingWidth(int laserSwingWidth) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setLaserSwingWidth(laserSwingWidth, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setLaserSwingWidth(laserSwingWidth);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getLaserSwingWidth() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getLaserSwingWidth(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getLaserSwingWidth();
     }
 
     public static int setLaserHighlightMode(int enable) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setLaserHighlightMode(enable, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setLaserHighlightMode(enable);
     }
 
     /**
      *
      *
-     * @return {@code int}: {@link ScannerLibrary.CONSTANT.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibrary.CONSTANT.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getLaserHighlightMode(unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getLaserHighlightMode();
     }
 
     public static int setInternalParameter(byte[] command) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter(command, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setInternalParameter(command);
     }
 
     public static int setInternalParameter(int tag, int value) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter2(tag, value, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setInternalParameter(tag, value);
     }
 
     public static int setInternalParameter(int number, int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter3(number, tags, values, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setInternalParameter(number, tags, values);
     }
 
     public static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getInternalParameter(tag, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getInternalParameter(tag);
     }
 
     public static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal = getInstance().edtServiceScannerLibrary().getInternalParameter2(tags, values, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getInternalParameter(tags, values);
     }
 
 
+    private static final class Implementation {
+        private static int openScanner() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().openScanner(unsupported);
+            checkMethodUnsupported("openScanner", unsupported);
+            return retVal;
+        }
+
+        private static int closeScanner() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().closeScanner(unsupported);
+            checkMethodUnsupported("closeScanner", unsupported);
+            return retVal;
+        }
+
+        private static boolean isScannerOpen() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal = getInstance().edtServiceScannerLibrary().isScannerOpen(unsupported);
+            checkMethodUnsupported("isScannerOpen", unsupported);
+            return retVal;
+        }
+
+        private static int setDefaultAll() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setDefaultAll(unsupported);
+            checkMethodUnsupported("setDefaultAll", unsupported);
+            return retVal;
+        }
+
+        private static String getAPIVersion() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            String retVal = getInstance().edtServiceScannerLibrary().getAPIVersion(unsupported);
+            checkMethodUnsupported("getAPIVersion", unsupported);
+            return retVal;
+        }
+
+        private static String getModuleVersion() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            String retVal = getInstance().edtServiceScannerLibrary().getModuleVersion(unsupported);
+            checkMethodUnsupported("getModuleVersion", unsupported);
+            return retVal;
+        }
+
+        private static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            ScanResultParcelable scanResultParcelable = new ScanResultParcelable(scanResult);
+            int retVal = getInstance().edtServiceScannerLibrary().getScanResult(scanResultParcelable, unsupported);
+            scanResultParcelable.copyTo(scanResult);
+            checkMethodUnsupported("getScanResult", unsupported);
+            return retVal;
+        }
+
+        private static int setNotificationLED(int led) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setNotificationLED(led, unsupported);
+            checkMethodUnsupported("setNotificationLED", unsupported);
+            return retVal;
+        }
+
+        private static int getNotificationLED() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getNotificationLED(unsupported);
+            checkMethodUnsupported("getNotificationLED", unsupported);
+            return retVal;
+        }
+
+        private static int setNotificationVibrator(int vibrator) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setNotificationVibrator(vibrator, unsupported);
+            checkMethodUnsupported("setNotificationVibrator", unsupported);
+            return retVal;
+        }
+
+        private static int getNotificationVibrator() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getNotificationVibrator(unsupported);
+            checkMethodUnsupported("getNotificationVibrator", unsupported);
+            return retVal;
+        }
+
+        private static int setNotificationSound(int sound) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setNotificationSound(sound, unsupported);
+            checkMethodUnsupported("setNotificationSound", unsupported);
+            return retVal;
+        }
+
+        private static int getNotificationSound() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getNotificationSound(unsupported);
+            checkMethodUnsupported("getNotificationSound", unsupported);
+            return retVal;
+        }
+
+        private static int setLightMode(int lightMode) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setLightMode(lightMode, unsupported);
+            checkMethodUnsupported("setLightMode", unsupported);
+            return retVal;
+        }
+
+        private static int getLightMode() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getLightMode(unsupported);
+            checkMethodUnsupported("getLightMode", unsupported);
+            return retVal;
+        }
+
+        private static int turnAimerOn(int aimerOn) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().turnAimerOn(aimerOn, unsupported);
+            checkMethodUnsupported("turnAimerOn", unsupported);
+            return retVal;
+        }
+
+        private static int turnIlluminationOn(int illuminationOn) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().turnIlluminationOn(illuminationOn, unsupported);
+            checkMethodUnsupported("turnIlluminationOn", unsupported);
+            return retVal;
+        }
+
+        private static int getImageDataSize() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getImageDataSize(unsupported);
+            checkMethodUnsupported("getImageDataSize", unsupported);
+            return retVal;
+        }
+
+        private static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().captureImage(buffer, unsupported);
+            checkMethodUnsupported("captureImage", unsupported);
+            return retVal;
+        }
+
+        private static int getStreamDataSize() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getStreamDataSize(unsupported);
+            checkMethodUnsupported("getStreamDataSize", unsupported);
+            return retVal;
+        }
+
+        private static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getStreamDataSize2(rectangle, resolution, unsupported);
+            checkMethodUnsupported("getStreamDataSize", unsupported);
+            return retVal;
+        }
+
+        private static int initializeStream(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().initializeStream(rectangle, resolution, unsupported);
+            checkMethodUnsupported("initializeStream", unsupported);
+            return retVal;
+        }
+
+        private static int startStream() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().startStream(unsupported);
+            checkMethodUnsupported("startStream", unsupported);
+            return retVal;
+        }
+
+        private static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().readStream(buffer, unsupported);
+            checkMethodUnsupported("readStream", unsupported);
+            return retVal;
+        }
+
+        private static int stopStream() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().stopStream(unsupported);
+            checkMethodUnsupported("stopStream", unsupported);
+            return retVal;
+        }
+
+        private static int deinitializeStream() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().deinitializeStream(unsupported);
+            checkMethodUnsupported("deinitializeStream", unsupported);
+            return retVal;
+        }
+
+        private static int setSymbologyEnable(int symbologyID, int enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setSymbologyEnable(symbologyID, enable, unsupported);
+            checkMethodUnsupported("setSymbologyEnable", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyEnable(symbologyID, unsupported);
+            checkMethodUnsupported("getSymbologyEnable", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMaxDefault(symbologyID, unsupported);
+            checkMethodUnsupported("getSymbologyMaxDefault", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMinDefault(symbologyID, unsupported);
+            checkMethodUnsupported("getSymbologyMinDefault", unsupported);
+            return retVal;
+        }
+
+        private static int setSymbologyMax(int symbologyID, int max) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setSymbologyMax(symbologyID, max, unsupported);
+            checkMethodUnsupported("setSymbologyMax", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMax(symbologyID, unsupported);
+            checkMethodUnsupported("getSymbologyMax", unsupported);
+            return retVal;
+        }
+
+        private static int setSymbologyMin(int symbologyID, int min) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setSymbologyMin(symbologyID, min, unsupported);
+            checkMethodUnsupported("setSymbologyMin", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMin(symbologyID, unsupported);
+            checkMethodUnsupported("getSymbologyMin", unsupported);
+            return retVal;
+        }
+
+        private static int setSymbologyCheckCount(int symbologyID, int checkCount) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setSymbologyCheckCount(symbologyID, checkCount, unsupported);
+            checkMethodUnsupported("setSymbologyCheckCount", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyCheckCount(symbologyID, unsupported);
+            checkMethodUnsupported("getSymbologyCheckCount", unsupported);
+            return retVal;
+        }
+
+        private static int setSymbologyProperty(int symbologyID, int propertyNo, int propertySetting) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setSymbologyProperty(symbologyID, propertyNo, propertySetting, unsupported);
+            checkMethodUnsupported("setSymbologyProperty", unsupported);
+            return retVal;
+        }
+
+        private static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSymbologyProperty(symbologyID, propertyNo, unsupported);
+            checkMethodUnsupported("getSymbologyProperty", unsupported);
+            return retVal;
+        }
+
+        private static int setOutputType(int outputType) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setOutputType(outputType, unsupported);
+            checkMethodUnsupported("setOutputType", unsupported);
+            return retVal;
+        }
+
+        private static int getOutputType() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getOutputType(unsupported);
+            checkMethodUnsupported("getOutputType", unsupported);
+            return retVal;
+        }
+
+        private static int setSuffix(int suffix) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setSuffix(suffix, unsupported);
+            checkMethodUnsupported("setSuffix", unsupported);
+            return retVal;
+        }
+
+        private static int getSuffix() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getSuffix(unsupported);
+            checkMethodUnsupported("getSuffix", unsupported);
+            return retVal;
+        }
+
+        private static int setInverseMode(int inverseMode) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setInverseMode(inverseMode, unsupported);
+            checkMethodUnsupported("setInverseMode", unsupported);
+            return retVal;
+        }
+
+        private static int getInverseMode() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getInverseMode(unsupported);
+            checkMethodUnsupported("getInverseMode", unsupported);
+            return retVal;
+        }
+
+        private static int setTriggerKeyEnable(int triggerKeyEnable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyEnable(triggerKeyEnable, unsupported);
+            checkMethodUnsupported("setTriggerKeyEnable", unsupported);
+            return retVal;
+        }
+
+        private static int getTriggerKeyEnable() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyEnable(unsupported);
+            checkMethodUnsupported("getTriggerKeyEnable", unsupported);
+            return retVal;
+        }
+
+        private static int setTriggerKeyMode(int triggerKeyMode) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyMode(triggerKeyMode, unsupported);
+            checkMethodUnsupported("setTriggerKeyMode", unsupported);
+            return retVal;
+        }
+
+        private static int getTriggerKeyMode() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyMode(unsupported);
+            checkMethodUnsupported("getTriggerKeyMode", unsupported);
+            return retVal;
+        }
+
+        private static int setNumberOfBarcodes(int numberOfBarcodes) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setNumberOfBarcodes(numberOfBarcodes, unsupported);
+            checkMethodUnsupported("setNumberOfBarcodes", unsupported);
+            return retVal;
+        }
+
+        private static int getNumberOfBarcodes() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getNumberOfBarcodes(unsupported);
+            checkMethodUnsupported("getNumberOfBarcodes", unsupported);
+            return retVal;
+        }
+
+        private static int setDelimiter(int delimiter) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setDelimiter(delimiter, unsupported);
+            checkMethodUnsupported("setDelimiter", unsupported);
+            return retVal;
+        }
+
+        private static int getDelimiter() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getDelimiter(unsupported);
+            checkMethodUnsupported("getDelimiter", unsupported);
+            return retVal;
+        }
+
+        private static int setTriggerKeyTimeout(int triggerKeyTimeout) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyTimeout(triggerKeyTimeout, unsupported);
+            checkMethodUnsupported("setTriggerKeyTimeout", unsupported);
+            return retVal;
+        }
+
+        private static int getTriggerKeyTimeout() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyTimeout(unsupported);
+            checkMethodUnsupported("getTriggerKeyTimeout", unsupported);
+            return retVal;
+        }
+
+        private static int setTriggerKeyOn(int triggerKeyOn) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyOn(triggerKeyOn, unsupported);
+            checkMethodUnsupported("setTriggerKeyOn", unsupported);
+            return retVal;
+        }
+
+        private static int setScannerAPO(int scannerAPOTime) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setScannerAPO(scannerAPOTime, unsupported);
+            checkMethodUnsupported("setScannerAPO", unsupported);
+            return retVal;
+        }
+
+        private static int getScannerAPO() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getScannerAPO(unsupported);
+            checkMethodUnsupported("getScannerAPO", unsupported);
+            return retVal;
+        }
+
+        private static int setCenteringWindow(int centeringWindow) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setCenteringWindow(centeringWindow, unsupported);
+            checkMethodUnsupported("setCenteringWindow", unsupported);
+            return retVal;
+        }
+
+        private static int getCenteringWindow() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getCenteringWindow(unsupported);
+            checkMethodUnsupported("getCenteringWindow", unsupported);
+            return retVal;
+        }
+
+        private static int setDetectionAreaSize(int detectionAreaSize) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setDetectionAreaSize(detectionAreaSize, unsupported);
+            checkMethodUnsupported("setDetectionAreaSize", unsupported);
+            return retVal;
+        }
+
+        private static int getDetectionAreaSize() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getDetectionAreaSize(unsupported);
+            checkMethodUnsupported("getDetectionAreaSize", unsupported);
+            return retVal;
+        }
+
+        private static int setLaserSwingWidth(int laserSwingWidth) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setLaserSwingWidth(laserSwingWidth, unsupported);
+            checkMethodUnsupported("setLaserSwingWidth", unsupported);
+            return retVal;
+        }
+
+        private static int getLaserSwingWidth() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getLaserSwingWidth(unsupported);
+            checkMethodUnsupported("getLaserSwingWidth", unsupported);
+            return retVal;
+        }
+
+        private static int setLaserHighlightMode(int enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setLaserHighlightMode(enable, unsupported);
+            checkMethodUnsupported("setLaserHighlightMode", unsupported);
+            return retVal;
+        }
+
+        private static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getLaserHighlightMode(unsupported);
+            checkMethodUnsupported("getLaserHighlightMode", unsupported);
+            return retVal;
+        }
+
+        private static int setInternalParameter(byte[] command) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter(command, unsupported);
+            checkMethodUnsupported("setInternalParameter", unsupported);
+            return retVal;
+        }
+
+        private static int setInternalParameter(int tag, int value) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter2(tag, value, unsupported);
+            checkMethodUnsupported("setInternalParameter", unsupported);
+            return retVal;
+        }
+
+        private static int setInternalParameter(int number, int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter3(number, tags, values, unsupported);
+            checkMethodUnsupported("setInternalParameter", unsupported);
+            return retVal;
+        }
+
+        private static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getInternalParameter(tag, unsupported);
+            checkMethodUnsupported("getInternalParameter", unsupported);
+            return retVal;
+        }
+
+        private static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtServiceScannerLibrary().getInternalParameter2(tags, values, unsupported);
+            checkMethodUnsupported("getInternalParameter", unsupported);
+            return retVal;
+        }
+    }
 }

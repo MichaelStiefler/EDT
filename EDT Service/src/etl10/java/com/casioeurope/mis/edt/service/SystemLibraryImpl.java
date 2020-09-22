@@ -6,7 +6,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.casioeurope.mis.edt.ISystemLibrary;
-import com.casioeurope.mis.edt.types.BooleanParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
 
 import java.math.BigInteger;
 import java.util.Arrays;

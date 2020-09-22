@@ -5,11 +5,11 @@ import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
 import android.os.RemoteException;
 
-import com.casioeurope.mis.edt.types.APN;
-import com.casioeurope.mis.edt.types.APNParcelable;
-import com.casioeurope.mis.edt.types.ReadWriteFileParams;
-import com.casioeurope.mis.edt.types.ReadWriteFileParamsParcelable;
-import com.casioeurope.mis.edt.types.WifiConfigurationParcelable;
+import com.casioeurope.mis.edt.type.APN;
+import com.casioeurope.mis.edt.type.APNParcelable;
+import com.casioeurope.mis.edt.type.ReadWriteFileParams;
+import com.casioeurope.mis.edt.type.ReadWriteFileParamsParcelable;
+import com.casioeurope.mis.edt.type.WifiConfigurationParcelable;
 
 import java.nio.file.CopyOption;
 import java.nio.file.Path;

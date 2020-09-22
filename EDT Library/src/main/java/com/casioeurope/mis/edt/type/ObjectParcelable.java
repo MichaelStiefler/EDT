@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.types;
+package com.casioeurope.mis.edt.type;
 
 import android.os.Parcel;
 import android.os.Parcelable;

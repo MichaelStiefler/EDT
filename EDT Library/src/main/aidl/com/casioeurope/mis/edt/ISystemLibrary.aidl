@@ -1,5 +1,5 @@
 package com.casioeurope.mis.edt;
-import com.casioeurope.mis.edt.types.IParcelableTypes;
+import com.casioeurope.mis.edt.type.IParcelableTypes;
 
 interface ISystemLibrary {
     boolean isMethodSupported(String methodBigInteger);

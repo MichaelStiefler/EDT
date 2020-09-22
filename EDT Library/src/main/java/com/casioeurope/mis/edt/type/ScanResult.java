@@ -1,4 +1,4 @@
-package com.casioeurope.mis.edt.types;
+package com.casioeurope.mis.edt.type;
 
 /**
  * Scan Result class for use in {@link com.casioeurope.mis.edt.ScannerLibrary} methods

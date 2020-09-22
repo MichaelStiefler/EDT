@@ -10,8 +10,8 @@ import android.view.View;
 
 import com.casioeurope.mis.edt.EDTLibrary;
 import com.casioeurope.mis.edt.SystemLibrary;
-import com.casioeurope.mis.edt.types.APN;
-import com.casioeurope.mis.edt.types.ReadWriteFileParams;
+import com.casioeurope.mis.edt.type.APN;
+import com.casioeurope.mis.edt.type.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
 
 import java.nio.file.LinkOption;

@@ -2,8 +2,8 @@ package com.casioeurope.mis.edt.service;
 
 import com.casioeurope.mis.edt.IKeyLibrary;
 import com.casioeurope.mis.edt.KeyLibrary;
-import com.casioeurope.mis.edt.types.ApplicationInfoParcelable;
-import com.casioeurope.mis.edt.types.BooleanParcelable;
+import com.casioeurope.mis.edt.type.ApplicationInfoParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
 
 import java.math.BigInteger;
 import java.util.Arrays;

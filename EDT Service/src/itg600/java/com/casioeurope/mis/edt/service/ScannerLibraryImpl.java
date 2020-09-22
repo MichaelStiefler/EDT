@@ -4,8 +4,8 @@ import android.graphics.Rect;
 import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.IScannerLibrary;
-import com.casioeurope.mis.edt.types.BooleanParcelable;
-import com.casioeurope.mis.edt.types.ScanResultParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
+import com.casioeurope.mis.edt.type.ScanResultParcelable;
 
 import java.math.BigInteger;
 import java.util.Arrays;
