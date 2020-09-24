@@ -1,9 +1,11 @@
 package com.casioeurope.mis.edt.service;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.IScannerLibrary;
+import com.casioeurope.mis.edt.constant.ScannerLibraryConstant;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
 import com.casioeurope.mis.edt.type.ScanResultParcelable;
 
@@ -12,7 +14,7 @@ import java.util.Arrays;
 
 @SuppressWarnings({"unused", "RedundantThrows", "RedundantSuppression", "SpellCheckingInspection"})
 public class ScannerLibraryImpl extends IScannerLibrary.Stub {
-    private static final BigInteger METHODS_SUPPORTED = new BigInteger("1111111111111111111111111111111111111111111111111111111111111111111111", 2);
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("1111111111111110011100111011111111111111111111111111111111111111111111", 2);
     private static String[] methodNames = {"openScanner",
             "closeScanner",
             "isScannerOpen",
@@ -200,13 +202,13 @@ public class ScannerLibraryImpl extends IScannerLibrary.Stub {
     }
 
     public int turnAimerOn(int aimerOn, BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        return getJpInstance().turnAimerOn(aimerOn);
+        unsupported.setValue(true);
+        return ScannerLibraryConstant.RETURN.ERROR_UNSUPPORTED;
     }
 
     public int turnIlluminationOn(int illuminationOn, BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        return getJpInstance().turnIlluminationOn(illuminationOn);
+        unsupported.setValue(true);
+        return ScannerLibraryConstant.RETURN.ERROR_UNSUPPORTED;
     }
 
     public int getImageDataSize(BooleanParcelable unsupported) throws RemoteException {
@@ -225,13 +227,13 @@ public class ScannerLibraryImpl extends IScannerLibrary.Stub {
     }
 
     public int getStreamDataSize2(Rect rectangle, int resolution, BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        return getJpInstance().getStreamDataSize(rectangle, resolution);
+        unsupported.setValue(true);
+        return ScannerLibraryConstant.RETURN.ERROR_UNSUPPORTED;
     }
 
     public int initializeStream(Rect rectangle, int resolution, BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        return getJpInstance().initializeStream(rectangle, resolution);
+        unsupported.setValue(true);
+        return ScannerLibraryConstant.RETURN.ERROR_UNSUPPORTED;
     }
 
     public int startStream(BooleanParcelable unsupported) throws RemoteException {
@@ -250,8 +252,8 @@ public class ScannerLibraryImpl extends IScannerLibrary.Stub {
     }
 
     public int deinitializeStream(BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        return getJpInstance().deinitializeStream();
+        unsupported.setValue(true);
+        return ScannerLibraryConstant.RETURN.ERROR_UNSUPPORTED;
     }
 
     public int setSymbologyEnable(int symbologyID, int enable, BooleanParcelable unsupported) throws RemoteException {

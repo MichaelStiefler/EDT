@@ -84,27 +84,27 @@ public class ScannerLibrary {
     }
 
     /**
-     * Open the barcode scanner.<br/>
-     * Call this function when the application starts.<br/>
-     * If you call Scanner Library’s function before open the barcode scanner, it may not work correctly.
+     * Open the barcode scanner.
      *
      * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Call this function when the application starts.<br/>
+     * If you call Scanner Library’s function before open the barcode scanner, it may not work correctly.
      */
     public static int openScanner() throws RemoteException, UnsupportedOperationException {
         return Implementation.openScanner();
     }
 
     /**
-     * Close the barcode scanner.<br/>
-     * Call this function when the application terminates.
+     * Close the barcode scanner.
      *
      * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Call this function when the application terminates.
      */
     public static int closeScanner() throws RemoteException, UnsupportedOperationException {
         return Implementation.closeScanner();
@@ -157,11 +157,7 @@ public class ScannerLibrary {
     }
 
     /**
-     * Get the last Scan Result.<br/>
-     * When you read multiple barcodes, you can get the final Scan Result.<br/>
-     * When you fail scanning, you can get all of data are cleared except scan time.<br/>
-     * When you call this function before scanning ever, you can get all of data are cleared.<br/>
-     * For the default value, refer to the {@link ScanResult ScanResult class}.
+     * Get the last Scan Result.
      *
      * @param scanResult {@link ScanResult}: Specify the {@link ScanResult ScanResult} class object to store the Scan Result.<br/>
      * For the member variable of the ScanReslt class, refer to the {@link ScanResult ScanResult class}.
@@ -170,6 +166,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote When you read multiple barcodes, you can get the final Scan Result.<br/>
+     * When you fail scanning, you can get all of data are cleared except scan time.<br/>
+     * When you call this function before scanning ever, you can get all of data are cleared.<br/>
+     * For the default value, refer to the {@link ScanResult ScanResult class}.
      */
     public static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException {
         return Implementation.getScanResult(scanResult);
@@ -271,10 +271,7 @@ public class ScannerLibrary {
     }
 
     /**
-     * Set the light mode.<br/>
-     * Set the action of Illumination and Aimer when you will scan, capture image, stream.<br/>
-     * Specify {@link ScannerLibraryConstant.LIGHT_MODE#ALL_ON ALL_ON} when scanning.<br/>
-     * If specify other parameters, reading performance decreased.
+     * Set the light mode.
      *
      * @param lightMode {@code int}: Light mode<br/>
      *            {@link ScannerLibraryConstant.LIGHT_MODE#ALL_OFF ALL_OFF}: Illumination and Aimer does not light up<br/>
@@ -286,14 +283,16 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Set the action of Illumination and Aimer when you will scan, capture image, stream.<br/>
+     * Specify {@link ScannerLibraryConstant.LIGHT_MODE#ALL_ON ALL_ON} when scanning.<br/>
+     * If specify other parameters, reading performance decreased.
      */
     public static int setLightMode(int lightMode) throws RemoteException, UnsupportedOperationException {
         return Implementation.setLightMode(lightMode);
     }
 
     /**
-     * Get the light mode.<br/>
-     * Get the action of Illumination and Aimer behavior when you will scan, capture image, stream.
+     * Get the light mode.
      *
      * @return {@code int}: {@link ScannerLibraryConstant.LIGHT_MODE#ALL_OFF ALL_OFF}: Illumination and Aimer does not light up<br/>
      *            {@link ScannerLibraryConstant.LIGHT_MODE#AIMER_ON AIMER_ON}: Aimer lights up<br/>
@@ -302,6 +301,7 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Get the action of Illumination and Aimer behavior when you will scan, capture image, stream.
      */
     public static int getLightMode() throws RemoteException, UnsupportedOperationException {
         return Implementation.getLightMode();
@@ -435,8 +435,7 @@ public class ScannerLibrary {
     }
 
     /**
-     * Read the stream data.<br/>
-     * To realize preview, call this function continuously.
+     * Read the stream data.
      *
      * @param buffer {@code byte[]}: Buffer to store stream data.<br/>
      *                       Allocate the area necessary for storing stream data.<br/>
@@ -446,6 +445,7 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote To realize preview, call this function continuously.
      */
     public static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException {
         return Implementation.readStream(buffer);
@@ -543,8 +543,7 @@ public class ScannerLibrary {
     }
 
     /**
-     * Set the reading maximum number of digits of the specified barcode.<br/>
-     * Barcodes larger than the set number of digits are not read.
+     * Set the reading maximum number of digits of the specified barcode.
      *
      * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
      *                               For the SymbologyID of each barcode, refer to the Code identification table.<br/>
@@ -556,6 +555,7 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Barcodes larger than the set number of digits are not read.
      */
     public static int setSymbologyMax(int symbologyID, int max) throws RemoteException, UnsupportedOperationException {
         return Implementation.setSymbologyMax(symbologyID, max);
@@ -578,8 +578,7 @@ public class ScannerLibrary {
     }
 
     /**
-     * Set the reading minimum number of digits of the specified barcode.<br/>
-     * Barcodes less than the set number of digits are not read.
+     * Set the reading minimum number of digits of the specified barcode.
      *
      * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
      *                               For the SymbologyID of each barcode, refer to the Code identification table.<br/>
@@ -591,6 +590,7 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Barcodes less than the set number of digits are not read.
      */
     public static int setSymbologyMin(int symbologyID, int min) throws RemoteException, UnsupportedOperationException {
         return Implementation.setSymbologyMin(symbologyID, min);
@@ -649,8 +649,7 @@ public class ScannerLibrary {
     }
 
     /**
-     * Set the value of property setting of the specified barcode.<br/>
-     * Specify property number and set value to change.
+     * Set the value of property setting of the specified barcode.
      *
      * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
      *                                 For the SymbologyID of each barcode, refer to the Code identification table.
@@ -665,14 +664,14 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Specify property number and set value to change.
      */
     public static int setSymbologyProperty(int symbologyID, int propertyNo, int propertySetting) throws RemoteException, UnsupportedOperationException {
         return Implementation.setSymbologyProperty(symbologyID, propertyNo, propertySetting);
     }
 
     /**
-     * Get the value of property setting of the specified barcode.<br/>
-     * Specify property number and set value to change.
+     * Get the value of property setting of the specified barcode.
      *
      * @param symbologyID {@code int}: Specify the SymbologyID of each barcode.<br/>
      *                                 For the SymbologyID of each barcode, refer to the Code identification table.
@@ -684,6 +683,7 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Specify property number and set value to change.
      */
     public static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException {
         return Implementation.getSymbologyProperty(symbologyID, propertyNo);
@@ -778,7 +778,7 @@ public class ScannerLibrary {
     /**
      * Get the inverse barcode reading mode.
      *
-     * @return {@code int}: {@link ScannerLibraryConstant.INVERSE#DISABLE DISABLE}: Only Normal barcode can read<br/>
+     * @return {@code int}: {@link ScannerLibraryConstant.INVERSE#DISABLE DISABLE}: Only Normal barcode can read (default)br/>
      *            {@link ScannerLibraryConstant.INVERSE#ENABLE ENABLE}: Only Inverse barcode can read<br/>
      *            {@link ScannerLibraryConstant.INVERSE#AUTO AUTO}: Normal and Inverse barcode can read
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
@@ -789,15 +789,28 @@ public class ScannerLibrary {
         return Implementation.getInverseMode();
     }
 
+    /**
+     * Set the Trigger key enable/disable.
+     *
+     * @param triggerKeyEnable {@code int}: Trigger key enable/disable.<br/>
+     *            {@link ScannerLibraryConstant.TRIGGERKEY#DISABLE DISABLE}: Trigger key disable<br/>
+     *            {@link ScannerLibraryConstant.TRIGGERKEY#ENABLE ENABLE}: Trigger key enable
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setTriggerKeyEnable(int triggerKeyEnable) throws RemoteException, UnsupportedOperationException {
         return Implementation.setTriggerKeyEnable(triggerKeyEnable);
     }
 
     /**
+     * Get the Trigger key enable/disable.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.TRIGGERKEY#DISABLE DISABLE}: Trigger key disable<br/>
+     *            {@link ScannerLibraryConstant.TRIGGERKEY#ENABLE ENABLE}: Trigger key enable (default)<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -805,15 +818,33 @@ public class ScannerLibrary {
         return Implementation.getTriggerKeyEnable();
     }
 
+    /**
+     * Set the Trigger key mode.
+     *
+     * @param triggerKeyMode {@code int}: Trigger key enable/disable.<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#NORMAL NORMAL}: Normal Scan<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#CONTINUOUS CONTINUOUS}: Continuous reading<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#MULTI_STEP MULTI_STEP}: Multi-step reading<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#PACKAGE PACKAGE}: Package reading<br/>
+     *                                  This setting returns to the default after rebooting. To use this setting, please set it when starting the application.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setTriggerKeyMode(int triggerKeyMode) throws RemoteException, UnsupportedOperationException {
         return Implementation.setTriggerKeyMode(triggerKeyMode);
     }
 
     /**
+     * Get the Trigger key mode.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}:{@link ScannerLibraryConstant.TRIGGER_MODE#NORMAL NORMAL}: Normal Scan (default)<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#CONTINUOUS CONTINUOUS}: Continuous reading<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#MULTI_STEP MULTI_STEP}: Multi-step reading<br/>
+     *            {@link ScannerLibraryConstant.TRIGGER_MODE#PACKAGE PACKAGE}: Package reading<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -821,15 +852,26 @@ public class ScannerLibrary {
         return Implementation.getTriggerKeyMode();
     }
 
+    /**
+     * Set the number of Barcodes to be scanned in Multi-step scan or Package scan.
+     *
+     * @param numberOfBarcodes {@code int}: The number of Barcodes to be scanned in Multi-step scan or Package scan.<br/>
+     *            Specify a value between 2 and 10.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setNumberOfBarcodes(int numberOfBarcodes) throws RemoteException, UnsupportedOperationException {
         return Implementation.setNumberOfBarcodes(numberOfBarcodes);
     }
 
     /**
+     * Get the number of barcodes to be scanned in Multi-step scan or Package scan.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: Return the number of barcodes to be scanned in Multi-step scan or Package scan. Default value is 4.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -837,15 +879,27 @@ public class ScannerLibrary {
         return Implementation.getNumberOfBarcodes();
     }
 
+    /**
+     * Set the delimiter for Package scan.
+     *
+     * @param delimiter {@code int}: The delimiter for Package scan.<br/>
+     *            Specify a value between 0x00 and 0x7f as ASCII.<br/>
+     *            When 0x00 is set, it operates None (No delimiter).
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setDelimiter(int delimiter) throws RemoteException, UnsupportedOperationException {
         return Implementation.setDelimiter(delimiter);
     }
 
     /**
+     * Get the delimiter for Package scan.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: Return the delimiter as ASCII for Package scan. Default value is "US(0x1f)".<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -853,15 +907,28 @@ public class ScannerLibrary {
         return Implementation.getDelimiter();
     }
 
+    /**
+     * Set the Trigger key timeout.
+     *
+     * @param triggerKeyTimeout {@code int}: Trigger timeout<br/>
+     *            Specify a value in milliseconds.<br/>
+     *            The setting range is 1000 to 10000.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setTriggerKeyTimeout(int triggerKeyTimeout) throws RemoteException, UnsupportedOperationException {
         return Implementation.setTriggerKeyTimeout(triggerKeyTimeout);
     }
 
     /**
+     * Get the Trigger key timeout.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: Return the value of Trigger key timeout on success.<br/>
+     *            Default value is 10000.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -869,19 +936,43 @@ public class ScannerLibrary {
         return Implementation.getTriggerKeyTimeout();
     }
 
+    /**
+     * Control the behavior of trigger key by software.
+     *
+     * @param triggerKeyOn {@code int}: Status of trigger key<br/>
+     *            {@link ScannerLibraryConstant.CONTROL#TRIGGER_OFF TRIGGER_OFF}: Trigger key is released virtually<br/>
+     *            {@link ScannerLibraryConstant.CONTROL#TRIGGER_ON TRIGGER_ON}: Trigger key is pressed virtually
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setTriggerKeyOn(int triggerKeyOn) throws RemoteException, UnsupportedOperationException {
         return Implementation.setTriggerKeyOn(triggerKeyOn);
     }
 
+    /**
+     * Set the Auto Power Off(APO) time of the barcode scanner.
+     *
+     * @param scannerAPOTime {@code int}: The APO time of the barcode scanner.<br/>
+     *            Specify a value between 0 and 65535 in seconds.<br/>
+     *            When set to 0, APO is disabled.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setScannerAPO(int scannerAPOTime) throws RemoteException, UnsupportedOperationException {
         return Implementation.setScannerAPO(scannerAPOTime);
     }
 
     /**
+     * Get the Auto Power Off(APO) time of the barcode scanner.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: Return the APO time of barcode scanner. Default value is 60.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -889,15 +980,31 @@ public class ScannerLibrary {
         return Implementation.getScannerAPO();
     }
 
+    /**
+     * Set enable/disable of the centering window mode.
+     *
+     * @param centeringWindow {@code int}: Enable/disable of the centering window mode.<br/>
+     *            {@link ScannerLibraryConstant.CENTERING_WINDOW_MODE#DISABLE DISABLE}: Centering window mode disable<br/>
+     *            {@link ScannerLibraryConstant.CENTERING_WINDOW_MODE#ENABLE ENABLE}: Centering window mode enable
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Refer to the figure below for the barcode that can be read while the center reading mode is in effect. If part of the barcode is included in the detection area, read the barcode.<br/>
+     *            <img src="./doc-files/setcenteringwindow_01.png" /><br/>
+     *            <img src="./doc-files/setcenteringwindow_02.png" />
+     */
     public static int setCenteringWindow(int centeringWindow) throws RemoteException, UnsupportedOperationException {
         return Implementation.setCenteringWindow(centeringWindow);
     }
 
     /**
+     * Get enable/disable of the centering window mode.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.CENTERING_WINDOW_MODE#DISABLE DISABLE}: Centering window mode disable (default)<br/>
+     *            {@link ScannerLibraryConstant.CENTERING_WINDOW_MODE#ENABLE ENABLE}: Centering window mode enable<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -905,15 +1012,32 @@ public class ScannerLibrary {
         return Implementation.getCenteringWindow();
     }
 
+    /**
+     * Set the size of barcode detection area for the centering window mode.
+     *
+     * @param detectionAreaSize {@code int}: The size of barcode detection area for the centering window mode.<br/>
+     *            Specify a value between 0 and 10.<br/>
+     *            If you set smaller value, the barcode near the center is detected.<br/>
+     *            If you specified 0, the center point becomes the detection area.<br/>
+     *            Please change the value according to the actual use environment.
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote Refer to the figure below for the detection area size guide:<br/>
+     *            <img src="./doc-files/setdetectionareasize_01.png" />
+     */
     public static int setDetectionAreaSize(int detectionAreaSize) throws RemoteException, UnsupportedOperationException {
         return Implementation.setDetectionAreaSize(detectionAreaSize);
     }
 
     /**
+     * Get the size of barcode detection area for the centering window mode.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: Return the size of barcode detection area for the centering window mode.<br/>
+     *            Default value is 5.<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -921,15 +1045,32 @@ public class ScannerLibrary {
         return Implementation.getDetectionAreaSize();
     }
 
+    /**
+     * Set the laser swing width of 1D scanner.
+     *
+     * @param laserSwingWidth {@code int}: Swing width<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#MAX MAX}: Swing width MAX<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#WIDE WIDE}: Swing width WIDE<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#MIDDLE MIDDLE}: Swing width MIDDLE<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#NARROW NARROW}: Swing width NARROW
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setLaserSwingWidth(int laserSwingWidth) throws RemoteException, UnsupportedOperationException {
         return Implementation.setLaserSwingWidth(laserSwingWidth);
     }
 
     /**
+     * Get the laser swing width of 1D scanner.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.SWING_WIDTH#MAX MAX}: Swing width MAX (default)<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#WIDE WIDE}: Swing width WIDE<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#MIDDLE MIDDLE}: Swing width MIDDLE<br/>
+     *            {@link ScannerLibraryConstant.SWING_WIDTH#NARROW NARROW}: Swing width NARROW
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
@@ -937,38 +1078,96 @@ public class ScannerLibrary {
         return Implementation.getLaserSwingWidth();
     }
 
+    /**
+     * Set enable/disable of the laser highlight mode of 1D scanner.
+     *
+     * @param enable {@code int}: Enable/disable of the laser highlight mode<br/>
+     *            {@link ScannerLibraryConstant.LASER_HIGHLIGHT_MODE#DISABLE DISABLE}: Laser highlight mode disable<br/>
+     *            {@link ScannerLibraryConstant.LASER_HIGHLIGHT_MODE#ENABLE ENABLE}: Laser highlight mode enable
+     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_PARAMETER ERROR_PARAMETER}: Parameter error<br/>
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setLaserHighlightMode(int enable) throws RemoteException, UnsupportedOperationException {
         return Implementation.setLaserHighlightMode(enable);
     }
 
     /**
+     * Get enable/disable of the laser highlight mode of 1D scanner.
      *
-     *
-     * @return {@code int}: {@link ScannerLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
-     * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
+     * @return {@code int}: {@link ScannerLibraryConstant.LASER_HIGHLIGHT_MODE#DISABLE DISABLE}: Laser highlight mode disable (default)<br/>
+     *            {@link ScannerLibraryConstant.LASER_HIGHLIGHT_MODE#ENABLE ENABLE}: Laser highlight mode enable
+     *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote When highlight mode is enabled, the barcode read is emphasized. It is useful for checking the barcode read when two or more barcodes are placed nearby.
      */
     public static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException {
         return Implementation.getLaserHighlightMode();
     }
 
+    /**
+     * Set internal parameters. Detailed specifications are not disclosed.
+     *
+     * @param command {@code byte[]}
+     * @return {@code int}
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setInternalParameter(byte[] command) throws RemoteException, UnsupportedOperationException {
         return Implementation.setInternalParameter(command);
     }
 
+    /**
+     * Set internal parameters. Detailed specifications are not disclosed.
+     *
+     * @param tag {@code int}
+     * @param value {@code int}
+     * @return {@code int}
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setInternalParameter(int tag, int value) throws RemoteException, UnsupportedOperationException {
         return Implementation.setInternalParameter(tag, value);
     }
 
+    /**
+     * Set internal parameters. Detailed specifications are not disclosed.
+     *
+     * @param number {@code int}
+     * @param tags {@code int[]}
+     * @param values {@code int[]}
+     * @return {@code int}
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int setInternalParameter(int number, int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
         return Implementation.setInternalParameter(number, tags, values);
     }
 
+    /**
+     * Get internal parameters. Detailed specifications are not disclosed.
+     *
+     * @param tag {@code int}
+     * @return {@code int}
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException {
         return Implementation.getInternalParameter(tag);
     }
 
+    /**
+     * Get internal parameters. Detailed specifications are not disclosed.
+     *
+     * @param tags {@code int[]}
+     * @param values {@code int[]}
+     * @return {@code int}
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
     public static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
         return Implementation.getInternalParameter(tags, values);
     }

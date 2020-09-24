@@ -179,6 +179,10 @@ public class ScannerLibraryConstant {
          * User message output
          */
         public static final int USER = 2;
+        /**
+         * Output to the focus edit box (ET-L10 only)
+         */
+        public static final int OUTPUT_FOCUS_EDITBOX = 4;
     }
 
     /**
@@ -241,6 +245,10 @@ public class ScannerLibraryConstant {
          * Add TAB+LF (0x09, 0x0A)
          */
         public static final int TAB_LF = 3;
+        /**
+         * Add Enter (0x0D) (ET-L10 only)
+         */
+        public static final int ENTER = 4;
     }
 
     /**

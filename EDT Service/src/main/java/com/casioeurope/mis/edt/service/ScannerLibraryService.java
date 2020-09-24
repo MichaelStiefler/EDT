@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 public class ScannerLibraryService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
+    @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (ScannerLibraryService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
@@ -29,10 +30,10 @@ public class ScannerLibraryService extends Service {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    private IBinder doOnBind(@SuppressWarnings("unused") Intent intent) {
+    private IBinder doOnBind(@SuppressWarnings({"unused", "RedundantSuppression"}) Intent intent) {
         logMethodEntranceExit(true);
         logMethodEntranceExit(false);
-        return new ScannerLibraryImpl();
+        return new ScannerLibraryImpl(this.getApplicationContext());
     }
 
     @Nullable
