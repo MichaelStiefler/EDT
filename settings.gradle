@@ -1,7 +1,6 @@
 include ':DeviceLibraryItg6x0'
 include ':DeviceLibraryItg400'
 include ':DeviceLibraryDtx400'
-include ':DeviceLibrary'
 rootProject.name='EDT'
 include ':EDT Library'
 include ':EDT Test'

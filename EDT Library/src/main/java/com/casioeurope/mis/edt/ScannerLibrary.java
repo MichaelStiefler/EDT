@@ -1173,7 +1173,7 @@ public class ScannerLibrary {
     }
 
 
-    private static final class Implementation {
+        private static final class Implementation {
         private static int openScanner() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().openScanner(unsupported);

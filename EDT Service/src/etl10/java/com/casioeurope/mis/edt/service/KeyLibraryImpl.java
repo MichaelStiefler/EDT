@@ -1,7 +1,7 @@
 package com.casioeurope.mis.edt.service;
 
 import com.casioeurope.mis.edt.IKeyLibrary;
-import com.casioeurope.mis.edt.KeyLibrary;
+import com.casioeurope.mis.edt.constant.KeyLibraryConstant;
 import com.casioeurope.mis.edt.type.ApplicationInfoParcelable;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
 
@@ -30,62 +30,62 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     public int setUserKeyCode(int nID, int KeyCode, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int getUserKeyCode(int nID, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int setDefaultKeyCode(int nID, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int setFnUserKeyCode(int nID, int KeyCode, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int getFnUserKeyCode(int nID, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int setFnDefaultKeyCode(int nID, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int setLaunchApplication(int nID, ApplicationInfoParcelable appInfo, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int getLaunchApplication(int nID, ApplicationInfoParcelable appInfo, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 	
     public int clearLaunchApplication(int nID, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int setFnLaunchApplication(int nID, ApplicationInfoParcelable appInfo, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public int getFnLaunchApplication(int nID, ApplicationInfoParcelable appInfo, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 	
     public int clearFnLaunchApplication(int nID, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return KeyLibrary.CONSTANT.RETURN.ERROR_NOTSUPPORTED;
+        return KeyLibraryConstant.RETURN.ERROR_NOTSUPPORTED;
     }
 
     public boolean isMethodNameSupported(String methodName) {

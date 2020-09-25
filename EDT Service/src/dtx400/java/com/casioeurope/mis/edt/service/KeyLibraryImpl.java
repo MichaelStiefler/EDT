@@ -3,6 +3,7 @@ package com.casioeurope.mis.edt.service;
 import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.IKeyLibrary;
+import com.casioeurope.mis.edt.constant.KeyLibraryConstant;
 import com.casioeurope.mis.edt.type.ApplicationInfoParcelable;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
 

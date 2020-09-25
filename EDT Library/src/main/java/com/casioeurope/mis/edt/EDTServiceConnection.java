@@ -36,6 +36,7 @@ public class EDTServiceConnection implements ServiceConnection {
     private ISystemLibrary edtServiceSystemLibrary;
     private IKeyLibrary edtServiceKeyLibrary;
     private IScannerLibrary edtServiceScannerLibrary;
+    private ISamLibrary edtServiceSamLibrary;
 
     public IEDT getEDTService() {
         return this.edtService;
@@ -49,6 +50,9 @@ public class EDTServiceConnection implements ServiceConnection {
     public IScannerLibrary getScannerLibrary() {
         return this.edtServiceScannerLibrary;
     }
+    public ISamLibrary getSamLibrary() {
+        return this.edtServiceSamLibrary;
+    }
 
     @SuppressWarnings("UnusedReturnValue")
     protected boolean bind(Context context) {
@@ -60,6 +64,8 @@ public class EDTServiceConnection implements ServiceConnection {
         context.bindService(new Intent("com.casioeurope.mis.edt.service.KeyLibraryService").setPackage("com.casioeurope.mis.edt.service")
                 , this, Context.BIND_AUTO_CREATE);
         context.bindService(new Intent("com.casioeurope.mis.edt.service.ScannerLibraryService").setPackage("com.casioeurope.mis.edt.service")
+                , this, Context.BIND_AUTO_CREATE);
+        context.bindService(new Intent("com.casioeurope.mis.edt.service.SamLibraryService").setPackage("com.casioeurope.mis.edt.service")
                 , this, Context.BIND_AUTO_CREATE);
         logMethodEntranceExit(false);
         return true;
@@ -82,6 +88,8 @@ public class EDTServiceConnection implements ServiceConnection {
                 edtServiceKeyLibrary = IKeyLibrary.Stub.asInterface(service);
             } else if (service.getInterfaceDescriptor().equals(IScannerLibrary.class.getName())) {
                 edtServiceScannerLibrary = IScannerLibrary.Stub.asInterface(service);
+            } else if (service.getInterfaceDescriptor().equals(ISamLibrary.class.getName())) {
+                edtServiceSamLibrary = ISamLibrary.Stub.asInterface(service);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

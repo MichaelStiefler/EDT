@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.service;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.RemoteException;
 
