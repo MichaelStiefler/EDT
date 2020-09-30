@@ -1,3 +1,4 @@
+include ':EEICLibraryItg6x0'
 include ':DeviceLibraryItg6x0'
 include ':DeviceLibraryItg400'
 include ':DeviceLibraryDtx400'

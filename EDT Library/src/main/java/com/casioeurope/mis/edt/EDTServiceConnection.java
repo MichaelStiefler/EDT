@@ -37,6 +37,7 @@ public class EDTServiceConnection implements ServiceConnection {
     private IKeyLibrary edtServiceKeyLibrary;
     private IScannerLibrary edtServiceScannerLibrary;
     private ISamLibrary edtServiceSamLibrary;
+    private IEeicLibrary edtServiceEeicLibrary;
 
     public IEDT getEDTService() {
         return this.edtService;
@@ -53,6 +54,9 @@ public class EDTServiceConnection implements ServiceConnection {
     public ISamLibrary getSamLibrary() {
         return this.edtServiceSamLibrary;
     }
+    public IEeicLibrary getEeicLibrary() {
+        return this.edtServiceEeicLibrary;
+    }
 
     @SuppressWarnings("UnusedReturnValue")
     protected boolean bind(Context context) {
@@ -66,6 +70,8 @@ public class EDTServiceConnection implements ServiceConnection {
         context.bindService(new Intent("com.casioeurope.mis.edt.service.ScannerLibraryService").setPackage("com.casioeurope.mis.edt.service")
                 , this, Context.BIND_AUTO_CREATE);
         context.bindService(new Intent("com.casioeurope.mis.edt.service.SamLibraryService").setPackage("com.casioeurope.mis.edt.service")
+                , this, Context.BIND_AUTO_CREATE);
+        context.bindService(new Intent("com.casioeurope.mis.edt.service.EeicLibraryService").setPackage("com.casioeurope.mis.edt.service")
                 , this, Context.BIND_AUTO_CREATE);
         logMethodEntranceExit(false);
         return true;
@@ -90,6 +96,8 @@ public class EDTServiceConnection implements ServiceConnection {
                 edtServiceScannerLibrary = IScannerLibrary.Stub.asInterface(service);
             } else if (service.getInterfaceDescriptor().equals(ISamLibrary.class.getName())) {
                 edtServiceSamLibrary = ISamLibrary.Stub.asInterface(service);
+            } else if (service.getInterfaceDescriptor().equals(IEeicLibrary.class.getName())) {
+                edtServiceEeicLibrary = IEeicLibrary.Stub.asInterface(service);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

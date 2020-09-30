@@ -1,0 +1,40 @@
+package com.casioeurope.mis.edt;
+import com.casioeurope.mis.edt.type.IParcelableTypes;
+import com.casioeurope.mis.edt.IEeicCallback;
+
+interface IEeicLibrary {
+    boolean setPower(boolean enable, out BooleanParcelable unsupported);
+    boolean isPowerOn(out BooleanParcelable unsupported);
+    String getLibraryVersion(out BooleanParcelable unsupported);
+    int gpioDeviceSetInputDirection(int pinNo, int pinStatus, out BooleanParcelable unsupported);
+    int gpioDeviceSetOutputDirection(int pinNo, int value, out BooleanParcelable unsupported);
+    int gpioDeviceSetValue(int pinNo, int value, out BooleanParcelable unsupported);
+    int gpioDeviceGetValue(int pinNo, out BooleanParcelable unsupported);
+    int gpioDeviceSetInterruptEdge(int pinNo, int type, out BooleanParcelable unsupported);
+    boolean gpioDeviceRegisterCallback(IEeicCallback callback, out BooleanParcelable unsupported);
+    boolean gpioDeviceUnregisterCallback(out BooleanParcelable unsupported);
+    boolean serialDeviceOpen1(int baudrate, int flags, boolean hwflow, int bitLen, int parityBit, int stopBit, out BooleanParcelable unsupported);
+    boolean serialDeviceOpen2(int baudrate, int bitLen, int parityBit, int stopBit, out BooleanParcelable unsupported);
+    boolean serialDeviceOpen3(int baudrate, out BooleanParcelable unsupported);
+    boolean serialDeviceClose(out BooleanParcelable unsupported);
+    boolean serialDeviceWrite1(in byte data, out BooleanParcelable unsupported);
+    boolean serialDeviceWrite2(in byte[] buffer, out BooleanParcelable unsupported);
+    boolean serialDeviceWrite3(in byte[] buffer, int offset, int length, out BooleanParcelable unsupported);
+    int serialDeviceRead(out byte[] buffer, int length, out BooleanParcelable unsupported);
+    boolean serialDeviceSendBreak(out BooleanParcelable unsupported);
+    boolean i2cDeviceOpen1(out BooleanParcelable unsupported);
+    boolean i2cDeviceOpen2(int flags, out BooleanParcelable unsupported);
+    boolean i2cDeviceClose(out BooleanParcelable unsupported);
+    boolean i2cDeviceWrite1(byte data, out BooleanParcelable unsupported);
+    boolean i2cDeviceWrite2(in byte[] buffer, out BooleanParcelable unsupported);
+    boolean i2cDeviceWrite3(in byte[] buffer, int offset, int length, out BooleanParcelable unsupported);
+    int i2cDeviceRead(out byte[] buffer, int length, out BooleanParcelable unsupported);
+    boolean i2cDeviceSetSlaveAddress(int address, out BooleanParcelable unsupported);
+    boolean spiDeviceOpen1(out BooleanParcelable unsupported);
+    boolean spiDeviceOpen2(int flags, out BooleanParcelable unsupported);
+    boolean spiDeviceClose(out BooleanParcelable unsupported);
+    boolean spiDeviceWrite1(byte data, out BooleanParcelable unsupported);
+    boolean spiDeviceWrite2(in byte[] buffer, out BooleanParcelable unsupported);
+    boolean spiDeviceWrite3(in byte[] buffer, int offset, int length, out BooleanParcelable unsupported);
+    int spiDeviceRead(out byte[] buffer, int length, out BooleanParcelable unsupported);
+}

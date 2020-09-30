@@ -27,8 +27,8 @@ android {
         applicationId 'com.casioeurope.mis.edt.service'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 102001
-        versionName '1.02'
+        versionCode 200001
+        versionName '2.00'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -60,11 +60,13 @@ android {
             dimension "device"
             //applicationIdSuffix ".itg600"
             versionNameSuffix "-itg600"
+            minSdkVersion 28
         }
         itg650 {
             dimension "device"
             //applicationIdSuffix ".itg650"
             versionNameSuffix "-itg650"
+            minSdkVersion 28
         }
         dtx400 {
             dimension "device"
@@ -100,6 +102,8 @@ dependencies {
     dtx400Implementation project(path: ':DeviceLibraryDtx400')
     itg600Implementation project(path: ':DeviceLibraryItg6x0')
     itg650Implementation project(path: ':DeviceLibraryItg6x0')
+    itg600Implementation project(path: ':EEICLibraryItg6x0')
+    itg650Implementation project(path: ':EEICLibraryItg6x0')
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

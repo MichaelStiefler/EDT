@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 102001
-        versionName "1.02"
+        versionCode 200001
+        versionName "2.00"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -47,7 +47,7 @@ dependencies {
 }
 
 android { buildTypes { release { minifyEnabled true } } }
-
+1
 android { buildTypes { release { proguardFile 'library-rules.pro' } } }
 
 dasho {
