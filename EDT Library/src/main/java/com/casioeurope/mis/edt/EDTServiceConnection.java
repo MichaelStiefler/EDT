@@ -8,11 +8,15 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.casioeurope.mis.edt.type.LibraryCallback;
+
 import java.util.Arrays;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class EDTServiceConnection implements ServiceConnection {
 
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true; //BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
     private static String TAG = "EDT (EDTServiceConnection)";
 
@@ -33,29 +37,77 @@ public class EDTServiceConnection implements ServiceConnection {
     }
 
     private IEDT edtService;
-    private ISystemLibrary edtServiceSystemLibrary;
-    private IKeyLibrary edtServiceKeyLibrary;
-    private IScannerLibrary edtServiceScannerLibrary;
-    private ISamLibrary edtServiceSamLibrary;
-    private IEeicLibrary edtServiceEeicLibrary;
+    private ISystemLibrary systemLibraryService;
+    private IKeyLibrary keyLibraryService;
+    private IScannerLibrary scannerLibraryService;
+    private ISamLibrary samLibraryService;
+    private IEeicLibrary eeicLibraryService;
+
+    private Queue<LibraryCallback> edtServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private Queue<LibraryCallback> systemLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private Queue<LibraryCallback> keyLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private Queue<LibraryCallback> scannerLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private Queue<LibraryCallback> samLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private Queue<LibraryCallback> eeicLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+
+    void addEdtCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        if (this.edtService == null) {
+            this.edtServiceCallbacks.offer(callback);
+        } else {
+            callback.onLibraryReady();
+        }
+    }
+    void addSystemLibraryCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        if (this.systemLibraryService == null) {
+            this.systemLibraryServiceCallbacks.offer(callback);
+        } else {
+            callback.onLibraryReady();
+        }
+    }
+    void addKeyLibraryCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        if (this.keyLibraryService == null) {
+            this.keyLibraryServiceCallbacks.offer(callback);
+        } else {
+            callback.onLibraryReady();
+        }
+    }
+    void addScannerLibraryCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        if (this.scannerLibraryService == null) {
+            this.scannerLibraryServiceCallbacks.offer(callback);
+        } else {
+            callback.onLibraryReady();
+        }
+    }
+    void addSamLibraryCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        if (this.samLibraryService == null) {
+            this.samLibraryServiceCallbacks.offer(callback);
+        } else {
+            callback.onLibraryReady();
+        }
+    }
+    void addEeicLibraryCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        if (this.eeicLibraryService == null) {
+            this.eeicLibraryServiceCallbacks.offer(callback);
+        } else {
+            callback.onLibraryReady();
+        }
+    }
 
     public IEDT getEDTService() {
         return this.edtService;
     }
     public ISystemLibrary getSystemLibrary() {
-        return this.edtServiceSystemLibrary;
+        return this.systemLibraryService;
     }
     public IKeyLibrary getKeyLibrary() {
-        return this.edtServiceKeyLibrary;
+        return this.keyLibraryService;
     }
-    public IScannerLibrary getScannerLibrary() {
-        return this.edtServiceScannerLibrary;
-    }
+    public IScannerLibrary getScannerLibrary() { return this.scannerLibraryService; }
     public ISamLibrary getSamLibrary() {
-        return this.edtServiceSamLibrary;
+        return this.samLibraryService;
     }
     public IEeicLibrary getEeicLibrary() {
-        return this.edtServiceEeicLibrary;
+        return this.eeicLibraryService;
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -77,7 +129,7 @@ public class EDTServiceConnection implements ServiceConnection {
         return true;
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "SimplifyStreamApiCallChains"})
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         try {
@@ -87,17 +139,59 @@ public class EDTServiceConnection implements ServiceConnection {
         }
         try {
             if (service.getInterfaceDescriptor().equals(IEDT.class.getName())) {
-                edtService = IEDT.Stub.asInterface(service);
+                this.edtService = IEDT.Stub.asInterface(service);
+                this.edtServiceCallbacks.stream().forEach(libraryCallback -> {
+                    try {
+                        libraryCallback.onLibraryReady();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else if (service.getInterfaceDescriptor().equals(ISystemLibrary.class.getName())) {
-                edtServiceSystemLibrary = ISystemLibrary.Stub.asInterface(service);
+                this.systemLibraryService = ISystemLibrary.Stub.asInterface(service);
+                this.systemLibraryServiceCallbacks.stream().forEach(libraryCallback -> {
+                    try {
+                        libraryCallback.onLibraryReady();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else if (service.getInterfaceDescriptor().equals(IKeyLibrary.class.getName())) {
-                edtServiceKeyLibrary = IKeyLibrary.Stub.asInterface(service);
+                this.keyLibraryService = IKeyLibrary.Stub.asInterface(service);
+                this.keyLibraryServiceCallbacks.stream().forEach(libraryCallback -> {
+                    try {
+                        libraryCallback.onLibraryReady();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else if (service.getInterfaceDescriptor().equals(IScannerLibrary.class.getName())) {
-                edtServiceScannerLibrary = IScannerLibrary.Stub.asInterface(service);
+                this.scannerLibraryService = IScannerLibrary.Stub.asInterface(service);
+                this.scannerLibraryServiceCallbacks.stream().forEach(libraryCallback -> {
+                    try {
+                        libraryCallback.onLibraryReady();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else if (service.getInterfaceDescriptor().equals(ISamLibrary.class.getName())) {
-                edtServiceSamLibrary = ISamLibrary.Stub.asInterface(service);
+                this.samLibraryService = ISamLibrary.Stub.asInterface(service);
+                this.samLibraryServiceCallbacks.stream().forEach(libraryCallback -> {
+                    try {
+                        libraryCallback.onLibraryReady();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else if (service.getInterfaceDescriptor().equals(IEeicLibrary.class.getName())) {
-                edtServiceEeicLibrary = IEeicLibrary.Stub.asInterface(service);
+                this.eeicLibraryService = IEeicLibrary.Stub.asInterface(service);
+                this.eeicLibraryServiceCallbacks.stream().forEach(libraryCallback -> {
+                    try {
+                        libraryCallback.onLibraryReady();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         } catch (RemoteException e) {
             e.printStackTrace();

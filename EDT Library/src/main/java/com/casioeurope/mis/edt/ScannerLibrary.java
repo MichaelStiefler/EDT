@@ -1,22 +1,44 @@
 package com.casioeurope.mis.edt;
 
+import android.app.Activity;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.casioeurope.mis.edt.constant.ScannerLibraryConstant;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
+import com.casioeurope.mis.edt.type.LibraryCallback;
 import com.casioeurope.mis.edt.type.ScanResult;
 import com.casioeurope.mis.edt.type.ScanResultParcelable;
 
 import java.math.BigInteger;
 
+import static com.casioeurope.mis.edt.constant.ScannerLibraryConstant.RETURN.SUCCESS;
+
 /**
  * The <b>CASIO Enterprise Developer Tools</b> Scanner Library<br/><br/>
+ *
+ * @apiNote The Scanner Library is bound to the calling application on application startup time automatically.<br/>
+ *          The Library's lifecycle therefore depends on the application lifecycle.<br/>
+ *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly adviced not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
+ *          When the activity is being launched (and hence the process gets created), <i>the same applies to the {@link android.app.Activity#onStart() onStart} and {@link android.app.Activity#onResume() onResume} methods</i>.<br/>
+ *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@ScannerLibrary.onLibraryReady onLibraryReady} method instead.<br/>
+ *          For instance, instead of calling {@link ScannerLibrary#openScanner() ScannerLibrary.openScanner()} directly in {@link android.app.Activity#onCreate(Bundle) onCreate}, use this code to postpone it to a {@link LibraryCallback Callback} appropriately:<br/>
+ * <pre>ScannerLibrary.onLibraryReady(new LibraryCallback() {
+ *     public void onLibraryReady() {
+ *         ScannerLibrary.openScanner();
+ *     }
+ * });</pre>
+ *          <br/>Which can be simplified to:<br/>
+ * <pre>ScannerLibrary.onLibraryReady(() -> { ScannerLibrary.openScanner(); });</pre>
+ *          <br/>Or even further to:<br/>
+ * <pre>ScannerLibrary.onLibraryReady(ScannerLibrary::openScanner);</pre>
  *
  * @version 2.00
  * @since 2.00
  */
-@SuppressWarnings({"unused", "RedundantSuppression"})
+@SuppressWarnings({"unused", "RedundantSuppression", "JavadocReference"})
 public class ScannerLibrary {
 
     private static ScannerLibrary instance;
@@ -60,8 +82,11 @@ public class ScannerLibrary {
      *
      * @param method {@link BigInteger BigInteger}: Constant referencing the method to be checked
      * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static boolean isMethodSupported(BigInteger method) {
+    public static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
+        if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
         try {
             return getInstance().edtServiceScannerLibrary().isMethodSupported(method.toString());
         } catch (Exception e) {
@@ -74,8 +99,11 @@ public class ScannerLibrary {
      *
      * @param methodName {@link String String}: Name of the method to be checked
      * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static boolean isMethodSupported(String methodName) {
+    public static boolean isMethodSupported(String methodName) throws IllegalStateException {
+        if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
         try {
             return getInstance().edtServiceScannerLibrary().isMethodNameSupported(methodName);
         } catch (Exception e) {
@@ -117,8 +145,10 @@ public class ScannerLibrary {
      * false: The barcode scanner is closed
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static boolean isScannerOpen() throws RemoteException, UnsupportedOperationException {
+    public static boolean isScannerOpen() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.isScannerOpen();
     }
 
@@ -140,8 +170,10 @@ public class ScannerLibrary {
      * @return {@link String String}: The API Version of the Scanner or Null in case of failure.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static String getAPIVersion() throws RemoteException, UnsupportedOperationException {
+    public static String getAPIVersion() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getAPIVersion();
     }
 
@@ -151,8 +183,10 @@ public class ScannerLibrary {
      * @return {@link String String}: The Module Version of the Scanner or Null in case of failure.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static String getModuleVersion() throws RemoteException, UnsupportedOperationException {
+    public static String getModuleVersion() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getModuleVersion();
     }
 
@@ -166,12 +200,14 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      * @apiNote When you read multiple barcodes, you can get the final Scan Result.<br/>
      * When you fail scanning, you can get all of data are cleared except scan time.<br/>
      * When you call this function before scanning ever, you can get all of data are cleared.<br/>
      * For the default value, refer to the {@link ScanResult ScanResult class}.
      */
-    public static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException {
+    public static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getScanResult(scanResult);
     }
 
@@ -199,8 +235,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getNotificationLED() throws RemoteException, UnsupportedOperationException {
+    public static int getNotificationLED() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getNotificationLED();
     }
 
@@ -232,8 +270,10 @@ public class ScannerLibrary {
      *             {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getNotificationVibrator() throws RemoteException, UnsupportedOperationException {
+    public static int getNotificationVibrator() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getNotificationVibrator();
     }
 
@@ -265,8 +305,10 @@ public class ScannerLibrary {
      *             {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getNotificationSound() throws RemoteException, UnsupportedOperationException {
+    public static int getNotificationSound() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getNotificationSound();
     }
 
@@ -301,9 +343,11 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      * @apiNote Get the action of Illumination and Aimer behavior when you will scan, capture image, stream.
      */
-    public static int getLightMode() throws RemoteException, UnsupportedOperationException {
+    public static int getLightMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getLightMode();
     }
 
@@ -346,8 +390,10 @@ public class ScannerLibrary {
      * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getImageDataSize() throws RemoteException, UnsupportedOperationException {
+    public static int getImageDataSize() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getImageDataSize();
     }
 
@@ -363,8 +409,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_NOTOPENED ERROR_NOTOPENED}: Not opened error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+    public static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.captureImage(buffer);
     }
 
@@ -375,8 +423,10 @@ public class ScannerLibrary {
      * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getStreamDataSize() throws RemoteException, UnsupportedOperationException {
+    public static int getStreamDataSize() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getStreamDataSize();
     }
 
@@ -396,8 +446,10 @@ public class ScannerLibrary {
      * {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
+    public static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getStreamDataSize(rectangle, resolution);
     }
 
@@ -445,9 +497,11 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      * @apiNote To realize preview, call this function continuously.
      */
-    public static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+    public static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.readStream(buffer);
     }
 
@@ -505,8 +559,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyEnable(symbologyID);
     }
 
@@ -521,8 +577,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyMaxDefault(symbologyID);
     }
 
@@ -537,8 +595,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyMinDefault(symbologyID);
     }
 
@@ -572,8 +632,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyMax(symbologyID);
     }
 
@@ -607,8 +669,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyMin(symbologyID);
     }
 
@@ -643,8 +707,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyCheckCount(symbologyID);
     }
 
@@ -683,9 +749,11 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      * @apiNote Specify property number and set value to change.
      */
-    public static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException {
+    public static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSymbologyProperty(symbologyID, propertyNo);
     }
 
@@ -720,8 +788,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getOutputType() throws RemoteException, UnsupportedOperationException {
+    public static int getOutputType() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getOutputType();
     }
 
@@ -753,8 +823,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getSuffix() throws RemoteException, UnsupportedOperationException {
+    public static int getSuffix() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getSuffix();
     }
 
@@ -784,8 +856,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getInverseMode() throws RemoteException, UnsupportedOperationException {
+    public static int getInverseMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getInverseMode();
     }
 
@@ -813,8 +887,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getTriggerKeyEnable() throws RemoteException, UnsupportedOperationException {
+    public static int getTriggerKeyEnable() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getTriggerKeyEnable();
     }
 
@@ -847,8 +923,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getTriggerKeyMode() throws RemoteException, UnsupportedOperationException {
+    public static int getTriggerKeyMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getTriggerKeyMode();
     }
 
@@ -874,8 +952,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getNumberOfBarcodes() throws RemoteException, UnsupportedOperationException {
+    public static int getNumberOfBarcodes() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getNumberOfBarcodes();
     }
 
@@ -902,8 +982,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getDelimiter() throws RemoteException, UnsupportedOperationException {
+    public static int getDelimiter() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getDelimiter();
     }
 
@@ -931,8 +1013,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getTriggerKeyTimeout() throws RemoteException, UnsupportedOperationException {
+    public static int getTriggerKeyTimeout() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getTriggerKeyTimeout();
     }
 
@@ -975,8 +1059,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getScannerAPO() throws RemoteException, UnsupportedOperationException {
+    public static int getScannerAPO() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getScannerAPO();
     }
 
@@ -1007,8 +1093,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getCenteringWindow() throws RemoteException, UnsupportedOperationException {
+    public static int getCenteringWindow() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getCenteringWindow();
     }
 
@@ -1040,8 +1128,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getDetectionAreaSize() throws RemoteException, UnsupportedOperationException {
+    public static int getDetectionAreaSize() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getDetectionAreaSize();
     }
 
@@ -1073,8 +1163,10 @@ public class ScannerLibrary {
      *            {@link ScannerLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED}: Unsupported error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getLaserSwingWidth() throws RemoteException, UnsupportedOperationException {
+    public static int getLaserSwingWidth() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getLaserSwingWidth();
     }
 
@@ -1103,8 +1195,10 @@ public class ScannerLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote When highlight mode is enabled, the barcode read is emphasized. It is useful for checking the barcode read when two or more barcodes are placed nearby.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException {
+    public static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getLaserHighlightMode();
     }
 
@@ -1154,8 +1248,10 @@ public class ScannerLibrary {
      * @return {@code int}
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link ScannerLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link ScannerLibrary this class} for further details.
      */
-    public static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException {
+    public static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getInternalParameter(tag);
     }
 
@@ -1168,14 +1264,36 @@ public class ScannerLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
-    public static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
+    public static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getInternalParameter(tags, values);
     }
 
+    /**
+     * Add a new Callback to the Queue of Callbacks to be processed once the Scanner becomes available
+     *
+     * @param callback {@link LibraryCallback LibraryCallback}: Instance of the {@link LibraryCallback LibraryCallback} Interface which holds the {@link LibraryCallback#onLibraryReady() onLibraryReady()} Method which will get called once the regarding library becomes available
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void onLibraryReady(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        Log.d("[EDT ScannerLibrary]", "onLibraryReady addScannerLibraryCallback");
+        EDTServiceConnection.getInstance().addScannerLibraryCallback(callback);
+    }
 
-        private static final class Implementation {
+
+    private static final class Implementation {
         private static int openScanner() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                Log.d("[EDT ScannerLibrary]", "edtServiceScannerLibrary is null, postponing openScanner call!");
+                onLibraryReady(() -> {
+                    Log.d("[EDT ScannerLibrary]", "onLibraryReady openScanner callback processing!");
+                    getInstance().edtServiceScannerLibrary().openScanner(unsupported);
+                    checkMethodUnsupported("openScanner", unsupported);
+                    Log.d("[EDT ScannerLibrary]", "onLibraryReady openScanner callback processed!");
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().openScanner(unsupported);
             checkMethodUnsupported("openScanner", unsupported);
             return retVal;
@@ -1183,12 +1301,23 @@ public class ScannerLibrary {
 
         private static int closeScanner() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                Log.d("[EDT ScannerLibrary]", "edtServiceScannerLibrary is null, postponing closeScanner call!");
+                onLibraryReady(() -> {
+                    Log.d("[EDT ScannerLibrary]", "onLibraryReady closeScanner callback processing!");
+                    getInstance().edtServiceScannerLibrary().closeScanner(unsupported);
+                    checkMethodUnsupported("closeScanner", unsupported);
+                    Log.d("[EDT ScannerLibrary]", "onLibraryReady closeScanner callback processed!");
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().closeScanner(unsupported);
             checkMethodUnsupported("closeScanner", unsupported);
             return retVal;
         }
 
-        private static boolean isScannerOpen() throws RemoteException, UnsupportedOperationException {
+        private static boolean isScannerOpen() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             boolean retVal = getInstance().edtServiceScannerLibrary().isScannerOpen(unsupported);
             checkMethodUnsupported("isScannerOpen", unsupported);
@@ -1197,26 +1326,36 @@ public class ScannerLibrary {
 
         private static int setDefaultAll() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setDefaultAll(unsupported);
+                    checkMethodUnsupported("setDefaultAll", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setDefaultAll(unsupported);
             checkMethodUnsupported("setDefaultAll", unsupported);
             return retVal;
         }
 
-        private static String getAPIVersion() throws RemoteException, UnsupportedOperationException {
+        private static String getAPIVersion() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             String retVal = getInstance().edtServiceScannerLibrary().getAPIVersion(unsupported);
             checkMethodUnsupported("getAPIVersion", unsupported);
             return retVal;
         }
 
-        private static String getModuleVersion() throws RemoteException, UnsupportedOperationException {
+        private static String getModuleVersion() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             String retVal = getInstance().edtServiceScannerLibrary().getModuleVersion(unsupported);
             checkMethodUnsupported("getModuleVersion", unsupported);
             return retVal;
         }
 
-        private static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException {
+        private static int getScanResult(ScanResult scanResult) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             ScanResultParcelable scanResultParcelable = new ScanResultParcelable(scanResult);
             int retVal = getInstance().edtServiceScannerLibrary().getScanResult(scanResultParcelable, unsupported);
@@ -1227,12 +1366,20 @@ public class ScannerLibrary {
 
         private static int setNotificationLED(int led) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setNotificationLED(led, unsupported);
+                    checkMethodUnsupported("setNotificationLED", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setNotificationLED(led, unsupported);
             checkMethodUnsupported("setNotificationLED", unsupported);
             return retVal;
         }
 
-        private static int getNotificationLED() throws RemoteException, UnsupportedOperationException {
+        private static int getNotificationLED() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getNotificationLED(unsupported);
             checkMethodUnsupported("getNotificationLED", unsupported);
@@ -1241,12 +1388,20 @@ public class ScannerLibrary {
 
         private static int setNotificationVibrator(int vibrator) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setNotificationVibrator(vibrator, unsupported);
+                    checkMethodUnsupported("setNotificationVibrator", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setNotificationVibrator(vibrator, unsupported);
             checkMethodUnsupported("setNotificationVibrator", unsupported);
             return retVal;
         }
 
-        private static int getNotificationVibrator() throws RemoteException, UnsupportedOperationException {
+        private static int getNotificationVibrator() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getNotificationVibrator(unsupported);
             checkMethodUnsupported("getNotificationVibrator", unsupported);
@@ -1255,12 +1410,20 @@ public class ScannerLibrary {
 
         private static int setNotificationSound(int sound) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setNotificationSound(sound, unsupported);
+                    checkMethodUnsupported("setNotificationSound", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setNotificationSound(sound, unsupported);
             checkMethodUnsupported("setNotificationSound", unsupported);
             return retVal;
         }
 
-        private static int getNotificationSound() throws RemoteException, UnsupportedOperationException {
+        private static int getNotificationSound() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getNotificationSound(unsupported);
             checkMethodUnsupported("getNotificationSound", unsupported);
@@ -1269,12 +1432,20 @@ public class ScannerLibrary {
 
         private static int setLightMode(int lightMode) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setLightMode(lightMode, unsupported);
+                    checkMethodUnsupported("setLightMode", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setLightMode(lightMode, unsupported);
             checkMethodUnsupported("setLightMode", unsupported);
             return retVal;
         }
 
-        private static int getLightMode() throws RemoteException, UnsupportedOperationException {
+        private static int getLightMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getLightMode(unsupported);
             checkMethodUnsupported("getLightMode", unsupported);
@@ -1283,6 +1454,13 @@ public class ScannerLibrary {
 
         private static int turnAimerOn(int aimerOn) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().turnAimerOn(aimerOn, unsupported);
+                    checkMethodUnsupported("turnAimerOn", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().turnAimerOn(aimerOn, unsupported);
             checkMethodUnsupported("turnAimerOn", unsupported);
             return retVal;
@@ -1290,33 +1468,44 @@ public class ScannerLibrary {
 
         private static int turnIlluminationOn(int illuminationOn) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().turnIlluminationOn(illuminationOn, unsupported);
+                    checkMethodUnsupported("turnAimerOn", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().turnIlluminationOn(illuminationOn, unsupported);
             checkMethodUnsupported("turnIlluminationOn", unsupported);
             return retVal;
         }
 
-        private static int getImageDataSize() throws RemoteException, UnsupportedOperationException {
+        private static int getImageDataSize() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getImageDataSize(unsupported);
             checkMethodUnsupported("getImageDataSize", unsupported);
             return retVal;
         }
 
-        private static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+        private static int captureImage(byte[] buffer) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().captureImage(buffer, unsupported);
             checkMethodUnsupported("captureImage", unsupported);
             return retVal;
         }
 
-        private static int getStreamDataSize() throws RemoteException, UnsupportedOperationException {
+        private static int getStreamDataSize() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getStreamDataSize(unsupported);
             checkMethodUnsupported("getStreamDataSize", unsupported);
             return retVal;
         }
 
-        private static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
+        private static int getStreamDataSize(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getStreamDataSize2(rectangle, resolution, unsupported);
             checkMethodUnsupported("getStreamDataSize", unsupported);
@@ -1325,6 +1514,13 @@ public class ScannerLibrary {
 
         private static int initializeStream(Rect rectangle, int resolution) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().initializeStream(rectangle, resolution, unsupported);
+                    checkMethodUnsupported("initializeStream", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().initializeStream(rectangle, resolution, unsupported);
             checkMethodUnsupported("initializeStream", unsupported);
             return retVal;
@@ -1332,12 +1528,20 @@ public class ScannerLibrary {
 
         private static int startStream() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().startStream(unsupported);
+                    checkMethodUnsupported("startStream", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().startStream(unsupported);
             checkMethodUnsupported("startStream", unsupported);
             return retVal;
         }
 
-        private static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException {
+        private static int readStream(byte[] buffer) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().readStream(buffer, unsupported);
             checkMethodUnsupported("readStream", unsupported);
@@ -1346,6 +1550,13 @@ public class ScannerLibrary {
 
         private static int stopStream() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().stopStream(unsupported);
+                    checkMethodUnsupported("stopStream", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().stopStream(unsupported);
             checkMethodUnsupported("stopStream", unsupported);
             return retVal;
@@ -1353,6 +1564,13 @@ public class ScannerLibrary {
 
         private static int deinitializeStream() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().deinitializeStream(unsupported);
+                    checkMethodUnsupported("deinitializeStream", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().deinitializeStream(unsupported);
             checkMethodUnsupported("deinitializeStream", unsupported);
             return retVal;
@@ -1360,26 +1578,36 @@ public class ScannerLibrary {
 
         private static int setSymbologyEnable(int symbologyID, int enable) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setSymbologyEnable(symbologyID, enable, unsupported);
+                    checkMethodUnsupported("setSymbologyEnable", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setSymbologyEnable(symbologyID, enable, unsupported);
             checkMethodUnsupported("setSymbologyEnable", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyEnable(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyEnable(symbologyID, unsupported);
             checkMethodUnsupported("getSymbologyEnable", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyMaxDefault(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMaxDefault(symbologyID, unsupported);
             checkMethodUnsupported("getSymbologyMaxDefault", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyMinDefault(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMinDefault(symbologyID, unsupported);
             checkMethodUnsupported("getSymbologyMinDefault", unsupported);
@@ -1388,12 +1616,20 @@ public class ScannerLibrary {
 
         private static int setSymbologyMax(int symbologyID, int max) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setSymbologyMax(symbologyID, max, unsupported);
+                    checkMethodUnsupported("setSymbologyMax", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setSymbologyMax(symbologyID, max, unsupported);
             checkMethodUnsupported("setSymbologyMax", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyMax(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMax(symbologyID, unsupported);
             checkMethodUnsupported("getSymbologyMax", unsupported);
@@ -1402,12 +1638,20 @@ public class ScannerLibrary {
 
         private static int setSymbologyMin(int symbologyID, int min) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setSymbologyMin(symbologyID, min, unsupported);
+                    checkMethodUnsupported("setSymbologyMin", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setSymbologyMin(symbologyID, min, unsupported);
             checkMethodUnsupported("setSymbologyMin", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyMin(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyMin(symbologyID, unsupported);
             checkMethodUnsupported("getSymbologyMin", unsupported);
@@ -1416,12 +1660,20 @@ public class ScannerLibrary {
 
         private static int setSymbologyCheckCount(int symbologyID, int checkCount) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setSymbologyCheckCount(symbologyID, checkCount, unsupported);
+                    checkMethodUnsupported("setSymbologyCheckCount", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setSymbologyCheckCount(symbologyID, checkCount, unsupported);
             checkMethodUnsupported("setSymbologyCheckCount", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyCheckCount(int symbologyID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyCheckCount(symbologyID, unsupported);
             checkMethodUnsupported("getSymbologyCheckCount", unsupported);
@@ -1430,12 +1682,20 @@ public class ScannerLibrary {
 
         private static int setSymbologyProperty(int symbologyID, int propertyNo, int propertySetting) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setSymbologyProperty(symbologyID, propertyNo, propertySetting, unsupported);
+                    checkMethodUnsupported("setSymbologyProperty", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setSymbologyProperty(symbologyID, propertyNo, propertySetting, unsupported);
             checkMethodUnsupported("setSymbologyProperty", unsupported);
             return retVal;
         }
 
-        private static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException {
+        private static int getSymbologyProperty(int symbologyID, int propertyNo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSymbologyProperty(symbologyID, propertyNo, unsupported);
             checkMethodUnsupported("getSymbologyProperty", unsupported);
@@ -1444,12 +1704,23 @@ public class ScannerLibrary {
 
         private static int setOutputType(int outputType) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                Log.d("[EDT ScannerLibrary]", "edtServiceScannerLibrary is null, postponing setOutputType call!");
+                onLibraryReady(() -> {
+                    Log.d("[EDT ScannerLibrary]", "onLibraryReady setOutputType callback processing!");
+                    getInstance().edtServiceScannerLibrary().setOutputType(outputType, unsupported);
+                    checkMethodUnsupported("setOutputType", unsupported);
+                    Log.d("[EDT ScannerLibrary]", "onLibraryReady setOutputType callback processed!");
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setOutputType(outputType, unsupported);
             checkMethodUnsupported("setOutputType", unsupported);
             return retVal;
         }
 
-        private static int getOutputType() throws RemoteException, UnsupportedOperationException {
+        private static int getOutputType() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getOutputType(unsupported);
             checkMethodUnsupported("getOutputType", unsupported);
@@ -1458,12 +1729,20 @@ public class ScannerLibrary {
 
         private static int setSuffix(int suffix) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setSuffix(suffix, unsupported);
+                    checkMethodUnsupported("setSuffix", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setSuffix(suffix, unsupported);
             checkMethodUnsupported("setSuffix", unsupported);
             return retVal;
         }
 
-        private static int getSuffix() throws RemoteException, UnsupportedOperationException {
+        private static int getSuffix() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getSuffix(unsupported);
             checkMethodUnsupported("getSuffix", unsupported);
@@ -1472,12 +1751,20 @@ public class ScannerLibrary {
 
         private static int setInverseMode(int inverseMode) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setInverseMode(inverseMode, unsupported);
+                    checkMethodUnsupported("setInverseMode", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setInverseMode(inverseMode, unsupported);
             checkMethodUnsupported("setInverseMode", unsupported);
             return retVal;
         }
 
-        private static int getInverseMode() throws RemoteException, UnsupportedOperationException {
+        private static int getInverseMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getInverseMode(unsupported);
             checkMethodUnsupported("getInverseMode", unsupported);
@@ -1486,12 +1773,20 @@ public class ScannerLibrary {
 
         private static int setTriggerKeyEnable(int triggerKeyEnable) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setTriggerKeyEnable(triggerKeyEnable, unsupported);
+                    checkMethodUnsupported("setTriggerKeyEnable", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyEnable(triggerKeyEnable, unsupported);
             checkMethodUnsupported("setTriggerKeyEnable", unsupported);
             return retVal;
         }
 
-        private static int getTriggerKeyEnable() throws RemoteException, UnsupportedOperationException {
+        private static int getTriggerKeyEnable() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyEnable(unsupported);
             checkMethodUnsupported("getTriggerKeyEnable", unsupported);
@@ -1500,12 +1795,20 @@ public class ScannerLibrary {
 
         private static int setTriggerKeyMode(int triggerKeyMode) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setTriggerKeyMode(triggerKeyMode, unsupported);
+                    checkMethodUnsupported("setTriggerKeyMode", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyMode(triggerKeyMode, unsupported);
             checkMethodUnsupported("setTriggerKeyMode", unsupported);
             return retVal;
         }
 
-        private static int getTriggerKeyMode() throws RemoteException, UnsupportedOperationException {
+        private static int getTriggerKeyMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyMode(unsupported);
             checkMethodUnsupported("getTriggerKeyMode", unsupported);
@@ -1514,12 +1817,20 @@ public class ScannerLibrary {
 
         private static int setNumberOfBarcodes(int numberOfBarcodes) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setNumberOfBarcodes(numberOfBarcodes, unsupported);
+                    checkMethodUnsupported("setNumberOfBarcodes", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setNumberOfBarcodes(numberOfBarcodes, unsupported);
             checkMethodUnsupported("setNumberOfBarcodes", unsupported);
             return retVal;
         }
 
-        private static int getNumberOfBarcodes() throws RemoteException, UnsupportedOperationException {
+        private static int getNumberOfBarcodes() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getNumberOfBarcodes(unsupported);
             checkMethodUnsupported("getNumberOfBarcodes", unsupported);
@@ -1528,12 +1839,20 @@ public class ScannerLibrary {
 
         private static int setDelimiter(int delimiter) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setDelimiter(delimiter, unsupported);
+                    checkMethodUnsupported("setDelimiter", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setDelimiter(delimiter, unsupported);
             checkMethodUnsupported("setDelimiter", unsupported);
             return retVal;
         }
 
-        private static int getDelimiter() throws RemoteException, UnsupportedOperationException {
+        private static int getDelimiter() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getDelimiter(unsupported);
             checkMethodUnsupported("getDelimiter", unsupported);
@@ -1542,12 +1861,20 @@ public class ScannerLibrary {
 
         private static int setTriggerKeyTimeout(int triggerKeyTimeout) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setTriggerKeyTimeout(triggerKeyTimeout, unsupported);
+                    checkMethodUnsupported("setTriggerKeyTimeout", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyTimeout(triggerKeyTimeout, unsupported);
             checkMethodUnsupported("setTriggerKeyTimeout", unsupported);
             return retVal;
         }
 
-        private static int getTriggerKeyTimeout() throws RemoteException, UnsupportedOperationException {
+        private static int getTriggerKeyTimeout() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getTriggerKeyTimeout(unsupported);
             checkMethodUnsupported("getTriggerKeyTimeout", unsupported);
@@ -1556,6 +1883,13 @@ public class ScannerLibrary {
 
         private static int setTriggerKeyOn(int triggerKeyOn) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setTriggerKeyOn(triggerKeyOn, unsupported);
+                    checkMethodUnsupported("setTriggerKeyOn", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setTriggerKeyOn(triggerKeyOn, unsupported);
             checkMethodUnsupported("setTriggerKeyOn", unsupported);
             return retVal;
@@ -1563,12 +1897,20 @@ public class ScannerLibrary {
 
         private static int setScannerAPO(int scannerAPOTime) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setScannerAPO(scannerAPOTime, unsupported);
+                    checkMethodUnsupported("setScannerAPO", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setScannerAPO(scannerAPOTime, unsupported);
             checkMethodUnsupported("setScannerAPO", unsupported);
             return retVal;
         }
 
-        private static int getScannerAPO() throws RemoteException, UnsupportedOperationException {
+        private static int getScannerAPO() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getScannerAPO(unsupported);
             checkMethodUnsupported("getScannerAPO", unsupported);
@@ -1577,12 +1919,20 @@ public class ScannerLibrary {
 
         private static int setCenteringWindow(int centeringWindow) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setCenteringWindow(centeringWindow, unsupported);
+                    checkMethodUnsupported("setCenteringWindow", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setCenteringWindow(centeringWindow, unsupported);
             checkMethodUnsupported("setCenteringWindow", unsupported);
             return retVal;
         }
 
-        private static int getCenteringWindow() throws RemoteException, UnsupportedOperationException {
+        private static int getCenteringWindow() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getCenteringWindow(unsupported);
             checkMethodUnsupported("getCenteringWindow", unsupported);
@@ -1591,12 +1941,20 @@ public class ScannerLibrary {
 
         private static int setDetectionAreaSize(int detectionAreaSize) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setDetectionAreaSize(detectionAreaSize, unsupported);
+                    checkMethodUnsupported("setDetectionAreaSize", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setDetectionAreaSize(detectionAreaSize, unsupported);
             checkMethodUnsupported("setDetectionAreaSize", unsupported);
             return retVal;
         }
 
-        private static int getDetectionAreaSize() throws RemoteException, UnsupportedOperationException {
+        private static int getDetectionAreaSize() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getDetectionAreaSize(unsupported);
             checkMethodUnsupported("getDetectionAreaSize", unsupported);
@@ -1605,12 +1963,20 @@ public class ScannerLibrary {
 
         private static int setLaserSwingWidth(int laserSwingWidth) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setLaserSwingWidth(laserSwingWidth, unsupported);
+                    checkMethodUnsupported("setLaserSwingWidth", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setLaserSwingWidth(laserSwingWidth, unsupported);
             checkMethodUnsupported("setLaserSwingWidth", unsupported);
             return retVal;
         }
 
-        private static int getLaserSwingWidth() throws RemoteException, UnsupportedOperationException {
+        private static int getLaserSwingWidth() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getLaserSwingWidth(unsupported);
             checkMethodUnsupported("getLaserSwingWidth", unsupported);
@@ -1619,12 +1985,20 @@ public class ScannerLibrary {
 
         private static int setLaserHighlightMode(int enable) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setLaserHighlightMode(enable, unsupported);
+                    checkMethodUnsupported("setLaserHighlightMode", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setLaserHighlightMode(enable, unsupported);
             checkMethodUnsupported("setLaserHighlightMode", unsupported);
             return retVal;
         }
 
-        private static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException {
+        private static int getLaserHighlightMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getLaserHighlightMode(unsupported);
             checkMethodUnsupported("getLaserHighlightMode", unsupported);
@@ -1633,6 +2007,13 @@ public class ScannerLibrary {
 
         private static int setInternalParameter(byte[] command) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setInternalParameter(command, unsupported);
+                    checkMethodUnsupported("setInternalParameter", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter(command, unsupported);
             checkMethodUnsupported("setInternalParameter", unsupported);
             return retVal;
@@ -1640,6 +2021,13 @@ public class ScannerLibrary {
 
         private static int setInternalParameter(int tag, int value) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setInternalParameter2(tag, value, unsupported);
+                    checkMethodUnsupported("setInternalParameter", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter2(tag, value, unsupported);
             checkMethodUnsupported("setInternalParameter", unsupported);
             return retVal;
@@ -1647,19 +2035,28 @@ public class ScannerLibrary {
 
         private static int setInternalParameter(int number, int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtServiceScannerLibrary() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtServiceScannerLibrary().setInternalParameter3(number, tags, values, unsupported);
+                    checkMethodUnsupported("setInternalParameter", unsupported);
+                });
+                return SUCCESS;
+            }
             int retVal = getInstance().edtServiceScannerLibrary().setInternalParameter3(number, tags, values, unsupported);
             checkMethodUnsupported("setInternalParameter", unsupported);
             return retVal;
         }
 
-        private static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException {
+        private static int getInternalParameter(int tag) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getInternalParameter(tag, unsupported);
             checkMethodUnsupported("getInternalParameter", unsupported);
             return retVal;
         }
 
-        private static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException {
+        private static int getInternalParameter(int[] tags, int[] values) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtServiceScannerLibrary() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal = getInstance().edtServiceScannerLibrary().getInternalParameter2(tags, values, unsupported);
             checkMethodUnsupported("getInternalParameter", unsupported);

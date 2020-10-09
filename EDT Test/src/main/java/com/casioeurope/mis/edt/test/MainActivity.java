@@ -347,7 +347,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, "Calling getCASIOSerial from System Library!");
                 String result = String.format("Serial Number = %s\r\nModel Name=%s", SystemLibrary.getCASIOSerial(), SystemLibrary.getModelName());
                 EDTLibrary.testMessage(result);
-                SystemLibrary.setNavigationBarState(false);
+                SystemLibrary.setNavigationBarState(true);
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");
