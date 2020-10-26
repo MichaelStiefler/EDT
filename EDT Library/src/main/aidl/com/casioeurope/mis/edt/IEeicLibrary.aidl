@@ -3,6 +3,8 @@ import com.casioeurope.mis.edt.type.IParcelableTypes;
 import com.casioeurope.mis.edt.IEeicCallback;
 
 interface IEeicLibrary {
+    boolean isMethodNameSupported(String methodName);
+    boolean isMethodSupported(String methodBigInteger);
     boolean setPower(boolean enable, out BooleanParcelable unsupported);
     boolean isPowerOn(out BooleanParcelable unsupported);
     String getLibraryVersion(out BooleanParcelable unsupported);

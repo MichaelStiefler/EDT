@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.preemptive.dasho.android'
 
 // Load keystore
 def keystorePropertiesFile = rootProject.file("../keystore.properties")
@@ -37,8 +36,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -97,14 +96,14 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     itg400Implementation project(path: ':DeviceLibraryItg400')
     dtx400Implementation project(path: ':DeviceLibraryDtx400')
     itg600Implementation project(path: ':DeviceLibraryItg6x0')
     itg650Implementation project(path: ':DeviceLibraryItg6x0')
     itg600Implementation project(path: ':EEICLibraryItg6x0')
     itg650Implementation project(path: ':EEICLibraryItg6x0')
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation project(path: ':EDT Library')
@@ -121,17 +120,4 @@ gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
-}
-
-dasho {
-    // debug false
-    // doxFilename "project.dox"
-    // enabledBuildVariants "release"
-    // excludeFromProtection null //See docs for details
-    // home 'C:/Program Files/PreEmptive Protection DashO 11.0/app' // for more information about DashO Home see the User Guide
-    // javaOptions "-Xmx1024M", "-Xms512M" //Normally has no default values
-    // libraryAssetDirs //See docs for details
-    // libraryResourceDirs //See docs for details
-    // searchVersion "11"
-    // verbose false
 }

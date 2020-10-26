@@ -8,7 +8,38 @@ import com.casioeurope.mis.edt.type.BooleanParcelable;
 @SuppressWarnings({"unused", "RedundantThrows", "RedundantSuppression", "SpellCheckingInspection"})
 public class EeicLibraryImpl extends IEeicLibrary.Stub {
 
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("0000000000000000", 2);
+    private static String[] methodNames = {"close",
+            "getLibraryVersion",
+            "getValue",
+            "isPowerOn",
+            "open",
+            "read",
+            "registerCallback",
+            "sendBreak",
+            "setInputDirection",
+            "setInterruptEdge",
+            "setOutputDirection",
+            "setPower",
+            "setSlaveAddress",
+            "setValue",
+            "unregisterCallback",
+            "write"};
+
     public EeicLibraryImpl() {
+    }
+
+    public boolean isMethodNameSupported(String methodName) {
+        int methodIndex = Arrays.asList(methodNames).indexOf(methodName);
+        return methodIndex >= 0 && isMethodSupported(BigInteger.ONE.shiftLeft(methodIndex).toString());
+    }
+
+    public boolean isMethodSupported(String methodBigInteger) {
+        try {
+            return !new BigInteger(methodBigInteger).and(METHODS_SUPPORTED).equals(BigInteger.ZERO);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean setPower(boolean enable, BooleanParcelable unsupported) {

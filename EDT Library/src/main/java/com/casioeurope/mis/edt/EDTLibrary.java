@@ -7,10 +7,13 @@ import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.type.APN;
 import com.casioeurope.mis.edt.type.APNParcelable;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
+import com.casioeurope.mis.edt.type.LibraryCallback;
 import com.casioeurope.mis.edt.type.ReadWriteFileParams;
 import com.casioeurope.mis.edt.type.ReadWriteFileParamsParcelable;
 import com.casioeurope.mis.edt.type.WifiConfigurationParcelable;
 
+import java.math.BigInteger;
 import java.nio.file.CopyOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,9 +28,26 @@ import java.util.stream.Collectors;
  * <p>
  * This Class holds all static methods required for a Developer to easily access methods and properties of the device where system access rights are required.<br/><br/>
  *
- * @version 1.02
+ * @apiNote The EDT Library is bound to the calling application on application startup time automatically.<br/>
+ *          The Library's lifecycle therefore depends on the application lifecycle.<br/>
+ *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly adviced not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
+ *          When the activity is being launched (and hence the process gets created), <i>the same applies to the {@link android.app.Activity#onStart() onStart} and {@link android.app.Activity#onResume() onResume} methods</i>.<br/>
+ *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@link EDTLibrary#onLibraryReady onLibraryReady} method instead.<br/>
+ *          For instance, instead of calling {@link EDTLibrary#reboot() EDTLibrary.reboot()} directly in {@link android.app.Activity#onCreate(Bundle) onCreate}, use this code to postpone it to a {@link LibraryCallback Callback} appropriately:<br/>
+ * <pre>ScannerLibrary.onLibraryReady(new LibraryCallback() {
+ *     public void onLibraryReady() {
+ *         EDTLibrary.reboot();
+ *     }
+ * });</pre>
+ *          <br/>Which can be simplified to:<br/>
+ * <pre>EDTLibrary.onLibraryReady(() -> { EDTLibrary.reboot(); });</pre>
+ *          <br/>Or even further to:<br/>
+ * <pre>EDTLibrary.onLibraryReady(EDTLibrary::reboot);</pre>
+ *
+ * @version 2.00
  * @since 1.00
  */
+@SuppressWarnings({"unused", "RedundantSuppression", "deprecation", "JavadocReference", "SpellCheckingInspection"})
 public class EDTLibrary {
 
     private static EDTLibrary instance;
@@ -46,23 +66,72 @@ public class EDTLibrary {
         return EDTServiceConnection.getInstance().getEDTService();
     }
 
+    private static void checkMethodUnsupported(BooleanParcelable unsupported) throws UnsupportedOperationException {
+        if (unsupported == null) return;
+        if (!unsupported.getValue()) return;
+        String nameOfCurrentMethod = Thread.currentThread()
+                .getStackTrace()[3]
+                .getMethodName();
+        if (nameOfCurrentMethod.startsWith("access$")) { // Inner Class called this method!
+            nameOfCurrentMethod = Thread.currentThread()
+                    .getStackTrace()[4]
+                    .getMethodName();
+        }
+        checkMethodUnsupported(nameOfCurrentMethod, unsupported);
+    }
+
+    private static void checkMethodUnsupported(String methodName, BooleanParcelable unsupported) throws UnsupportedOperationException {
+        if (unsupported == null) return;
+        if (!unsupported.getValue()) return;
+        throw new UnsupportedOperationException("Method \"" + methodName + "\" is not supported on this device type!");
+    }
+
+    /**
+     * Check whether the {@link java.lang.reflect.Method Method} indicated by the {@link BigInteger BigInteger} method parameter is supported on the currently active device
+     *
+     * @param method {@link BigInteger BigInteger}: Constant referencing the method to be checked
+     * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
+     */
+    public static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
+        if (getInstance().edtService()== null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+        try {
+            return getInstance().edtService().isMethodSupportedEdt(method.toString());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check whether the {@link java.lang.reflect.Method Method} indicated by the {@link String String} methodName parameter is supported on the currently active device
+     *
+     * @param methodName {@link String String}: Name of the method to be checked
+     * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
+     */
+    public static boolean isMethodSupported(String methodName) throws IllegalStateException {
+        if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+        try {
+            return getInstance().edtService().isMethodNameSupportedEdt(methodName);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     /**
      * Add a new network description to the set of configured networks. The {@link android.net.wifi.WifiConfiguration#networkId networkId} field of the supplied configuration object is ignored.
      *
      * @param wifiConfiguration {@link android.net.wifi.WifiConfiguration WifiConfiguration}: The set of variables that describe the configuration, contained in a WifiConfiguration object
      * @return boolean whether or not the new network could be added
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"deprecation", "unused", "RedundantSuppression"})
-    public static boolean addNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) {
-        try {
-            WifiConfigurationParcelable wifiConfigurationParcelable = new WifiConfigurationParcelable(wifiConfiguration);
-            return getInstance().edtService().addNetwork(wifiConfigurationParcelable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean addNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) throws RemoteException, UnsupportedOperationException {
+        return Implementation.addNetwork(wifiConfiguration);
     }
 
     /**
@@ -71,16 +140,12 @@ public class EDTLibrary {
      *
      * @param allow {@code boolean}: true allows unknown sources, false disallows them
      * @return boolean whether or not the Setting could be applied
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean allowUnknownSources(boolean allow) {
-        try {
-            return getInstance().edtService().allowUnknownSources(allow);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean allowUnknownSources(boolean allow) throws RemoteException, UnsupportedOperationException {
+        return Implementation.allowUnknownSources(allow);
     }
 
     /**
@@ -88,32 +153,24 @@ public class EDTLibrary {
      *
      * @param packageName {@link java.lang.String String}: Package Name of the App which's cache shall be cleared.
      * @return {@code boolean} whether or not the app cache could be cleared successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean clearCacheForPackage(String packageName) {
-        try {
-            return getInstance().edtService().clearCacheForPackage(packageName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean clearCacheForPackage(String packageName) throws RemoteException, UnsupportedOperationException {
+        return Implementation.clearCacheForPackage(packageName);
     }
 
     /**
      * Clears the device's Clipboard
      *
      * @return boolean whether or not the Clipboard could be cleared
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean clearClipboard() {
-        try {
-            return getInstance().edtService().clearClipboard();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean clearClipboard() throws RemoteException, UnsupportedOperationException {
+        return Implementation.clearClipboard();
     }
 
     /**
@@ -121,32 +178,24 @@ public class EDTLibrary {
      *
      * @param packageName {@link java.lang.String String}: Package Name of the App which's data shall be cleared.
      * @return {@code boolean} whether or not the app data could be cleared successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean clearDataForPackage(String packageName) {
-        try {
-            return getInstance().edtService().clearDataForPackage(packageName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean clearDataForPackage(String packageName) throws RemoteException, UnsupportedOperationException {
+        return Implementation.clearCacheForPackage(packageName);
     }
 
     /**
      * Clears the device password (PIN)
      *
      * @return boolean whether or not the Password could be cleared
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean clearPassword() {
-        try {
-            return getInstance().edtService().clearPassword();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean clearPassword() throws RemoteException, UnsupportedOperationException {
+        return Implementation.clearPassword();
     }
 
     /**
@@ -154,16 +203,12 @@ public class EDTLibrary {
      *
      * @param ssid {@link java.lang.String String}: The {@link android.net.wifi.WifiConfiguration#SSID SSID} of the network to connect to
      * @return boolean whether or not the connection could be established
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
-    public static boolean connectNetwork(String ssid) {
-        try {
-            return getInstance().edtService().connectNetwork(ssid);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean connectNetwork(String ssid) throws RemoteException, UnsupportedOperationException {
+        return Implementation.connectNetwork(ssid);
     }
 
     /**
@@ -171,16 +216,12 @@ public class EDTLibrary {
      *
      * @param networkId {@link java.lang.Integer int}: The {@link android.net.wifi.WifiConfiguration#networkId networkId} of the network to connect to
      * @return boolean whether or not the connection could be established
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean connectNetworkId(int networkId) {
-        try {
-            return getInstance().edtService().connectNetworkId(networkId);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean connectNetworkId(int networkId) throws RemoteException, UnsupportedOperationException {
+        return Implementation.connectNetworkId(networkId);
     }
 
     /**
@@ -189,26 +230,19 @@ public class EDTLibrary {
      * @param sourceFilePath      {@link java.nio.file.Path Path}:      Path to copy the file from
      * @param destinationFilePath {@link java.nio.file.Path Path}: Path to copy the file to
      * @param options             variable number of {@link java.nio.file.StandardCopyOption StandardCopyOptions} and/or {@link java.nio.file.LinkOption LinkOptions} to apply
-     * @return {@link java.nio.file.Path Path} to the target file or {@link javax.lang.model.type.NullType null} if operation failed
+     * @return {@link java.nio.file.Path Path} to the target file or {@code null} if operation failed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @apiNote This method follows the specification of the Android API {@link java.nio.file.Files#copy(Path, Path, CopyOption...) copy} method.<br/>
      * It's purpose is to give user applications the ability to copy files which are out of reach for non-system apps.
      * <p> Requires Android O (Android 8) or later.<br/>
      * If you call this method on a device running an earlier version of Android, this method will return {@code null}.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "JavadocReference", "RedundantSuppression"})
-    public static Path copyFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
-            return null;
-        }
-        try {
-            List<String> copyOptionStrings = options == null ? null : Arrays.stream(options).map(Object::toString).collect(Collectors.toList());
-            String retVal = getInstance().edtService().copyFile(sourceFilePath.toString(), destinationFilePath.toString(), copyOptionStrings);
-            return retVal == null ? null : Paths.get(retVal);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static Path copyFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) throws RemoteException, UnsupportedOperationException {
+        return Implementation.copyFile(sourceFilePath, destinationFilePath, options);
     }
 
     /**
@@ -217,16 +251,12 @@ public class EDTLibrary {
      * @param apn          {@link APN APN}:         The Access Point Name (APN) configuration for a carrier data connection.
      * @param setAsDefault {@code boolean}: Whether or not the APN configuration should become the new default configuration.
      * @return boolean whether or not the new Access Point Name (APN) configuration has been created successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean createNewApn(APN apn, boolean setAsDefault) {
-        try {
-            return getInstance().edtService().createNewApn(new APNParcelable(apn), setAsDefault);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean createNewApn(APN apn, boolean setAsDefault) throws RemoteException, UnsupportedOperationException {
+        return Implementation.createNewApn(apn, setAsDefault);
     }
 
     /**
@@ -234,18 +264,14 @@ public class EDTLibrary {
      *
      * @param filePath {@link java.lang.String String}: Path (including name) of the file to be removed
      * @return boolean whether or not the file has been removed successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote Requires Android O (Android 8) or later.<br/>
      * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean deleteFile(String filePath) {
-        try {
-            return getInstance().edtService().deleteFile(filePath);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean deleteFile(String filePath) throws RemoteException, UnsupportedOperationException {
+        return Implementation.deleteFile(filePath);
     }
 
     /**
@@ -253,16 +279,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: {@code true} enables ADB connectivity via USB, {@code false} disables it
      * @return boolean whether or not the ADB connectivity via USB was enabled/disabled successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableAdb(boolean enable) {
-        try {
-            return getInstance().edtService().enableAdb(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableAdb(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableAdb(enable);
     }
 
     /**
@@ -271,16 +293,12 @@ public class EDTLibrary {
      * @param packageName {@link java.lang.String String}: Package Name of the System App which shall be enabled/disabled.
      * @param enable      {@code boolean}: True enables the System App, false disables it.
      * @return {@code boolean} whether or not the app could be enabled/disabled successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableApplication(String packageName, boolean enable) {
-        try {
-            return enable ? getInstance().edtService().enableApplication(packageName) : getInstance().edtService().disableApplication(packageName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableApplication(String packageName, boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableApplication(packageName, enable);
     }
 
     /**
@@ -288,16 +306,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: true enables Background Data, false disables it
      * @return boolean whether or not the setting was applied successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableBackgroundData(boolean enable) {
-        try {
-            return getInstance().edtService().enableBackgroundData(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableBackgroundData(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableBackgroundData(enable);
     }
 
     /**
@@ -307,16 +321,12 @@ public class EDTLibrary {
      * @param packageName {@link java.lang.String String}: Package Name of the System App which shall be added/removed to/from the doze mode whitelist.
      * @param enable      {@code boolean}: True adds the app to the doze mode whitelist, false removes it from the doze mode whitelist.
      * @return {@code boolean} whether or not the app could be added/removed to/from the doze mode whitelist successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableBatteryOptimization(String packageName, boolean enable) {
-        try {
-            return enable ? getInstance().edtService().enableBatteryOptimization(packageName) : getInstance().edtService().disableBatteryOptimization(packageName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableBatteryOptimization(String packageName, boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableBatteryOptimization(packageName, enable);
     }
 
     /**
@@ -327,16 +337,12 @@ public class EDTLibrary {
      *
      * @param enabled {@code boolean}: true enables Bluetooth, false disables it
      * @return boolean whether or not Bluetooth could be enabled/disabled
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableBluetooth(boolean enabled) {
-        try {
-            return getInstance().edtService().enableBluetooth(enabled);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableBluetooth(boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableBluetooth(enabled);
     }
 
     /**
@@ -344,16 +350,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: true enables the Camera usage, false disables it
      * @return boolean whether or not the setting was applied successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableCameras(boolean enable) {
-        try {
-            return getInstance().edtService().enableCameras(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableCameras(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableCameras(enable);
     }
 
     /**
@@ -361,16 +363,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: {@code true} enables the Clipboard, {@code false} disables it
      * @return boolean whether or not the Clipboard was enabled/disabled successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableClipboard(boolean enable) {
-        try {
-            return getInstance().edtService().enableClipboard(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableClipboard(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableClipboard(enable);
     }
 
     /**
@@ -381,16 +379,12 @@ public class EDTLibrary {
      *
      * @param enabled {@code boolean}: true enables Developer Mode, false disables it
      * @return boolean whether or not Developer Mode could be enabled/disabled
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableDeveloperMode(boolean enabled) {
-        try {
-            return getInstance().edtService().enableDeveloperMode(enabled);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableDeveloperMode(boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableDeveloperMode(enabled);
     }
 
     /**
@@ -403,16 +397,12 @@ public class EDTLibrary {
      * @param className   {@link String String}: The class name of the Class within that application that implements the DeviceAdminReceiver.
      * @param makeAdmin   {@code boolean}: true enables device admin mode on the application, false disables it.
      * @return boolean whether or not Device Admin Mode could be enabled/disabled on the application in question.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin) {
-        try {
-            return getInstance().edtService().enableDeviceAdmin(packageName, className, makeAdmin);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableDeviceAdmin(packageName, className, makeAdmin);
     }
 
     /**
@@ -423,16 +413,12 @@ public class EDTLibrary {
      *
      * @param enabled {@code boolean}: true enables GPS, false disables it
      * @return boolean whether or not GPS could be enabled/disabled
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableGps(boolean enabled) {
-        try {
-            return getInstance().edtService().enableGps(enabled);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableGps(boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableGps(enabled);
     }
 
     /**
@@ -440,16 +426,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: {@code true} enables the "USB Mass Storage" mode, {@code false} disables it
      * @return boolean whether or not the "USB Mass Storage" mode was enabled/disabled successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableMassStorage(boolean enable) {
-        try {
-            return getInstance().edtService().enableMassStorage(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableMassStorage(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableMassStorage(enable);
     }
 
     /**
@@ -460,16 +442,12 @@ public class EDTLibrary {
      *
      * @param enabled {@code boolean}: true enables NFC, false disables it
      * @return boolean whether or not NFC could be enabled/disabled
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableNfc(boolean enabled) {
-        try {
-            return getInstance().edtService().enableNfc(enabled);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableNfc(boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableNfc(enabled);
     }
 
     /**
@@ -477,16 +455,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: true enables Data Roaming false disables it
      * @return boolean whether or not the setting was applied successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableRoaming(boolean enable) {
-        try {
-            return getInstance().edtService().enableRoaming(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableRoaming(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableRoaming(enable);
     }
 
     /**
@@ -496,16 +470,12 @@ public class EDTLibrary {
      *
      * @param enabled {@code boolean}: true enables Wifi, false disables it
      * @return boolean whether or not Wifi could be enabled/disabled
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean enableWifi(boolean enabled) {
-        try {
-            return getInstance().edtService().enableWifi(enabled);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableWifi(boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableWifi(enabled);
     }
 
     /**
@@ -516,18 +486,14 @@ public class EDTLibrary {
      *
      * @param enabled {@code boolean}: true enables WWAN, false disables it
      * @return boolean whether or not WWAN could be enabled/disabled
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote Requires Android O (Android 8) or later.<br/>
      * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
-    public static boolean enableWwan(boolean enabled) {
-        try {
-            return getInstance().edtService().enableWwan(enabled);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean enableWwan(boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.enableWwan(enabled);
     }
 
     /**
@@ -539,42 +505,30 @@ public class EDTLibrary {
      *                       This is to prevent the device from accidentally falling into <a href="https://developer.android.com/work/dpc/security">FRP</a> mode.
      *                       If {@code removeAccounts} is set to "false", existing Google Accounts will remain untouched and the device will simply perform the Factory Reset. This means that if aGoogle Accounts was present at the time of calling {@code factoryReset(false)}, the device will fall into <a href="https://developer.android.com/work/dpc/security">FRP</a> mode after reboot has finished.
      * @return boolean whether or not the Factory Reset could be performed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently reboot and wipe the device.
      * <p><b>CAUTION: This wipes all data off the device!<br/>
      * CAUTION: If there's a Google Account active on the device at factory reset time, you will need to login to that account after reboot (Google Factory Reset Protection)!</b></p>
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean factoryReset(boolean removeAccounts) {
-        try {
-            return getInstance().edtService().factoryReset(removeAccounts);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean factoryReset(boolean removeAccounts) throws RemoteException, UnsupportedOperationException {
+        return Implementation.factoryReset(removeAccounts);
     }
 
     /**
      * Gets the {@link java.lang.reflect.Array Array} of existing {@link APN Access Point Name (APN)} configurations.
      *
      * @return {@link APN APN[]} {@link java.lang.reflect.Array Array} of available Access Point Name (APN) configurations.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static APN[] getAllApnList() {
-        try {
-            APNParcelable[] apnParcelables = getInstance().edtService().getAllApnList();
-            if (apnParcelables == null) return null;
-            //noinspection SpellCheckingInspection
-            APN[] apns = new APN[apnParcelables.length];
-            int i = 0;
-            for (APNParcelable apnParcelable : apnParcelables) apns[i++] = apnParcelable.getAPN();
-            return apns;
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static APN[] getAllApnList() throws RemoteException, UnsupportedOperationException {
+        return Implementation.getAllApnList();
     }
 
     /**
@@ -583,16 +537,14 @@ public class EDTLibrary {
      * @param name {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
      * @return {@link APN APN} the Access Point Name (APN) configuration for a carrier data connection.
      * If no matching configuration for the {@link APN#getName() name} could be found, the method returns {@code null}.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static APN getApn(String name) {
-        try {
-            return getInstance().edtService().getApn(name).getAPN();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static APN getApn(String name) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getApn(name);
     }
 
     /**
@@ -601,16 +553,14 @@ public class EDTLibrary {
      * @param name {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
      * @return {@code int} the {@link APN#getId() id} field of an existing Access Point Name (APN) configuration for a carrier data connection.
      * If no matching configuration for the {@link APN#getName() name} could be found, the method returns {@link APN#INVALID_APN INVALID_APN (-1)}.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static int getApnId(String name) {
-        try {
-            return getInstance().edtService().getApnId(name);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return APN.INVALID_APN;
+    public static int getApnId(String name) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getApnId(name);
     }
 
     /**
@@ -621,16 +571,12 @@ public class EDTLibrary {
      *
      * @param settingsFilePath {@link java.lang.String String}: Path to the file holding the Scanner settings
      * @return boolean whether or not the Barcode Scanner settings could be written to (a) file(s) and the new settings could applied to the Barcode Scanner successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean getCurrentAndSetNewScanSettings(String settingsFilePath) {
-        try {
-            return getInstance().edtService().getCurrentAndSetNewScanSettings(settingsFilePath);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean getCurrentAndSetNewScanSettings(String settingsFilePath) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getCurrentAndSetNewScanSettings(settingsFilePath);
     }
 
     /**
@@ -646,16 +592,12 @@ public class EDTLibrary {
      *
      * @param settingsFilePath {@link java.lang.String String}: Path to the file holding the Scanner settings
      * @return boolean whether or not the current Barcode Scanner settings could be written to (a) file(s) successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean getCurrentScanSettings(String settingsFilePath) {
-        try {
-            return getInstance().edtService().getCurrentScanSettings(settingsFilePath);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean getCurrentScanSettings(String settingsFilePath) throws RemoteException, UnsupportedOperationException {
+        return Implementation.getCurrentScanSettings(settingsFilePath);
     }
 
     /**
@@ -664,16 +606,14 @@ public class EDTLibrary {
      * @return {@link java.lang.reflect.Array Array} of {@link Account Account}: The {@link java.lang.reflect.Array Array} of existing Google {@link Account Accounts} currently configured for this device.<br/>
      * In case of failure, this method returns {@code null}.<br/>
      * If no Google {@link Account Accounts} are configured at the time of calling this method, the return value will be an empty {@link java.lang.reflect.Array Array}.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static Account[] getGoogleAccounts() {
-        try {
-            return getInstance().edtService().getGoogleAccounts();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static Account[] getGoogleAccounts() throws RemoteException, UnsupportedOperationException {
+        return Implementation.getGoogleAccounts();
     }
 
     /**
@@ -681,16 +621,14 @@ public class EDTLibrary {
      *
      * @return {@link List List} of {@link String String} The Package Names of the available Keyboards on this device.
      * In case of an error, the method returns {@code null}.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static List<String> getKeyboardNames() {
-        try {
-            return getInstance().edtService().getKeyboardNames();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static List<String> getKeyboardNames() throws RemoteException, UnsupportedOperationException {
+        return Implementation.getKeyboardNames();
     }
 
     /**
@@ -700,16 +638,12 @@ public class EDTLibrary {
      *                  Can be {@code null} or an empty {@link java.lang.String String}, in which case the default {@link java.security.KeyStore KeyStore} will be used.
      * @param password  {@link java.lang.String String}: Password to be used for the {@link java.security.KeyStore KeyStore}.
      * @return {@code boolean} whether or not the Certificate {@link java.security.KeyStore KeyStore} could be initialized successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean initializeKeyStore(String storeName, String password) {
-        try {
-            return getInstance().edtService().initializeKeyStore(storeName, password);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean initializeKeyStore(String storeName, String password) throws RemoteException, UnsupportedOperationException {
+        return Implementation.initializeKeyStore(storeName, password);
     }
 
     /**
@@ -720,34 +654,26 @@ public class EDTLibrary {
      *                    If you specify "true" but the app is not installed yet, this parameter will have no effect.<br/>
      *                    If you specify "false" but the app is already installed, this method will return false and the installation will fail.
      * @return {@code boolean} whether or not the .apk file could be installed successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean installApk(String apkFilename, boolean update) {
-        try {
-            return getInstance().edtService().installApk(apkFilename, update);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean installApk(String apkFilename, boolean update) throws RemoteException, UnsupportedOperationException {
+        return Implementation.installApk(apkFilename, update);
     }
 
     /**
-     * Installs a CA Certificate from a File.
+     * Installs a Certificate from a File.
      *
      * @param friendlyName {@link java.lang.String String}: Friendly name of the Certificate to be installed.
      * @param fileName     {@link java.lang.String String}: File Path and Name of the Certificate File.
      * @return {@code boolean} whether or not the Certificate could be installed successfully.
-     * @since 1.00
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean installCACertificate(String friendlyName, String fileName) {
-        try {
-            return getInstance().edtService().installCACertificate(friendlyName, fileName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean installCertificate(String friendlyName, String fileName) throws RemoteException, UnsupportedOperationException {
+        return Implementation.installCertificate(friendlyName, fileName);
     }
 
     /**
@@ -756,16 +682,12 @@ public class EDTLibrary {
      * <p>May or may not turn off the display, depending on device settings</p>
      *
      * @return {@code boolean} whether or not the Device could be locked
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean lockDevice() {
-        try {
-            return getInstance().edtService().lockDevice();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean lockDevice() throws RemoteException, UnsupportedOperationException {
+        return Implementation.lockDevice();
     }
 
     /**
@@ -773,16 +695,12 @@ public class EDTLibrary {
      *
      * @param mount {@code boolean}: true mounts the external SD card, false unmounts it
      * @return boolean whether or not the external SD card could (un)mounted successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean mountSDCard(boolean mount) {
-        try {
-            return getInstance().edtService().mountSDCard(mount);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean mountSDCard(boolean mount) throws RemoteException, UnsupportedOperationException {
+        return Implementation.mountSDCard(mount);
     }
 
     /**
@@ -791,26 +709,19 @@ public class EDTLibrary {
      * @param sourceFilePath      {@link java.nio.file.Path Path}:      Path to move the file from
      * @param destinationFilePath {@link java.nio.file.Path Path}: Path to move the file to
      * @param options             variable number of {@link java.nio.file.StandardCopyOption StandardCopyOptions} to apply
-     * @return {@link java.nio.file.Path Path} to the target file or {@link javax.lang.model.type.NullType null} if operation failed
+     * @return {@link java.nio.file.Path Path} to the target file or {@code null} if operation failed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @apiNote This method follows the specification of the Android API {@link java.nio.file.Files#move(Path, Path, CopyOption...) move} method.<br/>
      * It's purpose is to give user applications the ability to move files which are out of reach for non-system apps.
      * <p> Requires Android O (Android 8) or later.<br/>
      * If you call this method on a device running an earlier version of Android, this method will return {@code null}.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "JavadocReference", "RedundantSuppression"})
-    public static Path moveFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
-            return null;
-        }
-        try {
-            List<String> copyOptionStrings = options == null ? null : Arrays.stream(options).map(Object::toString).collect(Collectors.toList());
-            String retVal = getInstance().edtService().moveFile(sourceFilePath.toString(), destinationFilePath.toString(), copyOptionStrings);
-            return retVal == null ? null : Paths.get(retVal);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static Path moveFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) throws RemoteException, UnsupportedOperationException {
+        return Implementation.moveFile(sourceFilePath, destinationFilePath, options);
     }
 
     /**
@@ -841,6 +752,10 @@ public class EDTLibrary {
      *
      * @param readWriteFileParams {@link ReadWriteFileParams ReadWriteFileParams}: Parameters specifying which file to read from, with optional data buffer, offsets, length and File Options.<br>
      * @return {@code boolean} whether or not the file data has been read successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @apiNote the {@link ReadWriteFileParams#getData() data buffer} of {@link ReadWriteFileParams readWriteFileParams} is optional.<br/>
      * If this method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to hold the data being read.<br/>
      * If this method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will dynamically allocate a buffer holding the data being read.
@@ -849,50 +764,36 @@ public class EDTLibrary {
      * @see ReadWriteFileParams ReadWriteFileParams for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean readFile(ReadWriteFileParams readWriteFileParams) {
-        try {
-            return getInstance().edtService().readFile(new ReadWriteFileParamsParcelable(readWriteFileParams));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean readFile(ReadWriteFileParams readWriteFileParams) throws RemoteException, UnsupportedOperationException {
+        return Implementation.readFile(readWriteFileParams);
     }
 
     /**
      * Performs a device reboot
      *
      * @return {@code boolean} whether or not the Reboot could be performed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently reboot, quite like when the user keeps pressing the power key and chooses to "Reboot".
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean reboot() {
-        try {
-            return getInstance().edtService().reboot();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean reboot() throws RemoteException, UnsupportedOperationException {
+        return Implementation.reboot();
     }
 
     /**
      * Performs a device reboot into recovery mode
      *
      * @return {@code boolean} whether or not the Recovery Reboot could be performed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently reboot into recovery mode, quite like when the user keeps pressing the power key and chooses to "Reboot" - but using this method it will not reboot the Operating System, but reboot into recovery mode instead.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean recovery() {
-        try {
-            return getInstance().edtService().recovery();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean recovery() throws RemoteException, UnsupportedOperationException {
+        return Implementation.recovery();
     }
 
     /**
@@ -900,16 +801,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: true enables remembering Login Passwords, false disables it
      * @return {@code boolean} whether or not the setting was applied successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean rememberPasswords(boolean enable) {
-        try {
-            return getInstance().edtService().rememberPasswords(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean rememberPasswords(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.rememberPasswords(enable);
     }
 
     /**
@@ -917,50 +814,38 @@ public class EDTLibrary {
      *
      * @param account {@link android.accounts.Account Account}: Account to be removed
      * @return {@code boolean} whether or not the account removal was successful
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean removeAccount(Account account) {
-        try {
-            return getInstance().edtService().removeAccount(account);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean removeAccount(Account account) throws RemoteException, UnsupportedOperationException {
+        return Implementation.removeAccount(account);
     }
 
     /**
      * Removes (attempts to remove) all configured accounts of all kind from the device<br/>
      *
      * @return {@code boolean} whether or not the account removal was successful
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote This method usually fails, because certain accounts cannot be removed.<br/>
      * Those that can be removed will be removed nevertheless.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean removeAllAccounts() {
-        try {
-            return getInstance().edtService().removeAllAccounts();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean removeAllAccounts() throws RemoteException, UnsupportedOperationException {
+        return Implementation.removeAllAccounts();
     }
 
     /**
      * Removes (attempts to remove) all configured Google accounts from the device
      *
      * @return {@code boolean} whether or not the account removal was successful
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean removeAllGoogleAccounts() {
-        try {
-            return getInstance().edtService().removeAllGoogleAccounts();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean removeAllGoogleAccounts() throws RemoteException, UnsupportedOperationException {
+        return Implementation.removeAllGoogleAccounts();
     }
 
     /**
@@ -968,16 +853,12 @@ public class EDTLibrary {
      *
      * @param ssid {@link java.lang.String String}: The {@link android.net.wifi.WifiConfiguration#SSID SSID} of the network to be removed
      * @return {@code boolean} whether or not the existing network could be removed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
-    public static boolean removeNetwork(String ssid) {
-        try {
-            return getInstance().edtService().removeNetwork(ssid);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean removeNetwork(String ssid) throws RemoteException, UnsupportedOperationException {
+        return Implementation.removeNetwork(ssid);
     }
 
     /**
@@ -985,16 +866,12 @@ public class EDTLibrary {
      *
      * @param networkId {@link java.lang.Integer int}: The {@link android.net.wifi.WifiConfiguration#networkId networkId} of the network to be removed
      * @return {@code boolean} whether or not the existing network could be removed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean removeNetworkId(int networkId) {
-        try {
-            return getInstance().edtService().removeNetworkId(networkId);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean removeNetworkId(int networkId) throws RemoteException, UnsupportedOperationException {
+        return Implementation.removeNetworkId(networkId);
     }
 
     /**
@@ -1002,16 +879,12 @@ public class EDTLibrary {
      *
      * @param newPassword {@link java.lang.String String}: The new Device Password to be set
      * @return {@code boolean} whether or not the new Password could be set
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean resetPassword(String newPassword) {
-        try {
-            return getInstance().edtService().resetPassword(newPassword);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean resetPassword(String newPassword) throws RemoteException, UnsupportedOperationException {
+        return Implementation.resetPassword(newPassword);
     }
 
     /**
@@ -1019,16 +892,12 @@ public class EDTLibrary {
      *
      * @param enable {@code boolean}: true enables saving Form Input Data, false disables it
      * @return {@code boolean} whether or not the setting was applied successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean saveFormData(boolean enable) {
-        try {
-            return getInstance().edtService().saveFormData(enable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean saveFormData(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.saveFormData(enable);
     }
 
     /**
@@ -1036,24 +905,16 @@ public class EDTLibrary {
      *
      * @param date {@link java.util.Date Date}: The Date and Time to be set
      * @return {@code boolean} whether or not the new Date/Time could be set
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @apiNote Requires Android N (Android 7) or later.<br/>
      * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setDateTime(Date date) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
-            return false;
-        }
-        try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            // Convert Calendar to integer values because AIDL can handle limited data types only
-            return getInstance().edtService().setDateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setDateTime(Date date) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setDateTime(date);
     }
 
     /**
@@ -1061,16 +922,12 @@ public class EDTLibrary {
      *
      * @param homePage {@link java.lang.String String}: URL of the new Homepage
      * @return {@code boolean} whether or not the default Browser Homepage could be set successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setDefaultHomePage(String homePage) {
-        try {
-            return getInstance().edtService().setDefaultHomePage(homePage);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setDefaultHomePage(String homePage) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setDefaultHomePage(homePage);
     }
 
     /**
@@ -1078,16 +935,12 @@ public class EDTLibrary {
      *
      * @param packageName {@link java.lang.String String}: Package Name of the new Default Launcher
      * @return {@code boolean} whether or not the Default Launcher was set successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setDefaultLauncher(String packageName) {
-        try {
-            return getInstance().edtService().setDefaultLauncher(packageName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setDefaultLauncher(String packageName) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setDefaultLauncher(packageName);
     }
 
     /**
@@ -1096,16 +949,12 @@ public class EDTLibrary {
      * @param keyboardName {@link java.lang.String String}: The Package Name of the Keyboard to be used.<br/>
      *                     Use {@link #getKeyboardNames} to fetch a {@link List List} of available Keyboard Names.
      * @return {@code boolean} whether or not the Keyboard was set successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setKeyboard(String keyboardName) {
-        try {
-            return getInstance().edtService().setKeyboard(keyboardName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setKeyboard(String keyboardName) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setKeyboard(keyboardName);
     }
 
     /**
@@ -1120,16 +969,12 @@ public class EDTLibrary {
      *
      * @param settingsFilePath {@link java.lang.String String}: Path to the file holding the Scanner settings
      * @return {@code boolean} whether or not the new settings could applied to the Barcode Scanner
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setNewScanSettings(String settingsFilePath) {
-        try {
-            return getInstance().edtService().setNewScanSettings(settingsFilePath);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setNewScanSettings(String settingsFilePath) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setNewScanSettings(settingsFilePath);
     }
 
     /**
@@ -1137,16 +982,12 @@ public class EDTLibrary {
      *
      * @param name {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for becoming the new preferred carrier data connection.<br/>
      * @return {@code boolean} whether or not the Access Point Name (APN) configuration in question could be set as the new preferred APN configuration.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setPreferredApn(String name) {
-        try {
-            return getInstance().edtService().setPreferredApn(name);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setPreferredApn(String name) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setPreferredApn(name);
     }
 
     /**
@@ -1154,16 +995,12 @@ public class EDTLibrary {
      *
      * @param milliseconds {@link java.lang.Integer int}: The new Screen Lock Timeout Value in Milliseconds
      * @return {@code boolean} whether or not the Screen Lock Timeout was set successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setScreenLockTimeout(int milliseconds) {
-        try {
-            return getInstance().edtService().setScreenLockTimeout(milliseconds);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setScreenLockTimeout(int milliseconds) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setScreenLockTimeout(milliseconds);
     }
 
     /**
@@ -1171,40 +1008,28 @@ public class EDTLibrary {
      *
      * @param timeZone {@link android.icu.util.TimeZone TimeZone}: The new Time Zone to be set
      * @return {@code boolean} whether or not the new Time Zone could be set
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote Requires Android N (Android 7) or later.<br/>
      * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean setTimeZone(TimeZone timeZone) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
-            return false;
-        }
-        try {
-            // Convert TimeZone to String because AIDL can handle limited data types only
-            return getInstance().edtService().setTimeZone(timeZone.getDisplayName());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean setTimeZone(TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setTimeZone(timeZone);
     }
 
     /**
      * Performs a device shutdown
      *
      * @return {@code boolean} whether or not the Shutdown could be performed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote There will be no warning or any confirmation dialog whatsoever when you call this method.<br/>
      * The device will simply, irrevocably, silently power off, quite like when the user keeps pressing the power key and chooses to "Power off".
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean shutdown() {
-        try {
-            return getInstance().edtService().shutdown();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean shutdown() throws RemoteException, UnsupportedOperationException {
+        return Implementation.shutdown();
     }
 
     /**
@@ -1214,16 +1039,12 @@ public class EDTLibrary {
      *
      * @param message {@link java.lang.String String}: The Message to be displayed
      * @return {@code boolean} whether or not the Message could be shown
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean testMessage(String message) {
-        try {
-            return getInstance().edtService().testMessage(message);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean testMessage(String message) throws RemoteException, UnsupportedOperationException {
+        return Implementation.testMessage(message);
     }
 
     /**
@@ -1234,16 +1055,12 @@ public class EDTLibrary {
      *            Use {@link EDTLibrary#getApnId getApnId} to fetch the ID from a given name if required.
      * @return {@code boolean} whether or not the new Access Point Name (APN) configuration has been applied successfully.<br/>
      * If no matching configuration for the ID could be found, the method returns {@code false}.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean updateApn(APN apn) {
-        try {
-            return getInstance().edtService().updateApn(new APNParcelable(apn));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean updateApn(APN apn) throws RemoteException, UnsupportedOperationException {
+        return Implementation.updateApn(apn);
     }
 
     /**
@@ -1252,17 +1069,12 @@ public class EDTLibrary {
      * @param wifiConfiguration {@link android.net.wifi.WifiConfiguration WifiConfiguration}: The set of variables that describe the configuration, contained in a WifiConfiguration object.
      *                          It may be sparse, so that only the items that are being changed are non-null.
      * @return {@code boolean} whether or not the existing network could be updated
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"deprecation", "unused", "RedundantSuppression"})
-    public static boolean updateNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) {
-        try {
-            WifiConfigurationParcelable wifiConfigurationParcelable = new WifiConfigurationParcelable(wifiConfiguration);
-            return getInstance().edtService().updateNetwork(wifiConfigurationParcelable);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean updateNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) throws RemoteException, UnsupportedOperationException {
+        return Implementation.updateNetwork(wifiConfiguration);
     }
 
     /**
@@ -1270,16 +1082,12 @@ public class EDTLibrary {
      *
      * @param packageName {@link java.lang.String String}: Package Name of the App to be uninstalled.
      * @return {@code boolean} whether or not the app could be uninstalled successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean uninstallPackage(String packageName) {
-        try {
-            return getInstance().edtService().uninstallPackage(packageName);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean uninstallPackage(String packageName) throws RemoteException, UnsupportedOperationException {
+        return Implementation.uninstallPackage(packageName);
     }
 
     /**
@@ -1287,16 +1095,12 @@ public class EDTLibrary {
      *
      * @param name {@link String String}:         The {@link APN#getName() name} field of the Access Point Name (APN) configuration in question for a carrier data connection.<br/>
      * @return {@code boolean} whether or not the Access Point Name (APN) configuration in question refers to a valid APN configuration.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean verifyApn(String name) {
-        try {
-            return getInstance().edtService().verifyApn(name);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean verifyApn(String name) throws RemoteException, UnsupportedOperationException {
+        return Implementation.verifyApn(name);
     }
 
     /**
@@ -1327,6 +1131,10 @@ public class EDTLibrary {
      *
      * @param readWriteFileParams {@link ReadWriteFileParams ReadWriteFileParams}: Parameters specifying which file to write to, with mandatory data buffer and optional offsets, length and File Options.<br>
      * @return {@code boolean} whether or not the file data has been written successfully
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EDTLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EDTLibrary this class} for further details.
      * @apiNote the {@link ReadWriteFileParams#getData() data buffer} of {@link ReadWriteFileParams readWriteFileParams} is mandatory.<br/>
      * If this method is called with a data buffer provided, the method call will fail if the data buffer is insufficient to write the specified amount of data.<br/>
      * If this method is called <i>without providing a data buffer</i> i.e. when getData() equals {@code null}, the method call will fail.
@@ -1335,14 +1143,857 @@ public class EDTLibrary {
      * @see ReadWriteFileParams ReadWriteFileParams for further details.
      * @since 1.00
      */
-    @SuppressWarnings({"unused", "RedundantSuppression"})
-    public static boolean writeFile(ReadWriteFileParams readWriteFileParams) {
-        try {
-            return getInstance().edtService().readFile(new ReadWriteFileParamsParcelable(readWriteFileParams));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static boolean writeFile(ReadWriteFileParams readWriteFileParams) throws RemoteException, UnsupportedOperationException {
+        return Implementation.writeFile(readWriteFileParams);
     }
+
+    /**
+     * Add a new Callback to the Queue of Callbacks to be processed once the EDT Service becomes available
+     *
+     * @param callback {@link LibraryCallback LibraryCallback}: Instance of the {@link LibraryCallback LibraryCallback} Interface which holds the {@link LibraryCallback#onLibraryReady() onLibraryReady()} Method which will get called once the regarding library becomes available
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void onLibraryReady(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        EDTServiceConnection.getInstance().addEdtCallback(callback);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final class Implementation {
+        private static boolean addNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            WifiConfigurationParcelable wifiConfigurationParcelable = new WifiConfigurationParcelable(wifiConfiguration);
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().addNetwork(unsupported, wifiConfigurationParcelable);
+                    checkMethodUnsupported("openScanner", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().edtService().addNetwork(unsupported, wifiConfigurationParcelable);
+            checkMethodUnsupported("addNetwork", unsupported);
+            return retVal;
+        }
+        private static boolean allowUnknownSources(boolean allow) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().allowUnknownSources(unsupported, allow);
+                    checkMethodUnsupported("allowUnknownSources", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().allowUnknownSources(unsupported, allow);
+            checkMethodUnsupported("allowUnknownSources", unsupported);
+            return retVal;
+        }
+        private static boolean clearCacheForPackage(String packageName) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().clearCacheForPackage(unsupported, packageName);
+                            checkMethodUnsupported("clearCacheForPackage", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().clearCacheForPackage(unsupported, packageName);
+            checkMethodUnsupported("clearCacheForPackage", unsupported);
+            return retVal;
+        }
+        private static boolean clearClipboard() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().clearClipboard(unsupported);
+                            checkMethodUnsupported("clearClipboard", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().clearClipboard(unsupported);
+            checkMethodUnsupported("clearClipboard", unsupported);
+            return retVal;
+        }
+        private static boolean clearDataForPackage(String packageName) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().clearDataForPackage(unsupported, packageName);
+                            checkMethodUnsupported("clearDataForPackage", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().clearDataForPackage(unsupported, packageName);
+            checkMethodUnsupported("clearDataForPackage", unsupported);
+            return retVal;
+        }
+        private static boolean clearPassword() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().clearPassword(unsupported);
+                            checkMethodUnsupported("clearPassword", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().clearPassword(unsupported);
+            checkMethodUnsupported("clearPassword", unsupported);
+            return retVal;
+        }
+        private static boolean connectNetwork(String ssid) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().connectNetwork(unsupported, ssid);
+                            checkMethodUnsupported("connectNetwork", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().connectNetwork(unsupported, ssid);
+            checkMethodUnsupported("connectNetwork", unsupported);
+            return retVal;
+        }
+        private static boolean connectNetworkId(int networkId) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().connectNetworkId(unsupported, networkId);
+                            checkMethodUnsupported("connectNetworkId", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().connectNetworkId(unsupported, networkId);
+            checkMethodUnsupported("connectNetworkId", unsupported);
+            return retVal;
+        }
+        private static Path copyFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                throw new UnsupportedOperationException("Requires Android O or later!");
+            }
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            List<String> copyOptionStrings = options == null ? null : Arrays.stream(options).map(Object::toString).collect(Collectors.toList());
+            String sRetVal = getInstance().edtService().copyFile(unsupported, sourceFilePath.toString(), destinationFilePath.toString(), copyOptionStrings);
+            Path retVal = sRetVal == null ? null : Paths.get(sRetVal);
+            checkMethodUnsupported("copyFile", unsupported);
+            return retVal;
+        }
+        private static boolean createNewApn(APN apn, boolean setAsDefault) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().createNewApn(unsupported, new APNParcelable(apn), setAsDefault);
+                            checkMethodUnsupported("createNewApn", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().createNewApn(unsupported, new APNParcelable(apn), setAsDefault);
+            checkMethodUnsupported("createNewApn", unsupported);
+            return retVal;
+        }
+        private static boolean deleteFile(String filePath) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().deleteFile(unsupported, filePath);
+                            checkMethodUnsupported("deleteFile", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().deleteFile(unsupported, filePath);
+            checkMethodUnsupported("deleteFile", unsupported);
+            return retVal;
+        }
+        private static boolean enableAdb(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableAdb(unsupported, enable);
+                            checkMethodUnsupported("enableAdb", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableAdb(unsupported, enable);
+            checkMethodUnsupported("enableAdb", unsupported);
+            return retVal;
+        }
+        private static boolean enableApplication(String packageName, boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    if (enable) {
+                        getInstance().edtService().enableApplication(unsupported, packageName);
+                    } else {
+                        getInstance().edtService().disableApplication(unsupported, packageName);
+                    }
+                    checkMethodUnsupported("enableApplication", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = enable ? getInstance().edtService().enableApplication(unsupported, packageName) : getInstance().edtService().disableApplication(unsupported, packageName);
+            checkMethodUnsupported("enableApplication", unsupported);
+            return retVal;
+        }
+        private static boolean enableBackgroundData(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableBackgroundData(unsupported, enable);
+                            checkMethodUnsupported("enableBackgroundData", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableBackgroundData(unsupported, enable);
+            checkMethodUnsupported("enableBackgroundData", unsupported);
+            return retVal;
+        }
+        private static boolean enableBatteryOptimization(String packageName, boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    if (enable) {
+                        getInstance().edtService().enableBatteryOptimization(unsupported, packageName);
+                    } else {
+                        getInstance().edtService().disableBatteryOptimization(unsupported, packageName);
+                    }
+                    checkMethodUnsupported("enableBatteryOptimization", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = enable ? getInstance().edtService().enableBatteryOptimization(unsupported, packageName) : getInstance().edtService().disableBatteryOptimization(unsupported, packageName);
+            checkMethodUnsupported("enableBatteryOptimization", unsupported);
+            return retVal;
+        }
+        private static boolean enableBluetooth(boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableBluetooth(unsupported, enabled);
+                            checkMethodUnsupported("enableBluetooth", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableBluetooth(unsupported, enabled);
+            checkMethodUnsupported("enableBluetooth", unsupported);
+            return retVal;
+        }
+        private static boolean enableCameras(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableCameras(unsupported, enable);
+                            checkMethodUnsupported("enableCameras", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableCameras(unsupported, enable);
+            checkMethodUnsupported("enableCameras", unsupported);
+            return retVal;
+        }
+        private static boolean enableClipboard(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableClipboard(unsupported, enable);
+                            checkMethodUnsupported("enableClipboard", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableClipboard(unsupported, enable);
+            checkMethodUnsupported("enableClipboard", unsupported);
+            return retVal;
+        }
+        private static boolean enableDeveloperMode(boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableDeveloperMode(unsupported, enabled);
+                            checkMethodUnsupported("enableDeveloperMode", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableDeveloperMode(unsupported, enabled);
+            checkMethodUnsupported("enableDeveloperMode", unsupported);
+            return retVal;
+        }
+        private static boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableDeviceAdmin(unsupported, packageName, className, makeAdmin);
+                            checkMethodUnsupported("enableDeviceAdmin", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableDeviceAdmin(unsupported, packageName, className, makeAdmin);
+            checkMethodUnsupported("enableDeviceAdmin", unsupported);
+            return retVal;
+        }
+        private static boolean enableGps(boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableGps(unsupported, enabled);
+                            checkMethodUnsupported("enableGps", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableGps(unsupported, enabled);
+            checkMethodUnsupported("enableGps", unsupported);
+            return retVal;
+        }
+        private static boolean enableMassStorage(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableMassStorage(unsupported, enable);
+                            checkMethodUnsupported("enableMassStorage", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableMassStorage(unsupported, enable);
+            checkMethodUnsupported("enableMassStorage", unsupported);
+            return retVal;
+        }
+        private static boolean enableNfc(boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableNfc(unsupported, enabled);
+                            checkMethodUnsupported("enableNfc", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableNfc(unsupported, enabled);
+            checkMethodUnsupported("enableNfc", unsupported);
+            return retVal;
+        }
+        private static boolean enableRoaming(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableRoaming(unsupported, enable);
+                            checkMethodUnsupported("enableRoaming", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableRoaming(unsupported, enable);
+            checkMethodUnsupported("enableRoaming", unsupported);
+            return retVal;
+        }
+        private static boolean enableWifi(boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableWifi(unsupported, enabled);
+                            checkMethodUnsupported("enableWifi", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableWifi(unsupported, enabled);
+            checkMethodUnsupported("enableWifi", unsupported);
+            return retVal;
+        }
+        private static boolean enableWwan(boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().enableWwan(unsupported, enabled);
+                            checkMethodUnsupported("enableWwan", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().enableWwan(unsupported, enabled);
+            checkMethodUnsupported("enableWwan", unsupported);
+            return retVal;
+        }
+        private static boolean factoryReset(boolean removeAccounts) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().factoryReset(unsupported, removeAccounts);
+                            checkMethodUnsupported("factoryReset", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().factoryReset(unsupported, removeAccounts);
+            checkMethodUnsupported("factoryReset", unsupported);
+            return retVal;
+        }
+        private static APN[] getAllApnList() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            APNParcelable[] apnParcelables = getInstance().edtService().getAllApnList(unsupported);
+            if (apnParcelables == null) return null;
+            APN[] apns = new APN[apnParcelables.length];
+            int i = 0;
+            for (APNParcelable apnParcelable : apnParcelables) apns[i++] = apnParcelable.getAPN();
+            checkMethodUnsupported("getAllApnList", unsupported);
+            return apns;
+        }
+        private static APN getApn(String name) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            APN retVal = getInstance().edtService().getApn(unsupported, name).getAPN();
+            checkMethodUnsupported("getApn", unsupported);
+            return retVal;
+        }
+        private static int getApnId(String name) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal = getInstance().edtService().getApnId(unsupported, name);
+            checkMethodUnsupported("getApnId", unsupported);
+            return retVal;
+        }
+        private static boolean getCurrentAndSetNewScanSettings(String settingsFilePath) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().getCurrentAndSetNewScanSettings(unsupported, settingsFilePath);
+                            checkMethodUnsupported("getCurrentAndSetNewScanSettings", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().getCurrentAndSetNewScanSettings(unsupported, settingsFilePath);
+            checkMethodUnsupported("getCurrentAndSetNewScanSettings", unsupported);
+            return retVal;
+        }
+        private static boolean getCurrentScanSettings(String settingsFilePath) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().getCurrentScanSettings(unsupported, settingsFilePath);
+                            checkMethodUnsupported("getCurrentScanSettings", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().getCurrentScanSettings(unsupported, settingsFilePath);
+            checkMethodUnsupported("getCurrentScanSettings", unsupported);
+            return retVal;
+        }
+        private static Account[] getGoogleAccounts() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            Account[] retVal = getInstance().edtService().getGoogleAccounts(unsupported);
+            checkMethodUnsupported("getGoogleAccounts", unsupported);
+            return retVal;
+        }
+        private static List<String> getKeyboardNames() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            List<String> retVal = getInstance().edtService().getKeyboardNames(unsupported);
+            checkMethodUnsupported("getKeyboardNames", unsupported);
+            return retVal;
+        }
+        private static boolean initializeKeyStore(String storeName, String password) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().initializeKeyStore(unsupported, storeName, password);
+                            checkMethodUnsupported("initializeKeyStore", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().initializeKeyStore(unsupported, storeName, password);
+            checkMethodUnsupported("initializeKeyStore", unsupported);
+            return retVal;
+        }
+        private static boolean installApk(String apkFilename, boolean update) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().installApk(unsupported, apkFilename, update);
+                            checkMethodUnsupported("installApk", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().installApk(unsupported, apkFilename, update);
+            checkMethodUnsupported("installApk", unsupported);
+            return retVal;
+        }
+        private static boolean installCertificate(String friendlyName, String fileName) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().installCertificate(unsupported, friendlyName, fileName);
+                            checkMethodUnsupported("installCertificate", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().installCertificate(unsupported, friendlyName, fileName);
+            checkMethodUnsupported("installCertificate", unsupported);
+            return retVal;
+        }
+        private static boolean lockDevice() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().lockDevice(unsupported);
+                            checkMethodUnsupported("lockDevice", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().lockDevice(unsupported);
+            checkMethodUnsupported("lockDevice", unsupported);
+            return retVal;
+        }
+        private static boolean mountSDCard(boolean mount) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().mountSDCard(unsupported, mount);
+                            checkMethodUnsupported("mountSDCard", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().mountSDCard(unsupported, mount);
+            checkMethodUnsupported("mountSDCard", unsupported);
+            return retVal;
+        }
+        private static Path moveFile(Path sourceFilePath, Path destinationFilePath, CopyOption... options) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                throw new UnsupportedOperationException("Requires Android O or later!");
+            }
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            List<String> copyOptionStrings = options == null ? null : Arrays.stream(options).map(Object::toString).collect(Collectors.toList());
+            String sRetVal = getInstance().edtService().moveFile(unsupported, sourceFilePath.toString(), destinationFilePath.toString(), copyOptionStrings);
+            Path retVal = sRetVal == null ? null : Paths.get(sRetVal);
+            checkMethodUnsupported("moveFile", unsupported);
+            return retVal;
+        }
+        private static boolean readFile(ReadWriteFileParams readWriteFileParams) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal = getInstance().edtService().readFile(unsupported, new ReadWriteFileParamsParcelable(readWriteFileParams));
+            checkMethodUnsupported("readFile", unsupported);
+            return retVal;
+        }
+        private static boolean reboot() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().reboot(unsupported);
+                            checkMethodUnsupported("reboot", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().reboot(unsupported);
+            checkMethodUnsupported("reboot", unsupported);
+            return retVal;
+        }
+        private static boolean recovery() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().recovery(unsupported);
+                            checkMethodUnsupported("recovery", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().recovery(unsupported);
+            checkMethodUnsupported("recovery", unsupported);
+            return retVal;
+        }
+        private static boolean rememberPasswords(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().rememberPasswords(unsupported, enable);
+                            checkMethodUnsupported("rememberPasswords", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().rememberPasswords(unsupported, enable);
+            checkMethodUnsupported("rememberPasswords", unsupported);
+            return retVal;
+        }
+        private static boolean removeAccount(Account account) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().removeAccount(unsupported, account);
+                            checkMethodUnsupported("removeAccount", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().removeAccount(unsupported, account);
+            checkMethodUnsupported("removeAccount", unsupported);
+            return retVal;
+        }
+        private static boolean removeAllAccounts() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().removeAllAccounts(unsupported);
+                            checkMethodUnsupported("removeAllAccounts", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().removeAllAccounts(unsupported);
+            checkMethodUnsupported("removeAllAccounts", unsupported);
+            return retVal;
+        }
+        private static boolean removeAllGoogleAccounts() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().removeAllGoogleAccounts(unsupported);
+                            checkMethodUnsupported("removeAllGoogleAccounts", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().removeAllGoogleAccounts(unsupported);
+            checkMethodUnsupported("removeAllGoogleAccounts", unsupported);
+            return retVal;
+        }
+        private static boolean removeNetwork(String ssid) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().removeNetwork(unsupported, ssid);
+                            checkMethodUnsupported("removeNetwork", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().removeNetwork(unsupported, ssid);
+            checkMethodUnsupported("removeNetwork", unsupported);
+            return retVal;
+        }
+        private static boolean removeNetworkId(int networkId) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().removeNetworkId(unsupported, networkId);
+                            checkMethodUnsupported("removeNetworkId", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().removeNetworkId(unsupported, networkId);
+            checkMethodUnsupported("removeNetworkId", unsupported);
+            return retVal;
+        }
+        private static boolean resetPassword(String newPassword) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().resetPassword(unsupported, newPassword);
+                            checkMethodUnsupported("resetPassword", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().resetPassword(unsupported, newPassword);
+            checkMethodUnsupported("resetPassword", unsupported);
+            return retVal;
+        }
+        private static boolean saveFormData(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().saveFormData(unsupported, enable);
+                            checkMethodUnsupported("saveFormData", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().saveFormData(unsupported, enable);
+            checkMethodUnsupported("saveFormData", unsupported);
+            return retVal;
+        }
+        private static boolean setDateTime(Date date) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
+                throw new UnsupportedOperationException("Requires Android N or later!");
+            }
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            // Convert Calendar to integer values because AIDL can handle limited data types only
+            boolean retVal = getInstance().edtService().setDateTime(unsupported, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+            checkMethodUnsupported("setDateTime", unsupported);
+            return retVal;
+        }
+        private static boolean setDefaultHomePage(String homePage) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setDefaultHomePage(unsupported, homePage);
+                            checkMethodUnsupported("setDefaultHomePage", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().setDefaultHomePage(unsupported, homePage);
+            checkMethodUnsupported("setDefaultHomePage", unsupported);
+            return retVal;
+        }
+        private static boolean setDefaultLauncher(String packageName) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setDefaultLauncher(unsupported, packageName);
+                            checkMethodUnsupported("setDefaultLauncher", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().setDefaultLauncher(unsupported, packageName);
+            checkMethodUnsupported("setDefaultLauncher", unsupported);
+            return retVal;
+        }
+        private static boolean setKeyboard(String keyboardName) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setKeyboard(unsupported, keyboardName);
+                            checkMethodUnsupported("setKeyboard", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().setKeyboard(unsupported, keyboardName);
+            checkMethodUnsupported("setKeyboard", unsupported);
+            return retVal;
+        }
+        private static boolean setNewScanSettings(String settingsFilePath) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setNewScanSettings(unsupported, settingsFilePath);
+                            checkMethodUnsupported("setNewScanSettings", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().setNewScanSettings(unsupported, settingsFilePath);
+            checkMethodUnsupported("setNewScanSettings", unsupported);
+            return retVal;
+        }
+        private static boolean setPreferredApn(String name) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setPreferredApn(unsupported, name);
+                            checkMethodUnsupported("setPreferredApn", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().setPreferredApn(unsupported, name);
+            checkMethodUnsupported("setPreferredApn", unsupported);
+            return retVal;
+        }
+        private static boolean setScreenLockTimeout(int milliseconds) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setScreenLockTimeout(unsupported, milliseconds);
+                            checkMethodUnsupported("setScreenLockTimeout", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().setScreenLockTimeout(unsupported, milliseconds);
+            checkMethodUnsupported("setScreenLockTimeout", unsupported);
+            return retVal;
+        }
+        private static boolean setTimeZone(TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
+                throw new UnsupportedOperationException("Requires Android N or later!");
+            }
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().setTimeZone(unsupported, timeZone.getDisplayName());
+                            checkMethodUnsupported("setTimeZone", unsupported);
+                });
+                return true;
+            }
+            // Convert TimeZone to String because AIDL can handle limited data types only
+            boolean retVal = getInstance().edtService().setTimeZone(unsupported, timeZone.getDisplayName());
+            checkMethodUnsupported("setTimeZone", unsupported);
+            return retVal;
+        }
+        private static boolean shutdown() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().shutdown(unsupported);
+                            checkMethodUnsupported("shutdown", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().shutdown(unsupported);
+            checkMethodUnsupported("shutdown", unsupported);
+            return retVal;
+        }
+        private static boolean testMessage(String message) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().testMessage(unsupported, message);
+                            checkMethodUnsupported("testMessage", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().testMessage(unsupported, message);
+            checkMethodUnsupported("testMessage", unsupported);
+            return retVal;
+        }
+        private static boolean updateApn(APN apn) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().updateApn(unsupported, new APNParcelable(apn));
+                            checkMethodUnsupported("updateApn", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().updateApn(unsupported, new APNParcelable(apn));
+            checkMethodUnsupported("updateApn", unsupported);
+            return retVal;
+        }
+        private static boolean updateNetwork(android.net.wifi.WifiConfiguration wifiConfiguration) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            WifiConfigurationParcelable wifiConfigurationParcelable = new WifiConfigurationParcelable(wifiConfiguration);
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().updateNetwork(unsupported, wifiConfigurationParcelable);
+                            checkMethodUnsupported("updateNetwork", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().updateNetwork(unsupported, wifiConfigurationParcelable);
+            checkMethodUnsupported("updateNetwork", unsupported);
+            return retVal;
+        }
+        private static boolean uninstallPackage(String packageName) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().uninstallPackage(unsupported, packageName);
+                            checkMethodUnsupported("uninstallPackage", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().uninstallPackage(unsupported, packageName);
+            checkMethodUnsupported("uninstallPackage", unsupported);
+            return retVal;
+        }
+        private static boolean verifyApn(String name) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().edtService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().edtService().verifyApn(unsupported, name);
+                            checkMethodUnsupported("verifyApn", unsupported);
+                });
+                return true;
+            }
+            boolean retVal = getInstance().edtService().verifyApn(unsupported, name);
+            checkMethodUnsupported("verifyApn", unsupported);
+            return retVal;
+        }
+        private static boolean writeFile(ReadWriteFileParams readWriteFileParams) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().edtService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal = getInstance().edtService().readFile(unsupported, new ReadWriteFileParamsParcelable(readWriteFileParams));
+            checkMethodUnsupported("writeFile", unsupported);
+            return retVal;
+        }
+
+    }
+
 
 }

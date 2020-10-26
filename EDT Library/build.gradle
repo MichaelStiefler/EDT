@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.preemptive.dasho.android'
 
 android {
     compileSdkVersion 30
@@ -41,24 +40,7 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-}
-
-android { buildTypes { release { minifyEnabled true } } }
-1
-android { buildTypes { release { proguardFile 'library-rules.pro' } } }
-
-dasho {
-    // debug false
-    // doxFilename "project.dox"
-    // enabledBuildVariants "release"
-    // excludeFromProtection null //See docs for details
-    // home 'C:/Program Files/PreEmptive Protection DashO 11.0/app' // for more information about DashO Home see the User Guide
-    // javaOptions "-Xmx1024M", "-Xms512M" //Normally has no default values
-    // libraryAssetDirs //See docs for details
-    // libraryResourceDirs //See docs for details
-    // searchVersion "11"
-    // verbose false
 }

@@ -15,8 +15,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+@SuppressWarnings("RedundantSuppression")
 public class EDTService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
+    @SuppressWarnings("FieldMayBeFinal")
     private static String TAG = "EDT (EDTService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

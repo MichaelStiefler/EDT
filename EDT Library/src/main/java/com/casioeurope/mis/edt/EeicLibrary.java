@@ -6,7 +6,9 @@ import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.constant.EeicLibraryConstant;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
+import com.casioeurope.mis.edt.type.LibraryCallback;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -14,15 +16,31 @@ import java.util.Set;
 /**
  * The <b>CASIO Enterprise Developer Tools</b> External Expansion Interface Control (EEIC) Library
  *
+ * @apiNote The External Expansion Interface Control (EEIC) Library is bound to the calling application on application startup time automatically.<br/>
+ *          The Library's lifecycle therefore depends on the application lifecycle.<br/>
+ *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly adviced not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
+ *          When the activity is being launched (and hence the process gets created), <i>the same applies to the {@link android.app.Activity#onStart() onStart} and {@link android.app.Activity#onResume() onResume} methods</i>.<br/>
+ *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@link EeicLibrary#onLibraryReady onLibraryReady} method instead.<br/>
+ *          For instance, instead of calling {@link EeicLibrary.SerialDevice#sendBreak() EeicLibrary.SerialDevice.sendBreak()} directly in {@link android.app.Activity#onCreate(Bundle) onCreate}, use this code to postpone it to a {@link LibraryCallback Callback} appropriately:<br/>
+ * <pre>EeicLibrary.onLibraryReady(new LibraryCallback() {
+ *     public void onLibraryReady() {
+ *         EeicLibrary.SerialDevice.sendBreak();
+ *     }
+ * });</pre>
+ *          <br/>Which can be simplified to:<br/>
+ * <pre>EeicLibrary.onLibraryReady(() -> { EeicLibrary.SerialDevice.sendBreak(); });</pre>
+ *          <br/>Or even further to:<br/>
+ * <pre>EeicLibrary.onLibraryReady(EeicLibrary.SerialDevice::sendBreak);</pre>
+ *
  * @version 2.00
  * @since 2.00
  */
-@SuppressWarnings({"unused", "RedundantSuppression", "SpellCheckingInspection"})
+@SuppressWarnings({"unused", "RedundantSuppression", "deprecation", "JavadocReference", "SpellCheckingInspection"})
 public class EeicLibrary {
 
     private static class MyInterruptCallback implements Comparable<MyInterruptCallback> {
-        private InterruptCallback interruptCallback;
-        private Handler handler;
+        private final InterruptCallback interruptCallback;
+        private final Handler handler;
 
         public MyInterruptCallback(InterruptCallback interruptCallback, Handler handler) {
             this.interruptCallback = interruptCallback;
@@ -63,7 +81,7 @@ public class EeicLibrary {
 
     }
 
-    private Set<MyInterruptCallback> myInterruptCallback = new HashSet<>();
+    private final Set<MyInterruptCallback> myInterruptCallback = new HashSet<>();
 
     private static class NotificationRunnable implements Runnable {
         private final int gpio;
@@ -79,7 +97,7 @@ public class EeicLibrary {
         }
     }
 
-    private IEeicCallback myEeicCallback = new IEeicCallback.Stub() {
+    private final IEeicCallback myEeicCallback = new IEeicCallback.Stub() {
         @Override
         public void onChanged(int gpio) {
             for (MyInterruptCallback element : myInterruptCallback) {
@@ -151,8 +169,10 @@ public class EeicLibrary {
      * @return {@link String}: Returns the String Representation of the EEIC Library Version currently being used, or null on failure.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
      */
-    public static String getLibraryVersion() throws RemoteException, UnsupportedOperationException {
+    public static String getLibraryVersion() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getLibraryVersion();
     }
 
@@ -162,8 +182,10 @@ public class EeicLibrary {
      * @return {@code boolean}: Returns true on success and false on failure.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
      */
-    public static boolean isPowerOn() throws RemoteException, UnsupportedOperationException {
+    public static boolean isPowerOn() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.isPowerOn();
     }
 
@@ -181,26 +203,89 @@ public class EeicLibrary {
         return Implementation.setPower(enable);
     }
 
+    /**
+     * Check whether the {@link java.lang.reflect.Method Method} indicated by the {@link BigInteger BigInteger} method parameter is supported on the currently active device
+     *
+     * @param method {@link BigInteger BigInteger}: Constant referencing the method to be checked
+     * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
+     */
+    public static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
+        return Implementation.isMethodSupported(method);
+    }
+
+    /**
+     * Check whether the {@link java.lang.reflect.Method Method} indicated by the {@link String String} methodName parameter is supported on the currently active device
+     *
+     * @param methodName {@link String String}: Name of the method to be checked
+     * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
+     */
+    public static boolean isMethodSupported(String methodName) throws IllegalStateException {
+        return Implementation.isMethodSupported(methodName);
+    }
+
+    /**
+     * Add a new Callback to the Queue of Callbacks to be processed once the EeicLibrary Service becomes available
+     *
+     * @param callback {@link LibraryCallback LibraryCallback}: Instance of the {@link LibraryCallback LibraryCallback} Interface which holds the {@link LibraryCallback#onLibraryReady() onLibraryReady()} Method which will get called once the regarding library becomes available
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void onLibraryReady(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
+        EDTServiceConnection.getInstance().addEeicLibraryCallback(callback);
+    }
+
+
     private static final class Implementation {
         private static boolean setPower(boolean enable) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().eeicLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().eeicLibraryService().setPower(enable, unsupported);
+                    checkMethodUnsupported("setPower", unsupported);
+                });
+                return true;
+            }
             boolean retVal = getInstance().eeicLibraryService().setPower(enable, unsupported);
             checkMethodUnsupported("setPower", unsupported);
             return retVal;
         }
 
-        private static boolean isPowerOn() throws RemoteException, UnsupportedOperationException {
+        private static boolean isPowerOn() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             boolean retVal = getInstance().eeicLibraryService().isPowerOn(unsupported);
             checkMethodUnsupported("isPowerOn", unsupported);
             return retVal;
         }
 
-        private static String getLibraryVersion() throws RemoteException, UnsupportedOperationException {
+        private static String getLibraryVersion() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             String retVal = getInstance().eeicLibraryService().getLibraryVersion(unsupported);
             checkMethodUnsupported("getLibraryVersion", unsupported);
             return retVal;
+        }
+
+        private static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
+            if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            try {
+                return getInstance().eeicLibraryService().isMethodSupported(method.toString());
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        private static boolean isMethodSupported(String methodName) throws IllegalStateException {
+            if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            try {
+                return getInstance().eeicLibraryService().isMethodNameSupported(methodName);
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 
@@ -269,11 +354,13 @@ public class EeicLibrary {
          * @param pinNo {@code int}: GPIO number<br/>
          *                      Specify the target GPIO.<br/>
          *                      For details of the GPIO number, refer to {@link EeicLibraryConstant.GPIO_DEVICE GPIO_DEVICE Constants}
-         * @return {@code int}: {@link EeicLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED} in case of failure, other values indicate success.
+         * @return {@code int}: {@link EeicLibraryConstant.RETURN#ERROR_UNSUPPORTED ERROR_UNSUPPORTED} in case of failure, otherwise returns the value of the specified GPIO.
          * @throws RemoteException Gets thrown when access to the system service fails.
          * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+         * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+         *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
          */
-        public static int getValue(int pinNo) throws RemoteException, UnsupportedOperationException {
+        public static int getValue(int pinNo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
             return Implementation.getValue(pinNo);
         }
 
@@ -332,6 +419,13 @@ public class EeicLibrary {
 
             private static int setInputDirection(int pinNo, int pinStatus) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().gpioDeviceSetInputDirection(pinNo, pinStatus, unsupported);
+                        checkMethodUnsupported("setInputDirection", unsupported);
+                    });
+                    return EeicLibraryConstant.RETURN.SUCCESS;
+                }
                 int retVal = getInstance().eeicLibraryService().gpioDeviceSetInputDirection(pinNo, pinStatus, unsupported);
                 checkMethodUnsupported("setInputDirection", unsupported);
                 return retVal;
@@ -339,6 +433,13 @@ public class EeicLibrary {
 
             private static int setOutputDirection(int pinNo, int value) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().gpioDeviceSetOutputDirection(pinNo, value, unsupported);
+                        checkMethodUnsupported("setOutputDirection", unsupported);
+                    });
+                    return EeicLibraryConstant.RETURN.SUCCESS;
+                }
                 int retVal = getInstance().eeicLibraryService().gpioDeviceSetOutputDirection(pinNo, value, unsupported);
                 checkMethodUnsupported("setOutputDirection", unsupported);
                 return retVal;
@@ -346,12 +447,20 @@ public class EeicLibrary {
 
             private static int setValue(int pinNo, int value) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().gpioDeviceSetValue(pinNo, value, unsupported);
+                        checkMethodUnsupported("setValue", unsupported);
+                    });
+                    return EeicLibraryConstant.RETURN.SUCCESS;
+                }
                 int retVal = getInstance().eeicLibraryService().gpioDeviceSetValue(pinNo, value, unsupported);
                 checkMethodUnsupported("setValue", unsupported);
                 return retVal;
             }
 
-            private static int getValue(int pinNo) throws RemoteException, UnsupportedOperationException {
+            private static int getValue(int pinNo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+                if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
                 BooleanParcelable unsupported = new BooleanParcelable();
                 int retVal = getInstance().eeicLibraryService().gpioDeviceGetValue(pinNo, unsupported);
                 checkMethodUnsupported("getValue", unsupported);
@@ -360,6 +469,13 @@ public class EeicLibrary {
 
             private static int setInterruptEdge(int pinNo, int type) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().gpioDeviceSetInterruptEdge(pinNo, type, unsupported);
+                        checkMethodUnsupported("setInterruptEdge", unsupported);
+                    });
+                    return EeicLibraryConstant.RETURN.SUCCESS;
+                }
                 int retVal = getInstance().eeicLibraryService().gpioDeviceSetInterruptEdge(pinNo, type, unsupported);
                 checkMethodUnsupported("setInterruptEdge", unsupported);
                 return retVal;
@@ -371,6 +487,13 @@ public class EeicLibrary {
                 getInstance().myInterruptCallback.add(new MyInterruptCallback(callback, handler));
                 if (myInterruptCallbackWasEmpty) {
                     BooleanParcelable unsupported = new BooleanParcelable();
+                    if (getInstance().eeicLibraryService() == null) {
+                        onLibraryReady(() -> {
+                            getInstance().eeicLibraryService().gpioDeviceRegisterCallback(getInstance().myEeicCallback, unsupported);
+                            checkMethodUnsupported("registerCallback", unsupported);
+                        });
+                        return true;
+                    }
                     getInstance().eeicLibraryService().gpioDeviceRegisterCallback(getInstance().myEeicCallback, unsupported);
                     checkMethodUnsupported("registerCallback", unsupported);
                 }
@@ -389,6 +512,13 @@ public class EeicLibrary {
                 boolean myInterruptCallbackIsEmpty = getInstance().myInterruptCallback.isEmpty();
                 if (!myInterruptCallbackWasEmpty && myInterruptCallbackIsEmpty) {
                     BooleanParcelable unsupported = new BooleanParcelable();
+                    if (getInstance().eeicLibraryService() == null) {
+                        onLibraryReady(() -> {
+                            getInstance().eeicLibraryService().gpioDeviceUnregisterCallback(unsupported);
+                            checkMethodUnsupported("unregisterCallback", unsupported);
+                        });
+                        return true;
+                    }
                     getInstance().eeicLibraryService().gpioDeviceUnregisterCallback(unsupported);
                     checkMethodUnsupported("unregisterCallback", unsupported);
                 }
@@ -512,11 +642,13 @@ public class EeicLibrary {
          *
          * @param buffer {@code byte[]}: Specify the data buffer holding the data being read from the Serial Interface Port.
          * @param length {@code int}: Specify the number of bytes to be read.
-         * @return  {@code boolean}: Returns true on success and false on failure.
+         * @return  {@code int}: Returns the number of read bytes on success and -1 on failure.
          * @throws RemoteException Gets thrown when access to the system service fails.
          * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+         * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+         *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
          */
-        public static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException {
+        public static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException, IllegalStateException {
             return Implementation.read(buffer, length);
         }
 
@@ -534,6 +666,13 @@ public class EeicLibrary {
         private static final class Implementation {
             private static boolean open(int baudrate, int flags, boolean hwflow, int bitLen, int parityBit, int stopBit) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceOpen1(baudrate, flags, hwflow, bitLen, parityBit, stopBit, unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceOpen1(baudrate, flags, hwflow, bitLen, parityBit, stopBit, unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -541,6 +680,13 @@ public class EeicLibrary {
 
             private static boolean open(int baudrate, int bitLen, int parityBit, int stopBit) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceOpen2(baudrate, bitLen, parityBit, stopBit, unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceOpen2(baudrate, bitLen, parityBit, stopBit, unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -548,6 +694,13 @@ public class EeicLibrary {
 
             private static boolean open(int baudrate) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceOpen3(baudrate, unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceOpen3(baudrate, unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -555,6 +708,13 @@ public class EeicLibrary {
 
             private static boolean close() throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceClose(unsupported);
+                        checkMethodUnsupported("close", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceClose(unsupported);
                 checkMethodUnsupported("close", unsupported);
                 return retVal;
@@ -562,6 +722,13 @@ public class EeicLibrary {
 
             private static boolean write(byte data) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceWrite1(data, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceWrite1(data, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
@@ -569,6 +736,13 @@ public class EeicLibrary {
 
             private static boolean write(byte[] buffer) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceWrite2(buffer, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceWrite2(buffer, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
@@ -576,12 +750,20 @@ public class EeicLibrary {
 
             private static boolean write(byte[] buffer, int offset, int length) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceWrite3(buffer, offset, length, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceWrite3(buffer, offset, length, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
             }
 
-            private static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException {
+            private static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+                if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
                 BooleanParcelable unsupported = new BooleanParcelable();
                 int retVal = getInstance().eeicLibraryService().serialDeviceRead(buffer, length, unsupported);
                 checkMethodUnsupported("read", unsupported);
@@ -590,6 +772,13 @@ public class EeicLibrary {
 
             private static boolean sendBreak() throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().serialDeviceSendBreak(unsupported);
+                        checkMethodUnsupported("sendBreak", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().serialDeviceSendBreak(unsupported);
                 checkMethodUnsupported("sendBreak", unsupported);
                 return retVal;
@@ -682,11 +871,13 @@ public class EeicLibrary {
          *
          * @param buffer {@code byte[]}: Specify the data buffer holding the data being read from the I&sup2;C Interface Port.
          * @param length {@code int}: Specify the number of bytes to be read.
-         * @return  {@code boolean}: Returns true on success and false on failure.
+         * @return  {@code int}: Returns the number of read bytes on success and -1 on failure.
          * @throws RemoteException Gets thrown when access to the system service fails.
          * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+         * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+         *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
          */
-        public static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException {
+        public static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException, IllegalStateException {
             return Implementation.read(buffer, length);
         }
 
@@ -705,6 +896,13 @@ public class EeicLibrary {
         private static final class Implementation {
             private static boolean open() throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceOpen1(unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceOpen1(unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -712,6 +910,13 @@ public class EeicLibrary {
 
             private static boolean open(int flags) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceOpen2(flags, unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceOpen2(flags, unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -719,6 +924,13 @@ public class EeicLibrary {
 
             private static boolean close() throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceClose(unsupported);
+                        checkMethodUnsupported("close", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceClose(unsupported);
                 checkMethodUnsupported("close", unsupported);
                 return retVal;
@@ -726,6 +938,13 @@ public class EeicLibrary {
 
             private static boolean write(byte data) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceWrite1(data, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceWrite1(data, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
@@ -733,6 +952,13 @@ public class EeicLibrary {
 
             private static boolean write(byte[] buffer) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceWrite2(buffer, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceWrite2(buffer, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
@@ -740,12 +966,20 @@ public class EeicLibrary {
 
             private static boolean write(byte[] buffer, int offset, int length) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceWrite3(buffer, offset, length, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceWrite3(buffer, offset, length, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
             }
 
-            private static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException {
+            private static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+                if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
                 BooleanParcelable unsupported = new BooleanParcelable();
                 int retVal = getInstance().eeicLibraryService().i2cDeviceRead(buffer, length, unsupported);
                 checkMethodUnsupported("read", unsupported);
@@ -754,6 +988,13 @@ public class EeicLibrary {
 
             private static boolean setSlaveAddress(int address) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().i2cDeviceSetSlaveAddress(address, unsupported);
+                        checkMethodUnsupported("setSlaveAddress", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().i2cDeviceSetSlaveAddress(address, unsupported);
                 checkMethodUnsupported("setSlaveAddress", unsupported);
                 return retVal;
@@ -846,17 +1087,26 @@ public class EeicLibrary {
          *
          * @param buffer {@code byte[]}: Specify the data buffer holding the data being read from the SPI Port.
          * @param length {@code int}: Specify the number of bytes to be read.
-         * @return  {@code boolean}: Returns true on success and false on failure.
+         * @return  {@code int}: Returns the number of read bytes on success and -1 on failure.
          * @throws RemoteException Gets thrown when access to the system service fails.
          * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+         * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+         *                      In such case, please use {@link EeicLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link EeicLibrary this class} for further details.
          */
-        public static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException {
+        public static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException, IllegalStateException {
             return Implementation.read(buffer, length);
         }
 
         private static final class Implementation {
             private static boolean open() throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().spiDeviceOpen1(unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().spiDeviceOpen1(unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -864,6 +1114,13 @@ public class EeicLibrary {
 
             private static boolean open(int flags) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().spiDeviceOpen2(flags, unsupported);
+                        checkMethodUnsupported("open", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().spiDeviceOpen2(flags, unsupported);
                 checkMethodUnsupported("open", unsupported);
                 return retVal;
@@ -871,6 +1128,13 @@ public class EeicLibrary {
 
             private static boolean close() throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().spiDeviceClose(unsupported);
+                        checkMethodUnsupported("close", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().spiDeviceClose(unsupported);
                 checkMethodUnsupported("close", unsupported);
                 return retVal;
@@ -878,6 +1142,13 @@ public class EeicLibrary {
 
             private static boolean write(byte data) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().spiDeviceWrite1(data, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().spiDeviceWrite1(data, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
@@ -885,6 +1156,13 @@ public class EeicLibrary {
 
             private static boolean write(byte[] buffer) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().spiDeviceWrite2(buffer, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().spiDeviceWrite2(buffer, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
@@ -892,12 +1170,20 @@ public class EeicLibrary {
 
             private static boolean write(byte[] buffer, int offset, int length) throws RemoteException, UnsupportedOperationException {
                 BooleanParcelable unsupported = new BooleanParcelable();
+                if (getInstance().eeicLibraryService() == null) {
+                    onLibraryReady(() -> {
+                        getInstance().eeicLibraryService().spiDeviceWrite3(buffer, offset, length, unsupported);
+                        checkMethodUnsupported("write", unsupported);
+                    });
+                    return true;
+                }
                 boolean retVal = getInstance().eeicLibraryService().spiDeviceWrite3(buffer, offset, length, unsupported);
                 checkMethodUnsupported("write", unsupported);
                 return retVal;
             }
 
             private static int read(byte[] buffer, int length) throws RemoteException, UnsupportedOperationException {
+                if (getInstance().eeicLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
                 BooleanParcelable unsupported = new BooleanParcelable();
                 int retVal = getInstance().eeicLibraryService().spiDeviceRead(buffer, length, unsupported);
                 checkMethodUnsupported("read", unsupported);

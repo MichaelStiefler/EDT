@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class ScannerLibraryService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    @SuppressWarnings("FieldCanBeLocal")
+    @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
     private static String TAG = "EDT (ScannerLibraryService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

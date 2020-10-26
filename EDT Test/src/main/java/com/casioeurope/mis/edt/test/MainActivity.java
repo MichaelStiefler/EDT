@@ -269,7 +269,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.installCertificate) {
                 Log.d(TAG, "Calling Install CA Certificate from Service!");
-                String result = String.format("Install casio-europe.pem Result = %b", EDTLibrary.installCACertificate("TEST CA", "/sdcard/certs/casio-europe.pem"));
+                String result = String.format("Install casio-europe.pem Result = %b", EDTLibrary.installCertificate("TEST CA", "/sdcard/certs/casio-europe.pem"));
 //                result += "\n" + String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.p7b"));
 //                result += "\n" + String.format("Install admin.der Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/certs/mistest.crt"));
 //                String result = String.format("Install testca.cer Result = %b", EDTLib.installCACertificate("TEST CA", "/sdcard/testca.cer"));

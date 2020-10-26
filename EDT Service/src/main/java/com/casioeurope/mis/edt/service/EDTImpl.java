@@ -1,6 +1,7 @@
 package com.casioeurope.mis.edt.service;
 
 import android.accounts.Account;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.os.Handler;
@@ -11,12 +12,14 @@ import android.widget.Toast;
 import com.casioeurope.mis.edt.type.APN;
 import com.casioeurope.mis.edt.type.APNParcelable;
 import com.casioeurope.mis.edt.IEDT;
+import com.casioeurope.mis.edt.type.BooleanParcelable;
 import com.casioeurope.mis.edt.type.ObjectParcelable;
 import com.casioeurope.mis.edt.type.ReadWriteFileParamsParcelable;
 import com.casioeurope.mis.edt.type.WifiConfigurationParcelable;
 import com.casioeurope.mis.edt.service.barcodescanner.ScanLib;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -27,16 +30,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings({"FieldMayBeFinal", "RedundantSuppression", "deprecation", "DefaultLocale"})
 public class EDTImpl extends IEDT.Stub {
 
     private Context context;
-    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     private Handler handler = new Handler();
 
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     private static String TAG = "EDT (Implementation)";
 
-    @SuppressWarnings({"unused", "SpellCheckingInspection", "RedundantSuppression"})
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
         String nameOfCurrentMethod = Thread.currentThread()
@@ -51,6 +53,151 @@ public class EDTImpl extends IEDT.Stub {
         Arrays.stream(addonTags).forEach(sb::append);
 
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
+    }
+
+    private static final BigInteger METHODS_SUPPORTED_EDT = new BigInteger("11111111111111111111111111111111111111111111111111111111111111111111", 2);
+    private static String[] methodNamesEdt = {
+            "addNetwork",
+            "allowUnknownSources",
+            "clearCacheForPackage",
+            "clearClipboard",
+            "clearDataForPackage",
+            "clearPassword",
+            "connectNetwork",
+            "connectNetworkId",
+            "copyFile",
+            "createNewApn",
+            "deleteFile",
+            "disableApplication",
+            "disableBatteryOptimization",
+            "enableAdb",
+            "enableApplication",
+            "enableBackgroundData",
+            "enableBatteryOptimization",
+            "enableBluetooth",
+            "enableCameras",
+            "enableClipboard",
+            "enableDeveloperMode",
+            "enableDeviceAdmin",
+            "enableGps",
+            "enableMassStorage",
+            "enableNfc",
+            "enableRoaming",
+            "enableWifi",
+            "enableWwan",
+            "factoryReset",
+            "getAllApnList",
+            "getApn",
+            "getApnId",
+            "getCurrentAndSetNewScanSettings",
+            "getCurrentScanSettings",
+            "getGoogleAccounts",
+            "getKeyboardNames",
+            "initializeKeyStore",
+            "installApk",
+            "installCertificate",
+            "lockDevice",
+            "mountSDCard",
+            "moveFile",
+            "readFile",
+            "reboot",
+            "recovery",
+            "rememberPasswords",
+            "removeAccount",
+            "removeAllAccounts",
+            "removeAllGoogleAccounts",
+            "removeNetwork",
+            "removeNetworkId",
+            "resetPassword",
+            "saveFormData",
+            "setDateTime",
+            "setDefaultHomePage",
+            "setKeyboard",
+            "setNewScanSettings",
+            "setPreferredApn",
+            "setScreenLockTimeout",
+            "setTimeZone",
+            "shutdown",
+            "testMessage",
+            "uninstallPackage",
+            "updateApn",
+            "updateNetwork",
+            "verifyApn",
+            "writeFile"};
+
+    private static final BigInteger METHODS_SUPPORTED_REFLECTION = new BigInteger("11111111111111111111111111111111111111111111111", 2);
+    private static String[] methodNamesReflection = {
+            "getBoolean",
+            "getBoolean",
+            "getByte",
+            "getByte",
+            "getChar",
+            "getChar",
+            "getDouble",
+            "getDouble",
+            "getFloat",
+            "getFloat",
+            "getInt",
+            "getInt",
+            "getLong",
+            "getLong",
+            "getShort",
+            "getShort",
+            "getString",
+            "getString",
+            "getType",
+            "getType",
+            "getValue",
+            "getValue",
+            "invokeMethod",
+            "invokeMethod",
+            "invokeMethod",
+            "invokeMethod",
+            "setBoolean",
+            "setBoolean",
+            "setByte",
+            "setByte",
+            "setChar",
+            "setChar",
+            "setDefaultLauncher",
+            "setDouble",
+            "setDouble",
+            "setFloat",
+            "setFloat",
+            "setInt",
+            "setInt",
+            "setLong",
+            "setLong",
+            "setShort",
+            "setShort",
+            "setString",
+            "setString",
+            "setValue",
+            "setValue"};
+
+    public boolean isMethodNameSupportedEdt(String methodName) {
+        int methodIndex = Arrays.asList(methodNamesEdt).indexOf(methodName);
+        return methodIndex >= 0 && isMethodSupportedEdt(BigInteger.ONE.shiftLeft(methodIndex).toString());
+    }
+
+    public boolean isMethodSupportedEdt(String methodBigInteger) {
+        try {
+            return !new BigInteger(methodBigInteger).and(METHODS_SUPPORTED_EDT).equals(BigInteger.ZERO);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean isMethodNameSupportedReflection(String methodName) {
+        int methodIndex = Arrays.asList(methodNamesReflection).indexOf(methodName);
+        return methodIndex >= 0 && isMethodSupportedReflection(BigInteger.ONE.shiftLeft(methodIndex).toString());
+    }
+
+    public boolean isMethodSupportedReflection(String methodBigInteger) {
+        try {
+            return !new BigInteger(methodBigInteger).and(METHODS_SUPPORTED_REFLECTION).equals(BigInteger.ZERO);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private class DisplayToast implements Runnable {
@@ -78,8 +225,9 @@ public class EDTImpl extends IEDT.Stub {
      * @return whether or not the Message could be shown
      */
     @Override
-    public boolean testMessage(String message) {
-        Log.d(TAG, String.format("testMessage(%s)", message));
+    public boolean testMessage(BooleanParcelable unsupported, String message) {
+        logMethodEntranceExit(true, String.format("testMessage(%s)", message));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools Test Message!");
             return false;
@@ -89,8 +237,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean shutdown() {
-        Log.d(TAG, "shutdown()");
+    public boolean shutdown(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "shutdown()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools shutdown!");
             return false;
@@ -99,8 +248,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean reboot() {
-        Log.d(TAG, "reboot()");
+    public boolean reboot(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "reboot()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools reboot!");
             return false;
@@ -109,8 +259,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean recovery() {
-        Log.d(TAG, "recovery()");
+    public boolean recovery(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "recovery()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools recovery!");
             return false;
@@ -119,8 +270,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean clearPassword() {
-        Log.d(TAG, "clearPassword()");
+    public boolean clearPassword(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "clearPassword()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools clearPassword!");
             return false;
@@ -129,8 +281,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean resetPassword(String newPassword) {
-        Log.d(TAG, "passwordReset()");
+    public boolean resetPassword(BooleanParcelable unsupported, String newPassword) {
+        logMethodEntranceExit(true, String.format("resetPassword(%s)", newPassword));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools passwordReset!");
             return false;
@@ -139,8 +292,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean lockDevice() {
-        Log.d(TAG, "lockDevice()");
+    public boolean lockDevice(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "lockDevice()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools lockDevice!");
             return false;
@@ -149,8 +303,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean factoryReset(boolean removeAccounts) {
-        Log.d(TAG, "factoryReset()");
+    public boolean factoryReset(BooleanParcelable unsupported, boolean removeAccounts) {
+        logMethodEntranceExit(true, String.format("factoryReset(%b)", removeAccounts));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools factoryReset!");
             return false;
@@ -159,8 +314,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean allowUnknownSources(boolean allow) {
-        Log.d(TAG, "allowUnknownSources(" + allow + ")");
+    public boolean allowUnknownSources(BooleanParcelable unsupported, boolean allow) {
+        logMethodEntranceExit(true, String.format("allowUnknownSources(%b)", allow));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools allowUnknownSources!");
             return false;
@@ -169,8 +325,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setDateTime(int year, int month, int day, int hour, int minute, int second) {
-        Log.d(TAG, "setDateTime(" + year + "," + month + "," + day + "," + hour + "," + minute + "," + second + ")");
+    public boolean setDateTime(BooleanParcelable unsupported, int year, int month, int day, int hour, int minute, int second) {
+        logMethodEntranceExit(true, String.format("setDateTime(%d, %d, %d, %d, %d, %d)", year, month, day, hour, minute, second));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setDateTime!");
             return false;
@@ -190,8 +347,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setTimeZone(String timeZone) {
-        Log.d(TAG, "setTimeZone(" + timeZone + ")");
+    public boolean setTimeZone(BooleanParcelable unsupported, String timeZone) {
+        logMethodEntranceExit(true, String.format("setTimeZone(%s)", timeZone));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setTimeZone!");
             return false;
@@ -209,8 +367,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean removeAllAccounts() {
-        Log.d(TAG, "removeAllAccounts()");
+    public boolean removeAllAccounts(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "removeAllAccounts()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools removeAllAccounts!");
             return false;
@@ -219,8 +378,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean removeAllGoogleAccounts() {
-        Log.d(TAG, "removeAllGoogleAccounts()");
+    public boolean removeAllGoogleAccounts(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "removeAllGoogleAccounts()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools removeAllGoogleAccounts!");
             return false;
@@ -229,8 +389,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean removeAccount(Account account) {
-        Log.d(TAG, "removeAccount(" + account.name + "(Type: " + account.type + "))");
+    public boolean removeAccount(BooleanParcelable unsupported, Account account) {
+        logMethodEntranceExit(true, String.format("removeAccount(Account name:%s type:%s)", account.name, account.type));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools removeAccount!");
             return false;
@@ -239,8 +400,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableWifi(boolean enable) {
-        Log.d(TAG, "enableWifi(" + enable + ")");
+    public boolean enableWifi(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableWifi(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableWifi!");
             return false;
@@ -248,9 +410,11 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.enableWifi(enable, this.context);
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
-    public String copyFile(String sourceFilePath, String destinationFilePath, List<String> options) {
+    public String copyFile(BooleanParcelable unsupported, String sourceFilePath, String destinationFilePath, List<String> options) {
         logMethodEntranceExit(true, String.format("copyFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+        unsupported.setValue(false);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
             logMethodEntranceExit(false, String.format("copyFile(%s, %s, %s) = null", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
             return null;
@@ -283,9 +447,11 @@ public class EDTImpl extends IEDT.Stub {
         return null;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
-    public String moveFile(String sourceFilePath, String destinationFilePath, List<String> options) {
+    public String moveFile(BooleanParcelable unsupported, String sourceFilePath, String destinationFilePath, List<String> options) {
         logMethodEntranceExit(true, String.format("moveFile(%s, %s, %s)", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
+        unsupported.setValue(false);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
             logMethodEntranceExit(false, String.format("moveFile(%s, %s, %s) = null", sourceFilePath, destinationFilePath, options == null ? "null" : options.toString()));
             return null;
@@ -318,9 +484,11 @@ public class EDTImpl extends IEDT.Stub {
         return null;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
-    public boolean deleteFile(String filePath) {
-        logMethodEntranceExit(true, "deleteFile(" + filePath + ")");
+    public boolean deleteFile(BooleanParcelable unsupported, String filePath) {
+        logMethodEntranceExit(true, String.format("deleteFile(%s)", filePath));
+        unsupported.setValue(false);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
             logMethodEntranceExit(false, "deleteFile(" + filePath + ") = false");
             return false;
@@ -335,22 +503,23 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean readFile(ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
-        Log.d(TAG, "readFile(ReadWriteFileParams)");
-
+    public boolean readFile(BooleanParcelable unsupported, ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
+        logMethodEntranceExit(true, "readFile(ReadWriteFileParams)");
+        unsupported.setValue(false);
         return FileTools.readFile(readWriteFileParamsParcelable);
     }
 
     @Override
-    public boolean writeFile(ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
-        Log.d(TAG, "readFile(ReadWriteFileParams)");
-
+    public boolean writeFile(BooleanParcelable unsupported, ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
+        logMethodEntranceExit(true, "writeFile(ReadWriteFileParams)");
+        unsupported.setValue(false);
         return FileTools.writeFile(readWriteFileParamsParcelable);
     }
 
     @Override
-    public boolean getCurrentScanSettings(String settingsFilePath) {
-        Log.d(TAG, "getCurrentScanSettings(" + settingsFilePath + ")");
+    public boolean getCurrentScanSettings(BooleanParcelable unsupported, String settingsFilePath) {
+        logMethodEntranceExit(true, String.format("getCurrentScanSettings(%s)", settingsFilePath));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getCurrentScanSettings!");
             return false;
@@ -359,14 +528,16 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setNewScanSettings(String settingsFilePath) {
-        Log.d(TAG, "setNewScanSettings(" + settingsFilePath + ")");
+    public boolean setNewScanSettings(BooleanParcelable unsupported, String settingsFilePath) {
+        logMethodEntranceExit(true, String.format("setNewScanSettings(%s)", settingsFilePath));
+        unsupported.setValue(false);
         return ScanLib.setNewScanSettings(settingsFilePath, this.context);
     }
 
     @Override
-    public boolean getCurrentAndSetNewScanSettings(String settingsFilePath) {
-        Log.d(TAG, "getCurrentAndSetNewScanSettings(" + settingsFilePath + ")");
+    public boolean getCurrentAndSetNewScanSettings(BooleanParcelable unsupported, String settingsFilePath) {
+        logMethodEntranceExit(true, String.format("getCurrentAndSetNewScanSettings(%s)", settingsFilePath));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getCurrentAndSetNewScanSettings!");
             return false;
@@ -375,8 +546,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setDefaultHomePage(String homePage) {
-        Log.d(TAG, "setDefaultHomePage(" + homePage + ")");
+    public boolean setDefaultHomePage(BooleanParcelable unsupported, String homePage) {
+        logMethodEntranceExit(true, String.format("setDefaultHomePage(%s)", homePage));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setDefaultHomePage!");
             return false;
@@ -385,8 +557,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean rememberPasswords(boolean enable) {
-        Log.d(TAG, "rememberPasswords(" + enable + ")");
+    public boolean rememberPasswords(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("rememberPasswords(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools rememberPasswords!");
             return false;
@@ -395,8 +568,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean saveFormData(boolean enable) {
-        Log.d(TAG, "saveFormData(" + enable + ")");
+    public boolean saveFormData(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("saveFormData(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools saveFormData!");
             return false;
@@ -405,8 +579,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableCameras(boolean enable) {
-        Log.d(TAG, "enableCameras(" + enable + ")");
+    public boolean enableCameras(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableCameras(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableCameras!");
             return false;
@@ -415,8 +590,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableRoaming(boolean enable) {
-        Log.d(TAG, "enableRoaming(" + enable + ")");
+    public boolean enableRoaming(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableRoaming(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableRoaming!");
             return false;
@@ -425,8 +601,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableBackgroundData(boolean enable) {
-        Log.d(TAG, "enableBackgroundData(" + enable + ")");
+    public boolean enableBackgroundData(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableBackgroundData(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableBackgroundData!");
             return Cellular.enableBackgroundData(enable, context);
@@ -435,19 +612,20 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setScreenLockTimeout(int milliseconds) {
-        Log.d(TAG, "setScreenLockTimeout(" + milliseconds + ")");
+    public boolean setScreenLockTimeout(BooleanParcelable unsupported, int milliseconds) {
+        logMethodEntranceExit(true, String.format("setScreenLockTimeout(%d)", milliseconds));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setScreenLockTimeout!");
             return false;
         }
         return PowerManager.setScreenLockTimeout(this.context, milliseconds);
-        //return Settings.System.putInt(this.context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, milliseconds);
     }
 
     @Override
-    public boolean setDefaultLauncher(String packageName) {
-        Log.d(TAG, "setDefaultLauncher(" + packageName + ")");
+    public boolean setDefaultLauncher(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("setDefaultLauncher(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setDefaultLauncher!");
             return false;
@@ -455,9 +633,10 @@ public class EDTImpl extends IEDT.Stub {
         return Launcher.setDefaultLauncher(packageName, this.context);
     }
 
-    @SuppressWarnings({"deprecation", "RedundantSuppression"})
-    public boolean addNetwork(WifiConfigurationParcelable wifiConfiguration) {
-        Log.d(TAG, "addNetwork(" + wifiConfiguration.SSID + ")");
+    @Override
+    public boolean addNetwork(BooleanParcelable unsupported, WifiConfigurationParcelable wifiConfiguration) {
+        logMethodEntranceExit(true, String.format("addNetwork(%s)", wifiConfiguration.SSID));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools addNetwork!");
             return false;
@@ -465,11 +644,12 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.addNetwork(wifiConfiguration, this.context);
     }
 
-    @SuppressWarnings({"deprecation", "RedundantSuppression"})
-    public boolean updateNetwork(WifiConfigurationParcelable wifiConfiguration) {
+    @Override
+    public boolean updateNetwork(BooleanParcelable unsupported, WifiConfigurationParcelable wifiConfiguration) {
         if (wifiConfiguration == null || (wifiConfiguration.SSID == null || wifiConfiguration.SSID.isEmpty()) && wifiConfiguration.networkId < 1)
             return false;
-        Log.d(TAG, "updateNetwork()");
+        logMethodEntranceExit(true, String.format("updateNetwork(%s)", wifiConfiguration.SSID));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools updateNetwork!");
             return false;
@@ -477,9 +657,10 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.updateNetwork(wifiConfiguration, this.context);
     }
 
-    @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"})
-    public boolean removeNetwork(String ssid) {
-        Log.d(TAG, "removeNetwork(" + ssid + ")");
+    @Override
+    public boolean removeNetwork(BooleanParcelable unsupported, String ssid) {
+        logMethodEntranceExit(true, String.format("removeNetwork(%s)", ssid));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools removeNetwork!");
             return false;
@@ -487,8 +668,10 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.removeNetwork(ssid, this.context);
     }
 
-    public boolean removeNetworkId(int networkId) {
-        Log.d(TAG, "removeNetworkId(" + networkId + ")");
+    @Override
+    public boolean removeNetworkId(BooleanParcelable unsupported, int networkId) {
+        logMethodEntranceExit(true, String.format("removeNetworkId(%d)", networkId));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools removeNetworkId!");
             return false;
@@ -496,9 +679,10 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.removeNetwork(networkId, this.context);
     }
 
-    @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"})
-    public boolean connectNetwork(String ssid) {
-        Log.d(TAG, "connectNetwork(" + ssid + ")");
+    @Override
+    public boolean connectNetwork(BooleanParcelable unsupported, String ssid) {
+        logMethodEntranceExit(true, String.format("connectNetwork(%s)", ssid));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools connectNetwork!");
             return false;
@@ -506,8 +690,10 @@ public class EDTImpl extends IEDT.Stub {
         return Wifi.connectNetwork(ssid, this.context);
     }
 
-    public boolean connectNetworkId(int networkId) {
-        Log.d(TAG, "connectNetworkId(" + networkId + ")");
+    @Override
+    public boolean connectNetworkId(BooleanParcelable unsupported, int networkId) {
+        logMethodEntranceExit(true, String.format("connectNetworkId(%d)", networkId));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools connectNetworkId!");
             return false;
@@ -516,8 +702,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableBluetooth(boolean enable) {
-        Log.d(TAG, "enableBluetooth(" + enable + ")");
+    public boolean enableBluetooth(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableBluetooth(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableBluetooth!");
             return false;
@@ -526,8 +713,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableNfc(boolean enable) {
-        Log.d(TAG, "enableNfc(" + enable + ")");
+    public boolean enableNfc(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableNfc(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableNfc!");
             return false;
@@ -536,8 +724,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableGps(boolean enable) {
-        Log.d(TAG, "enableGps(" + enable + ")");
+    public boolean enableGps(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableGps(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableGps!");
             return false;
@@ -545,10 +734,10 @@ public class EDTImpl extends IEDT.Stub {
         return WirelessManager.enableGps(enable, this.context);
     }
 
-    @SuppressWarnings({"SpellCheckingInspection", "RedundantSuppression"})
     @Override
-    public boolean enableWwan(boolean enable) {
-        Log.d(TAG, "enableWwan(" + enable + ")");
+    public boolean enableWwan(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableWwan(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableWwan!");
             return false;
@@ -557,8 +746,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableDeveloperMode(boolean enable) {
-        Log.d(TAG, "enableDeveloperMode(" + enable + ")");
+    public boolean enableDeveloperMode(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableDeveloperMode(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableDeveloperMode!");
             return false;
@@ -567,8 +757,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean createNewApn(APNParcelable apn, boolean setAsDefault) {
-        Log.d(TAG, String.format("createNewApn(%s, %b)", apn.getName(), setAsDefault));
+    public boolean createNewApn(BooleanParcelable unsupported, APNParcelable apn, boolean setAsDefault) {
+        logMethodEntranceExit(true, String.format("createNewApn(%s, %b)", apn.getName(), setAsDefault));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools createNewApn!");
             return false;
@@ -577,8 +768,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean updateApn(APNParcelable apn) {
-        Log.d(TAG, String.format("updateApn(%s)", apn.getName()));
+    public boolean updateApn(BooleanParcelable unsupported, APNParcelable apn) {
+        logMethodEntranceExit(true, String.format("updateApn(%s)", apn.getName()));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools updateApn!");
             return false;
@@ -587,8 +779,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean verifyApn(String name) {
-        Log.d(TAG, String.format("verifyApn(%s)", name));
+    public boolean verifyApn(BooleanParcelable unsupported, String name) {
+        logMethodEntranceExit(true, String.format("verifyApn(%s)", name));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools verifyApn!");
             return false;
@@ -597,8 +790,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public int getApnId(String name) {
-        Log.d(TAG, String.format("getApnId(%s)", name));
+    public int getApnId(BooleanParcelable unsupported, String name) {
+        logMethodEntranceExit(true, String.format("getApnId(%s)", name));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getApnId!");
             return APN.INVALID_APN;
@@ -607,8 +801,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public APNParcelable getApn(String name) {
-        Log.d(TAG, String.format("getApn(%s)", name));
+    public APNParcelable getApn(BooleanParcelable unsupported, String name) {
+        logMethodEntranceExit(true, String.format("getApn(%s)", name));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getApn!");
             return null;
@@ -617,8 +812,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setPreferredApn(String name) {
-        Log.d(TAG, String.format("setPreferredApn(%s)", name));
+    public boolean setPreferredApn(BooleanParcelable unsupported, String name) {
+        logMethodEntranceExit(true, String.format("setPreferredApn(%s)", name));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setPreferredApn!");
             return false;
@@ -627,8 +823,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public APNParcelable[] getAllApnList() {
-        Log.d(TAG, "getAllApnList()");
+    public APNParcelable[] getAllApnList(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "getAllApnList()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getAllApnList!");
             return null;
@@ -637,8 +834,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public Account[] getGoogleAccounts() {
-        Log.d(TAG, "getGoogleAccounts()");
+    public Account[] getGoogleAccounts(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "getGoogleAccounts()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getGoogleAccounts!");
             return null;
@@ -647,8 +845,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean initializeKeyStore(String storeName, String password) {
-        Log.d(TAG, String.format("initializeKeyStore(%s, %s)", storeName, password));
+    public boolean initializeKeyStore(BooleanParcelable unsupported, String storeName, String password) {
+        logMethodEntranceExit(true, String.format("initializeKeyStore(%s, %s)", storeName, password));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools initializeKeyStore!");
             return false;
@@ -657,8 +856,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean installCACertificate(String friendlyName, String fileName) {
-        Log.d(TAG, String.format("installCACertificate(%s, %s)", friendlyName, fileName));
+    public boolean installCertificate(BooleanParcelable unsupported, String friendlyName, String fileName) {
+        logMethodEntranceExit(true, String.format("installCertificate(%s, %s)", friendlyName, fileName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools installCACertificate!");
             return false;
@@ -667,8 +867,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean mountSDCard(boolean mount) {
-        Log.d(TAG, String.format("mountSDCard(%b)", mount));
+    public boolean mountSDCard(BooleanParcelable unsupported, boolean mount) {
+        logMethodEntranceExit(true, String.format("mountSDCard(%b)", mount));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools mountSDCard!");
             return false;
@@ -677,8 +878,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableAdb(boolean enable) {
-        Log.d(TAG, String.format("enableAdb(%b)", enable));
+    public boolean enableAdb(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableAdb(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableAdb!");
             return false;
@@ -687,8 +889,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableMassStorage(boolean enable) {
-        Log.d(TAG, String.format("enableMassStorage(%b)", enable));
+    public boolean enableMassStorage(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableMassStorage(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableMassStorage!");
             return false;
@@ -697,8 +900,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public List<String> getKeyboardNames() {
-        Log.d(TAG, "getKeyboardNames");
+    public List<String> getKeyboardNames(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "getKeyboardNames()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools getKeyboardNames!");
             return null;
@@ -707,8 +911,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean setKeyboard(String keyboardName) {
-        Log.d(TAG, String.format("setKeyboard(%s)", keyboardName));
+    public boolean setKeyboard(BooleanParcelable unsupported, String keyboardName) {
+        logMethodEntranceExit(true, String.format("setKeyboard(%s)", keyboardName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools setKeyboard(%!");
             return false;
@@ -717,8 +922,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean clearClipboard() {
-        Log.d(TAG, "clearClipboard");
+    public boolean clearClipboard(BooleanParcelable unsupported) {
+        logMethodEntranceExit(true, "clearClipboard()");
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools clearClipboard!");
             return false;
@@ -727,8 +933,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableClipboard(boolean enable) {
-        Log.d(TAG, String.format("enableClipboard(%b)", enable));
+    public boolean enableClipboard(BooleanParcelable unsupported, boolean enable) {
+        logMethodEntranceExit(true, String.format("enableClipboard(%b)", enable));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableClipboard!");
             return false;
@@ -737,238 +944,285 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public ObjectParcelable invokeMethod(ObjectParcelable obj, String methodName) {
+    public ObjectParcelable invokeMethod(BooleanParcelable unsupported, ObjectParcelable obj, String methodName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericInvokeMethod(obj, methodName, new ObjectParcelable[]{});
     }
 
     @Override
-    public ObjectParcelable invokeMethodWithParams(ObjectParcelable obj, String methodName, String[] classParamNames, ObjectParcelable[] params) {
+    public ObjectParcelable invokeMethodWithParams(BooleanParcelable unsupported, ObjectParcelable obj, String methodName, String[] classParamNames, ObjectParcelable[] params) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericInvokeMethod(obj, methodName, classParamNames, params);
     }
 
     @Override
-    public ObjectParcelable invokeMethodStatic(String declaringClassName, String methodName) {
+    public ObjectParcelable invokeMethodStatic(BooleanParcelable unsupported, String declaringClassName, String methodName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericInvokeMethod(declaringClassName, methodName, new ObjectParcelable[]{});
     }
 
     @Override
-    public ObjectParcelable invokeMethodStaticWithParams(String declaringClassName, String methodName, String[] classParamNames, ObjectParcelable[] params) {
+    public ObjectParcelable invokeMethodStaticWithParams(BooleanParcelable unsupported, String declaringClassName, String methodName, String[] classParamNames, ObjectParcelable[] params) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericInvokeMethod(declaringClassName, methodName, classParamNames, params);
     }
 
     @Override
-    public ObjectParcelable getValue(ObjectParcelable obj, String fieldName) {
+    public ObjectParcelable getValue(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public ObjectParcelable getValueStatic(String declaringClassName, String fieldName) {
+    public ObjectParcelable getValueStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public boolean getBoolean(ObjectParcelable obj, String fieldName) {
+    public boolean getBoolean(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doBooleanGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public boolean getBooleanStatic(String declaringClassName, String fieldName) {
+    public boolean getBooleanStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doBooleanGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public byte getByte(ObjectParcelable obj, String fieldName) {
+    public byte getByte(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doByteGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public byte getByteStatic(String declaringClassName, String fieldName) {
+    public byte getByteStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doByteGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public char getChar(ObjectParcelable obj, String fieldName) {
+    public char getChar(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doCharGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public char getCharStatic(String declaringClassName, String fieldName) {
+    public char getCharStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doCharGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public double getDouble(ObjectParcelable obj, String fieldName) {
+    public double getDouble(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doDoubleGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public double getDoubleStatic(String declaringClassName, String fieldName) {
+    public double getDoubleStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doDoubleGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public float getFloat(ObjectParcelable obj, String fieldName) {
+    public float getFloat(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doFloatGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public float getFloatStatic(String declaringClassName, String fieldName) {
+    public float getFloatStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doFloatGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public int getInt(ObjectParcelable obj, String fieldName) {
+    public int getInt(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doIntGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public int getIntStatic(String declaringClassName, String fieldName) {
+    public int getIntStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doIntGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public long getLong(ObjectParcelable obj, String fieldName) {
+    public long getLong(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doLongGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public long getLongStatic(String declaringClassName, String fieldName) {
+    public long getLongStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doLongGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public int getShort(ObjectParcelable obj, String fieldName) {
+    public int getShort(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doShortGetFieldValue(obj, fieldName);
     }
 
     @Override
-    public int getShortStatic(String declaringClassName, String fieldName) {
+    public int getShortStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doShortGetFieldValue(declaringClassName, fieldName);
     }
 
     @Override
-    public String getType(ObjectParcelable obj, String fieldName) {
+    public String getType(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericGetFieldType(obj, fieldName);
     }
 
     @Override
-    public String getTypeStatic(String declaringClassName, String fieldName) {
+    public String getTypeStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGenericGetFieldType(declaringClassName, fieldName);
     }
 
     @Override
-    public String getString(ObjectParcelable obj, String fieldName) {
+    public String getString(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGetString(obj, fieldName);
     }
 
     @Override
-    public String getStringStatic(String declaringClassName, String fieldName) {
+    public String getStringStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName) {
+        unsupported.setValue(false);
         return ReflectionManager.doGetString(declaringClassName, fieldName);
     }
 
     @Override
-    public void setValue(ObjectParcelable obj, String fieldName, ObjectParcelable value) {
+    public void setValue(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, ObjectParcelable value) {
+        unsupported.setValue(false);
         ReflectionManager.doGenericSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setValueStatic(String declaringClassName, String fieldName, ObjectParcelable value) {
+    public void setValueStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, ObjectParcelable value) {
+        unsupported.setValue(false);
         ReflectionManager.doGenericSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setBoolean(ObjectParcelable obj, String fieldName, boolean value) {
+    public void setBoolean(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, boolean value) {
+        unsupported.setValue(false);
         ReflectionManager.doBooleanSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setBooleanStatic(String declaringClassName, String fieldName, boolean value) {
+    public void setBooleanStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, boolean value) {
+        unsupported.setValue(false);
         ReflectionManager.doBooleanSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setByte(ObjectParcelable obj, String fieldName, byte value) {
+    public void setByte(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, byte value) {
+        unsupported.setValue(false);
         ReflectionManager.doByteSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setByteStatic(String declaringClassName, String fieldName, byte value) {
+    public void setByteStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, byte value) {
+        unsupported.setValue(false);
         ReflectionManager.doByteSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setChar(ObjectParcelable obj, String fieldName, char value) {
+    public void setChar(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, char value) {
+        unsupported.setValue(false);
         ReflectionManager.doCharSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setCharStatic(String declaringClassName, String fieldName, char value) {
+    public void setCharStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, char value) {
+        unsupported.setValue(false);
         ReflectionManager.doCharSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setDouble(ObjectParcelable obj, String fieldName, double value) {
+    public void setDouble(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, double value) {
+        unsupported.setValue(false);
         ReflectionManager.doDoubleSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setDoubleStatic(String declaringClassName, String fieldName, double value) {
+    public void setDoubleStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, double value) {
+        unsupported.setValue(false);
         ReflectionManager.doDoubleSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setFloat(ObjectParcelable obj, String fieldName, float value) {
+    public void setFloat(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, float value) {
+        unsupported.setValue(false);
         ReflectionManager.doFloatSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setFloatStatic(String declaringClassName, String fieldName, float value) {
+    public void setFloatStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, float value) {
+        unsupported.setValue(false);
         ReflectionManager.doFloatSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setInt(ObjectParcelable obj, String fieldName, int value) {
+    public void setInt(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, int value) {
+        unsupported.setValue(false);
         ReflectionManager.doIntSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setIntStatic(String declaringClassName, String fieldName, int value) {
-        ReflectionManager.doIntSetFieldValue(declaringClassName, fieldName, value);
+    public void setIntStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, int value) {
+        unsupported.setValue(false);
+       ReflectionManager.doIntSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setLong(ObjectParcelable obj, String fieldName, long value) {
+    public void setLong(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, long value) {
+        unsupported.setValue(false);
         ReflectionManager.doLongSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setLongStatic(String declaringClassName, String fieldName, long value) {
+    public void setLongStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, long value) {
+        unsupported.setValue(false);
         ReflectionManager.doLongSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setShort(ObjectParcelable obj, String fieldName, int value) {
+    public void setShort(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, int value) {
+        unsupported.setValue(false);
         ReflectionManager.doShortSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setShortStatic(String declaringClassName, String fieldName, int value) {
+    public void setShortStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, int value) {
+        unsupported.setValue(false);
         ReflectionManager.doShortSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public void setString(ObjectParcelable obj, String fieldName, String value) {
+    public void setString(BooleanParcelable unsupported, ObjectParcelable obj, String fieldName, String value) {
+        unsupported.setValue(false);
         ReflectionManager.doGenericSetFieldValue(obj, fieldName, value);
     }
 
     @Override
-    public void setStringStatic(String declaringClassName, String fieldName, String value) {
+    public void setStringStatic(BooleanParcelable unsupported, String declaringClassName, String fieldName, String value) {
+        unsupported.setValue(false);
         ReflectionManager.doGenericSetFieldValue(declaringClassName, fieldName, value);
     }
 
     @Override
-    public boolean enableDeviceAdmin(String packageName, String className, boolean makeAdmin) {
-        Log.d(TAG, "enableDeviceAdmin");
+    public boolean enableDeviceAdmin(BooleanParcelable unsupported, String packageName, String className, boolean makeAdmin) {
+        logMethodEntranceExit(true, String.format("enableDeviceAdmin(%s, %s, %b)", packageName, className, makeAdmin));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableDeviceAdmin!");
             return false;
@@ -977,8 +1231,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean installApk(String apkFilename, boolean update) {
-        Log.d(TAG, "installApk");
+    public boolean installApk(BooleanParcelable unsupported, String apkFilename, boolean update) {
+        logMethodEntranceExit(true, String.format("installApk(%s, %b)", apkFilename, update));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools installApk!");
             return false;
@@ -987,8 +1242,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean uninstallPackage(String packageName) {
-        Log.d(TAG, "uninstallPackage");
+    public boolean uninstallPackage(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("uninstallPackage(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools uninstallPackage!");
             return false;
@@ -997,8 +1253,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean clearDataForPackage(String packageName) {
-        Log.d(TAG, "clearDataForPackage");
+    public boolean clearDataForPackage(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("clearDataForPackage(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools clearDataForPackage!");
             return false;
@@ -1007,8 +1264,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean clearCacheForPackage(String packageName) {
-        Log.d(TAG, "clearCacheForPackage");
+    public boolean clearCacheForPackage(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("clearCacheForPackage(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools clearCacheForPackage!");
             return false;
@@ -1017,8 +1275,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableApplication(String packageName) {
-        Log.d(TAG, "enableApplication");
+    public boolean enableApplication(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("enableApplication(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableApplication!");
             return false;
@@ -1027,8 +1286,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean disableApplication(String packageName) {
-        Log.d(TAG, "disableApplication");
+    public boolean disableApplication(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("disableApplication(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools disableApplication!");
             return false;
@@ -1037,8 +1297,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean enableBatteryOptimization(String packageName) {
-        Log.d(TAG, "enableBatteryOptimization");
+    public boolean enableBatteryOptimization(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("enableBatteryOptimization(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools enableBatteryOptimization!");
             return false;
@@ -1047,8 +1308,9 @@ public class EDTImpl extends IEDT.Stub {
     }
 
     @Override
-    public boolean disableBatteryOptimization(String packageName) {
-        Log.d(TAG, "disableBatteryOptimization");
+    public boolean disableBatteryOptimization(BooleanParcelable unsupported, String packageName) {
+        logMethodEntranceExit(true, String.format("disableBatteryOptimization(%s)", packageName));
+        unsupported.setValue(false);
         if (this.context == null) {
             Log.d(TAG, "No Context specified for EDT Tools disableBatteryOptimization!");
             return false;

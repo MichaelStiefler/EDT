@@ -1,6 +1,5 @@
 package com.casioeurope.mis.edt;
 
-import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -23,7 +22,7 @@ import static com.casioeurope.mis.edt.constant.ScannerLibraryConstant.RETURN.SUC
  *          The Library's lifecycle therefore depends on the application lifecycle.<br/>
  *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly adviced not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
  *          When the activity is being launched (and hence the process gets created), <i>the same applies to the {@link android.app.Activity#onStart() onStart} and {@link android.app.Activity#onResume() onResume} methods</i>.<br/>
- *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@ScannerLibrary.onLibraryReady onLibraryReady} method instead.<br/>
+ *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@link ScannerLibrary.onLibraryReady onLibraryReady} method instead.<br/>
  *          For instance, instead of calling {@link ScannerLibrary#openScanner() ScannerLibrary.openScanner()} directly in {@link android.app.Activity#onCreate(Bundle) onCreate}, use this code to postpone it to a {@link LibraryCallback Callback} appropriately:<br/>
  * <pre>ScannerLibrary.onLibraryReady(new LibraryCallback() {
  *     public void onLibraryReady() {
@@ -38,7 +37,7 @@ import static com.casioeurope.mis.edt.constant.ScannerLibraryConstant.RETURN.SUC
  * @version 2.00
  * @since 2.00
  */
-@SuppressWarnings({"unused", "RedundantSuppression", "JavadocReference"})
+@SuppressWarnings({"unused", "RedundantSuppression", "JavadocReference", "SpellCheckingInspection"})
 public class ScannerLibrary {
 
     private static ScannerLibrary instance;
@@ -1276,7 +1275,6 @@ public class ScannerLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static void onLibraryReady(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
-        Log.d("[EDT ScannerLibrary]", "onLibraryReady addScannerLibraryCallback");
         EDTServiceConnection.getInstance().addScannerLibraryCallback(callback);
     }
 
@@ -1285,12 +1283,9 @@ public class ScannerLibrary {
         private static int openScanner() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
             if (getInstance().edtServiceScannerLibrary() == null) {
-                Log.d("[EDT ScannerLibrary]", "edtServiceScannerLibrary is null, postponing openScanner call!");
                 onLibraryReady(() -> {
-                    Log.d("[EDT ScannerLibrary]", "onLibraryReady openScanner callback processing!");
                     getInstance().edtServiceScannerLibrary().openScanner(unsupported);
                     checkMethodUnsupported("openScanner", unsupported);
-                    Log.d("[EDT ScannerLibrary]", "onLibraryReady openScanner callback processed!");
                 });
                 return SUCCESS;
             }
@@ -1302,12 +1297,9 @@ public class ScannerLibrary {
         private static int closeScanner() throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
             if (getInstance().edtServiceScannerLibrary() == null) {
-                Log.d("[EDT ScannerLibrary]", "edtServiceScannerLibrary is null, postponing closeScanner call!");
                 onLibraryReady(() -> {
-                    Log.d("[EDT ScannerLibrary]", "onLibraryReady closeScanner callback processing!");
                     getInstance().edtServiceScannerLibrary().closeScanner(unsupported);
                     checkMethodUnsupported("closeScanner", unsupported);
-                    Log.d("[EDT ScannerLibrary]", "onLibraryReady closeScanner callback processed!");
                 });
                 return SUCCESS;
             }

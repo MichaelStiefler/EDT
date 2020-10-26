@@ -6,10 +6,31 @@ import com.casioeurope.mis.edt.IEeicCallback;
 import com.casioeurope.mis.edt.IEeicLibrary;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+
 import jp.casio.ht.eeiclibrary.EeicManager;
 
 @SuppressWarnings({"unused", "RedundantThrows", "RedundantSuppression", "SpellCheckingInspection"})
 public class EeicLibraryImpl extends IEeicLibrary.Stub {
+
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("1111111111111111", 2);
+    private static String[] methodNames = {"close",
+            "getLibraryVersion",
+            "getValue",
+            "isPowerOn",
+            "open",
+            "read",
+            "registerCallback",
+            "sendBreak",
+            "setInputDirection",
+            "setInterruptEdge",
+            "setOutputDirection",
+            "setPower",
+            "setSlaveAddress",
+            "setValue",
+            "unregisterCallback",
+            "write"};
 
     private IEeicCallback eeicCallback;
 
@@ -43,6 +64,19 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
     public EeicLibraryImpl() {
     }
 
+    public boolean isMethodNameSupported(String methodName) {
+        int methodIndex = Arrays.asList(methodNames).indexOf(methodName);
+        return methodIndex >= 0 && isMethodSupported(BigInteger.ONE.shiftLeft(methodIndex).toString());
+    }
+
+    public boolean isMethodSupported(String methodBigInteger) {
+        try {
+            return !new BigInteger(methodBigInteger).and(METHODS_SUPPORTED).equals(BigInteger.ZERO);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean setPower(boolean enable, BooleanParcelable unsupported) {
         unsupported.setValue(false);
         return getJpInstance().setPower(enable);
@@ -52,22 +86,6 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
         unsupported.setValue(false);
         return getJpInstance().isPowerOn();
     }
-
-//    public EeicManager.GpioDevice getGpioDevice() {
-//        return getJpInstance().getGpioDevice();
-//    }
-//
-//    public EeicManager.SerialDevice getSerialDevice() {
-//        return getJpInstance().getSerialDevice();
-//    }
-//
-//    public EeicManager.I2cDevice getI2cDevice() {
-//        return getJpInstance().getI2cDevice();
-//    }
-//
-//    public EeicManager.SpiDevice getSpiDevice() {
-//        return getJpInstance().getSpiDevice();
-//    }
 
     public String getLibraryVersion(BooleanParcelable unsupported) {
         unsupported.setValue(false);
@@ -109,14 +127,6 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
         this.eeicCallback = null;
         return retVal;
     }
-
-//    private boolean gpioDeviceRegisterCallback(EeicManager.InterruptCallback callback, Handler handler) {
-//        return getJpInstance().getGpioDevice().registerCallback(callback, handler);
-//    }
-//
-//    private boolean gpioDeviceUnregisterCallback(EeicManager.InterruptCallback callback) {
-//        return getJpInstance().getGpioDevice().unregisterCallback(callback);
-//    }
 
     public boolean serialDeviceOpen1(int baudrate, int flags, boolean hwflow, int bitLen, int parityBit, int stopBit, BooleanParcelable unsupported) {
         unsupported.setValue(false);
