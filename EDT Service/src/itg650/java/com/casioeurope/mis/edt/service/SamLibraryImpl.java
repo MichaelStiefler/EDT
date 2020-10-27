@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class SamLibraryImpl extends ISamLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("000000000", 2);
-    private static String[] methodNames = {"openSam",
+    private static final String[] methodNames = {"openSam",
             "closeSam",
             "sendPowerOn",
             "sendPowerOff",

@@ -17,7 +17,7 @@ import static com.casioeurope.mis.edt.constant.SamLibraryConstant.RETURN.SUCCESS
 public class SamLibraryImpl extends ISamLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("111111111", 2);
-    private static String[] methodNames = {"openSam",
+    private static final String[] methodNames = {"openSam",
             "closeSam",
             "sendPowerOn",
             "sendPowerOff",

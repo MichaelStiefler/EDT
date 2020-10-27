@@ -23,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class CertificateManager {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (CertificateManager)";
+    private static final String TAG = "EDT (CertificateManager)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

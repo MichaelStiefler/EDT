@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("000000000000", 2);
-    private static String[] methodNames = {"setUserKeyCode",
+    private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
             "setFnUserKeyCode",

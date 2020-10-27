@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class KeyLibraryService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (KeyLibraryService)";
+    private static final String TAG = "EDT (KeyLibraryService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -29,7 +29,7 @@ public class KeyLibraryService extends Service {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    private IBinder doOnBind(@SuppressWarnings("unused") Intent intent) {
+    private IBinder doOnBind(@SuppressWarnings({"unused", "RedundantSuppression"}) Intent intent) {
         logMethodEntranceExit(true);
         logMethodEntranceExit(false);
         return new KeyLibraryImpl();

@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.service;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.location.LocationManager;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class WirelessManager {
 
-    private static String TAG = "EDT (WirelessManager)";
+    private static final String TAG = "EDT (WirelessManager)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
@@ -63,6 +64,7 @@ public class WirelessManager {
         }
         Class<?> NfcManagerClass;
         Method setNfcEnabled;
+        //noinspection RedundantSuppression
         try {
             NfcManagerClass = Class.forName(nfcAdapter.getClass().getName());
             setNfcEnabled = NfcManagerClass.getDeclaredMethod(enable ? "enable" : "disable");
@@ -114,6 +116,7 @@ public class WirelessManager {
         return false;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public static boolean enableWwan(boolean enable, Context context) {
         logMethodEntranceExit(true);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later

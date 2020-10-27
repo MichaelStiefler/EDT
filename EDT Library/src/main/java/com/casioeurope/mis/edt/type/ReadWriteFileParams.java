@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.type;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.casioeurope.mis.edt.BuildConfig;
@@ -30,7 +31,7 @@ public class ReadWriteFileParams {
 
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (ReadWriteFileParams)";
+    private static final String TAG = "EDT (ReadWriteFileParams)";
     Path path;
     byte[] data;
     int fileOffset;
@@ -60,6 +61,7 @@ public class ReadWriteFileParams {
         logMethodEntranceExit(false);
     }
 
+    @SuppressLint("LongLogTag")
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
         String nameOfCurrentMethod = Thread.currentThread()

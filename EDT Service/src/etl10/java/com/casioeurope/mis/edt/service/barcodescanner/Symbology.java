@@ -22,7 +22,7 @@ public class Symbology {
     private int checkCount;
 
     @ElementList
-    private ArrayList<SymbologyProperty> properties;
+    private final ArrayList<SymbologyProperty> properties;
 
     public Symbology() {
         this.id = 0;

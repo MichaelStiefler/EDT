@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class APNTools {
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (APN)";
+    private static final String TAG = "EDT (APN)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

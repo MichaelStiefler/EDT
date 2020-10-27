@@ -5,11 +5,14 @@ import com.casioeurope.mis.edt.IEeicLibrary;
 import com.casioeurope.mis.edt.constant.EeicLibraryConstant;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+
 @SuppressWarnings({"unused", "RedundantThrows", "RedundantSuppression", "SpellCheckingInspection"})
 public class EeicLibraryImpl extends IEeicLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("0000000000000000", 2);
-    private static String[] methodNames = {"close",
+    private static final String[] methodNames = {"close",
             "getLibraryVersion",
             "getValue",
             "isPowerOn",

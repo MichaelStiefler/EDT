@@ -19,12 +19,12 @@ import java.util.List;
 
 public class UITools {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (UI Tools)";
+    private static final String TAG = "EDT (UI Tools)";
     private static Handler clipboardHandler;
 
-    private static Handler nullHandler = new Handler(Looper.getMainLooper()) {
+    private static final Handler nullHandler = new Handler(Looper.getMainLooper()) {
         @Override
-        public void handleMessage(@SuppressWarnings("NullableProblems") Message inputMessage) {
+        public void handleMessage(@SuppressWarnings({"NullableProblems", "RedundantSuppression"}) Message inputMessage) {
         }
     };
 

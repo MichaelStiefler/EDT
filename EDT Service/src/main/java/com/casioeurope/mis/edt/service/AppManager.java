@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 public class AppManager {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (AppManager)";
+    private static final String TAG = "EDT (AppManager)";
 
-    @SuppressLint("SdCardPath")
+    @SuppressLint({"SdCardPath", "ObsoleteSdkInt"})
     public static boolean clearCacheForPackage(Context context, String packageName) {
         logMethodEntranceExit(true, String.format("clearCacheForPackage(%s, %s)", context.getPackageName(), packageName));
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later

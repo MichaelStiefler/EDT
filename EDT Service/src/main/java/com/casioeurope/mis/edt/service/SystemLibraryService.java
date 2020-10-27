@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class SystemLibraryService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (SystemLibraryService)";
+    private static final String TAG = "EDT (SystemLibraryService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;

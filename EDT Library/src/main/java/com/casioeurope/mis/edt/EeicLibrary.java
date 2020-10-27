@@ -18,7 +18,7 @@ import java.util.Set;
  *
  * @apiNote The External Expansion Interface Control (EEIC) Library is bound to the calling application on application startup time automatically.<br/>
  *          The Library's lifecycle therefore depends on the application lifecycle.<br/>
- *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly adviced not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
+ *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly advised not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
  *          When the activity is being launched (and hence the process gets created), <i>the same applies to the {@link android.app.Activity#onStart() onStart} and {@link android.app.Activity#onResume() onResume} methods</i>.<br/>
  *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@link EeicLibrary#onLibraryReady onLibraryReady} method instead.<br/>
  *          For instance, instead of calling {@link EeicLibrary.SerialDevice#sendBreak() EeicLibrary.SerialDevice.sendBreak()} directly in {@link android.app.Activity#onCreate(Bundle) onCreate}, use this code to postpone it to a {@link LibraryCallback Callback} appropriately:<br/>
@@ -28,7 +28,7 @@ import java.util.Set;
  *     }
  * });</pre>
  *          <br/>Which can be simplified to:<br/>
- * <pre>EeicLibrary.onLibraryReady(() -> { EeicLibrary.SerialDevice.sendBreak(); });</pre>
+ * <pre>EeicLibrary.onLibraryReady(() -&gt; { EeicLibrary.SerialDevice.sendBreak(); });</pre>
  *          <br/>Or even further to:<br/>
  * <pre>EeicLibrary.onLibraryReady(EeicLibrary.SerialDevice::sendBreak);</pre>
  *

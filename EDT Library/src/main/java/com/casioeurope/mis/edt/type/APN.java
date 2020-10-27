@@ -74,7 +74,7 @@ public class APN {
     public static final int INVALID_APN = -1;
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (APN)";
+    private static final String TAG = "EDT (APN)";
     int id;
     String name;
     String user;
@@ -362,7 +362,7 @@ public class APN {
     public static final class Builder {
 
         private int id;
-        private String name;
+        private final String name;
         private String user;
         private String password;
         private String apn;

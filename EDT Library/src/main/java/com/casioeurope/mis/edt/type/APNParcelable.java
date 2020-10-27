@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class APNParcelable extends APN implements Parcelable {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (APNParcelable)";
+    private static final String TAG = "EDT (APNParcelable)";
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

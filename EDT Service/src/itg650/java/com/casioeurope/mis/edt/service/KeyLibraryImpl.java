@@ -15,7 +15,7 @@ import java.util.List;
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("111111111111", 2);
-    private static String[] methodNames = {"setUserKeyCode",
+    private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
             "setFnUserKeyCode",

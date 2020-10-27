@@ -3,7 +3,6 @@ package com.casioeurope.mis.edt.service;
 import android.os.RemoteException;
 
 import com.casioeurope.mis.edt.IKeyLibrary;
-import com.casioeurope.mis.edt.constant.KeyLibraryConstant;
 import com.casioeurope.mis.edt.type.ApplicationInfoParcelable;
 import com.casioeurope.mis.edt.type.BooleanParcelable;
 
@@ -16,7 +15,7 @@ import java.util.List;
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("111111111111", 2);
-    private static String[] methodNames = {"setUserKeyCode",
+    private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
             "setFnUserKeyCode",

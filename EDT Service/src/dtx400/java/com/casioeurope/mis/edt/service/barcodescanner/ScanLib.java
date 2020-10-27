@@ -45,7 +45,7 @@ public class ScanLib {
         return retVal;
     }
 
-    public static boolean setNewScanSettings(String settingsFilePath, @SuppressWarnings("unused") Context context) {
+    public static boolean setNewScanSettings(String settingsFilePath, @SuppressWarnings({"unused", "RedundantSuppression"}) Context context) {
         String fileNameNewJson = "";
         String fileNameNewXml = "";
         boolean setJson = true, setXml = true;

@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class Security {
-    private static String TAG = "EDT (Security)";
+    private static final String TAG = "EDT (Security)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

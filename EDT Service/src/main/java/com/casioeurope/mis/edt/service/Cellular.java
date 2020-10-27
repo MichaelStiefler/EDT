@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Cellular {
     private static final int THREAD_WAIT_TIMEOUT_IN_MS = 100;
     private static final int RESULT_TIMEOUT_IN_MS = 10000;
-    private static String TAG = "EDT (Cellular)";
+    private static final String TAG = "EDT (Cellular)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
@@ -33,6 +33,7 @@ public class Cellular {
     public static boolean enableBackgroundData(boolean enable, Context context) {
         logMethodEntranceExit(true, String.format("enableBackgroundData(%b, %s)", enable, context.getPackageName()));
         boolean result;
+        //noinspection RedundantSuppression
         try {
             final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             Class<?> connectivityManagerClass = Class.forName(connectivityManager.getClass().getName());
@@ -57,7 +58,8 @@ public class Cellular {
 
                 int timeout = RESULT_TIMEOUT_IN_MS;
 
-                while (timeout > 0) {
+                while (timeout > 0) //noinspection RedundantSuppression
+                {
                     // Check if the state is set
                     //noinspection ConstantConditions
                     result = (Boolean) getRestrictBackground.invoke(iNetworkPolicyManager);

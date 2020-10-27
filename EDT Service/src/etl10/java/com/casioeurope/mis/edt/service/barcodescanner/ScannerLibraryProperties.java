@@ -28,7 +28,7 @@ public class ScannerLibraryProperties {
     private int triggerKeyTimeout;
 
     @ElementList
-    private ArrayList<Symbology> symbologies;
+    private final ArrayList<Symbology> symbologies;
 
     ScannerLibraryProperties() {
         this.notificationLED = 0;

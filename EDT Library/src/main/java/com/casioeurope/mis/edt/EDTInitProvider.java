@@ -16,7 +16,7 @@ import java.util.Objects;
 public class EDTInitProvider extends ContentProvider {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = true; //BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (InitProvider)";
+    private static final String TAG = "EDT (InitProvider)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -69,34 +69,34 @@ public class EDTInitProvider extends ContentProvider {
         logMethodEntranceExit(false);
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
     @Nullable
     @Override
     public String getType(Uri uri) {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;

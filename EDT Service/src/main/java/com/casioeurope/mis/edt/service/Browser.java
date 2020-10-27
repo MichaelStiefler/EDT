@@ -6,7 +6,7 @@ import android.util.Log;
 
 public class Browser {
 
-    private static String TAG = "EDT (Browser)";
+    private static final String TAG = "EDT (Browser)";
     private static final String PREF_HOMEPAGE = "homepage";
     private static final String PREF_SAVE_FORMDATA = "save_formdata";
     private static final String PREF_REMEMBER_PASSWORDS = "remember_passwords";

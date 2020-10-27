@@ -15,7 +15,7 @@ import jp.casio.ht.eeiclibrary.EeicManager;
 public class EeicLibraryImpl extends IEeicLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("1111111111111111", 2);
-    private static String[] methodNames = {"close",
+    private static final String[] methodNames = {"close",
             "getLibraryVersion",
             "getValue",
             "isPowerOn",
@@ -46,7 +46,7 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
             }
         }
     }
-    private MyInterruptCallback myInterruptCallback = new MyInterruptCallback();
+    private final MyInterruptCallback myInterruptCallback = new MyInterruptCallback();
 
     private static volatile EeicManager jpInstance;
 

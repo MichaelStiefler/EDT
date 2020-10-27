@@ -14,7 +14,7 @@ import java.util.Arrays;
 @SuppressWarnings({"unused", "RedundantThrows", "RedundantSuppression", "SpellCheckingInspection"})
 public class ScannerLibraryImpl extends IScannerLibrary.Stub {
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("1111111111111111111111111111111111111111111111111111111111111111111111", 2);
-    private static String[] methodNames = {"openScanner",
+    private static final String[] methodNames = {"openScanner",
             "closeScanner",
             "isScannerOpen",
             "setDefaultAll",

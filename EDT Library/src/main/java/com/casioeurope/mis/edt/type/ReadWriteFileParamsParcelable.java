@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.type;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -18,9 +19,10 @@ import java.util.stream.Collectors;
 public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implements Parcelable {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (ReadWriteFileParamsParcelable)";
+    private static final String TAG = "EDT (ReadWriteFileParamsParcelable)";
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
+    @SuppressLint("LongLogTag")
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
         String nameOfCurrentMethod = Thread.currentThread()
@@ -38,6 +40,7 @@ public class ReadWriteFileParamsParcelable extends ReadWriteFileParams implement
     }
 
     public static final Creator<ReadWriteFileParamsParcelable> CREATOR = new Creator<ReadWriteFileParamsParcelable>() {
+        @SuppressLint("LongLogTag")
         public ReadWriteFileParamsParcelable createFromParcel(Parcel in) {
             logMethodEntranceExit(true);
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later

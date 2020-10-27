@@ -8,7 +8,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 public class Camera {
-    private static String TAG = "EDT (Camera)";
+    private static final String TAG = "EDT (Camera)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @SuppressWarnings({"deprecation", "RedundantSuppression"})
 public class Wifi {
-    private static String TAG = "EDT (Wifi)";
+    private static final String TAG = "EDT (Wifi)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {

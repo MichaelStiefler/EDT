@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.RemoteException;
 
-@SuppressWarnings({"JavadocReference", "JavaDoc", "unused", "RedundantSuppression", "SpellCheckingInspection"})
+@SuppressWarnings({"JavadocReference", "JavaDoc", "unused", "RedundantSuppression", "SpellCheckingInspection", "FieldMayBeFinal"})
 public class ApplicationManager {
 
 	public final int INSTALL_REPLACE_EXISTING = 2;

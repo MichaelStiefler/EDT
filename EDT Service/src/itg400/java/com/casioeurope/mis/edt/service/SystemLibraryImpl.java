@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class SystemLibraryImpl extends ISystemLibrary.Stub {
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("0011", 2);
-    private static String[] methodNames = {"getCASIOSerial",
+    private static final String[] methodNames = {"getCASIOSerial",
             "getModelName",
             "getNavigationBarState",
             "setNavigationBarState"};

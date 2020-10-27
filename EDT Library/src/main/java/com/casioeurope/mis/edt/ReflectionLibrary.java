@@ -21,9 +21,9 @@ import java.util.Arrays;
  *
  * @apiNote The Reflection Library is bound to the calling application on application startup time automatically.<br/>
  *          The Library's lifecycle therefore depends on the application lifecycle.<br/>
- *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly adviced not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
+ *          Due to the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Lifecycle of Android Applications</a> and the underlying timing, <b><i>it is strongly advised not to call any Library Methods inside the {@link android.app.Activity#onCreate(Bundle) onCreate} method</i></b>.<br/>
  *          When the activity is being launched (and hence the process gets created), <i>the same applies to the {@link android.app.Activity#onStart() onStart} and {@link android.app.Activity#onResume() onResume} methods</i>.<br/>
- *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@link ScannerLibrary.onLibraryReady onLibraryReady} method instead.<br/>
+ *          If you need to call any Library methods at application start in one of the above mentioned methods, you should use the {@link LibraryCallback Callback} Mechanism offered by the {@link ReflectionLibrary#onLibraryReady onLibraryReady} method instead.<br/>
  *          For instance, instead of calling {@link ReflectionLibrary#getBoolean(Object obj, String fieldName) ReflectionLibrary.getBoolean(Object obj, String fieldName)} directly in {@link android.app.Activity#onCreate(Bundle) onCreate}, use this code to postpone it to a {@link LibraryCallback Callback} appropriately:<br/>
  * <pre>ReflectionLibrary.onLibraryReady(new LibraryCallback() {
  *     public void onLibraryReady() {
@@ -31,7 +31,7 @@ import java.util.Arrays;
  *     }
  * });</pre>
  *          <br/>Which can be simplified to:<br/>
- * <pre>ReflectionLibrary.onLibraryReady(() -> { ReflectionLibrary.getBoolean(this, "booleanFieldName"); });</pre>
+ * <pre>ReflectionLibrary.onLibraryReady(() -&gt; { ReflectionLibrary.getBoolean(this, "booleanFieldName"); });</pre>
  *
  * @version 2.00
  * @since 1.00

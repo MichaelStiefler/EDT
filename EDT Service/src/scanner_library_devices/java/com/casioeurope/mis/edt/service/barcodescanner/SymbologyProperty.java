@@ -11,6 +11,7 @@ public class SymbologyProperty {
     @Attribute
     private int value;
 
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     SymbologyProperty() {
         this.id = 0;
         this.value = 0;

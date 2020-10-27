@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class AddDeviceAdminActivity extends Activity {
 
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (AddDeviceAdminActivity)";
+    private static final String TAG = "EDT (AddDeviceAdminActivity)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -97,7 +97,7 @@ public class AddDeviceAdminActivity extends Activity {
             return context.getString(R.string.admin_receiver_status_disable_warning);
         }
 
-        @SuppressWarnings("NullableProblems")
+        @SuppressWarnings({"NullableProblems", "RedundantSuppression"})
         @Override
         public CharSequence onDisableRequested(Context context, Intent intent) {
             return doOnDisableRequested(context, intent);

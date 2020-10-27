@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.service;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,7 +23,7 @@ import static java.nio.file.Files.newOutputStream;
 public class FileTools {
 
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (FileTools)";
+    private static final String TAG = "EDT (FileTools)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -40,6 +41,7 @@ public class FileTools {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public static boolean readFile(ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
         logMethodEntranceExit(true);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later
@@ -86,6 +88,7 @@ public class FileTools {
         return false;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public static boolean writeFile(ReadWriteFileParamsParcelable readWriteFileParamsParcelable) {
         logMethodEntranceExit(true);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) { // requires Android O or later

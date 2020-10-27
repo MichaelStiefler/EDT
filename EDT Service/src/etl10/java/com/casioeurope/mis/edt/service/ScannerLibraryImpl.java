@@ -149,7 +149,7 @@ public class ScannerLibraryImpl extends IScannerLibrary.Stub {
     };
 
     private static final BigInteger METHODS_SUPPORTED = new BigInteger("1100000101010000000000000010000000000010100010000000101000000000000000", 2);
-    private static String[] methodNames = {"openScanner",
+    private static final String[] methodNames = {"openScanner",
             "closeScanner",
             "isScannerOpen",
             "setDefaultAll",
@@ -224,7 +224,7 @@ public class ScannerLibraryImpl extends IScannerLibrary.Stub {
         this.context = context;
     }
 
-    private Context context;
+    private final Context context;
 
     public int openScanner(BooleanParcelable unsupported) throws RemoteException {
         unsupported.setValue(false);

@@ -47,7 +47,7 @@ public class ScannerLibraryProperties {
     private int laserHighlightMode;
 
     @ElementList
-    private ArrayList<Symbology> symbologies;
+    private final ArrayList<Symbology> symbologies;
 
     ScannerLibraryProperties() {
         this.notificationLED = ScannerLibrary.CONSTANT.NOTIFICATION.LED_ON;

@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class ObjectParcelable implements Parcelable {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (ObjectParcelable)";
+    private static final String TAG = "EDT (ObjectParcelable)";
     private static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private String objectClassName;

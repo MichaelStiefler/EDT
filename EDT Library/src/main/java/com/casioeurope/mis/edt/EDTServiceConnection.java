@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,12 +15,14 @@ import java.util.Arrays;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class EDTServiceConnection implements ServiceConnection {
 
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = true; //BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
-    private static String TAG = "EDT (EDTServiceConnection)";
+    private static final String TAG = "EDT (EDTServiceConnection)";
 
+    @SuppressLint("LongLogTag")
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
         String nameOfCurrentMethod = Thread.currentThread()
@@ -43,12 +46,12 @@ public class EDTServiceConnection implements ServiceConnection {
     private ISamLibrary samLibraryService;
     private IEeicLibrary eeicLibraryService;
 
-    private Queue<LibraryCallback> edtServiceCallbacks = new ConcurrentLinkedQueue<>();
-    private Queue<LibraryCallback> systemLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
-    private Queue<LibraryCallback> keyLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
-    private Queue<LibraryCallback> scannerLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
-    private Queue<LibraryCallback> samLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
-    private Queue<LibraryCallback> eeicLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private final Queue<LibraryCallback> edtServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private final Queue<LibraryCallback> systemLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private final Queue<LibraryCallback> keyLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private final Queue<LibraryCallback> scannerLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private final Queue<LibraryCallback> samLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
+    private final Queue<LibraryCallback> eeicLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
 
     void addEdtCallback(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
         if (this.edtService == null) {
@@ -129,7 +132,7 @@ public class EDTServiceConnection implements ServiceConnection {
         return true;
     }
 
-    @SuppressWarnings({"ConstantConditions", "SimplifyStreamApiCallChains"})
+    @SuppressWarnings({"ConstantConditions", "SimplifyStreamApiCallChains", "RedundantSuppression"})
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         try {

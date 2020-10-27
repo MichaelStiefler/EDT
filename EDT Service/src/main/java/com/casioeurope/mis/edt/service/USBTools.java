@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class USBTools {
 
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (USB Tools)";
+    private static final String TAG = "EDT (USB Tools)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;

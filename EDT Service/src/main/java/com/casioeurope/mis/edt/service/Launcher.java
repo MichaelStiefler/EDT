@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Launcher {
-    private static String TAG = "EDT (Launcher)";
+    private static final String TAG = "EDT (Launcher)";
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
