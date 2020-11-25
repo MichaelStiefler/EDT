@@ -16,4 +16,28 @@ interface IKeyLibrary {
     int setFnLaunchApplication(int nID, in ApplicationInfoParcelable appInfo, out BooleanParcelable unsupported);
     int getFnLaunchApplication(int nID, in ApplicationInfoParcelable appInfo, out BooleanParcelable unsupported);
     int clearFnLaunchApplication(int nID, out BooleanParcelable unsupported);
+    void broadcastKey(String action, String extra, in KeyEvent event, out BooleanParcelable unsupported);
+    int changeKCMapFile(String path, in byte[] data, out BooleanParcelable unsupported);
+    boolean changeKCMapFileToDefault(out BooleanParcelable unsupported);
+    void changeTrayIcon(in KeyEvent event, out BooleanParcelable unsupported);
+    String getCurrentKCMapFile(out BooleanParcelable unsupported);
+    int getKeypadMode(out BooleanParcelable unsupported);
+    int getTestMode(out BooleanParcelable unsupported);
+    boolean hasHardwareKey(int keyCode, out BooleanParcelable unsupported);
+    boolean hasWakeupRes(in KeyEvent event, out BooleanParcelable unsupported);
+    boolean hijackingKey(in KeyEvent event, boolean useCache, out BooleanParcelable unsupported);
+    boolean isDirectInputStyle(out BooleanParcelable unsupported);
+    boolean isFinishedHandle(out BooleanParcelable unsupported);
+    boolean isKeyControlMode(out BooleanParcelable unsupported);
+    boolean isWakeupRes(int keyCode, out BooleanParcelable unsupported);
+    void performKeyPressFeedback(in KeyEvent event, out BooleanParcelable unsupported);
+    boolean removeKCMapFile(out BooleanParcelable unsupported);
+    boolean setDirectInputStyle(boolean enable, out BooleanParcelable unsupported);
+    boolean setFixedNumberMode(boolean on, out BooleanParcelable unsupported);
+    boolean setKeyControlMode(boolean enable, out BooleanParcelable unsupported);
+    boolean setKeypadMode(int mode, out BooleanParcelable unsupported);
+    boolean setWakeupRes(int resourceID, boolean enabled, out BooleanParcelable unsupported);
+    void updateMetaState(in KeyEvent event, out BooleanParcelable unsupported);
+    boolean getRestrictInputMode(out BooleanParcelable unsupported);
+    void setRestrictInputMode(boolean enable, out BooleanParcelable unsupported);
 }

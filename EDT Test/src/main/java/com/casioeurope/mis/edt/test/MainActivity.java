@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.viewbinding.BuildConfig;
+
 import com.casioeurope.mis.edt.EDTLibrary;
+import com.casioeurope.mis.edt.KeyLibrary;
 import com.casioeurope.mis.edt.SystemLibrary;
 import com.casioeurope.mis.edt.type.APN;
 import com.casioeurope.mis.edt.type.ReadWriteFileParams;
@@ -21,12 +24,13 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Date;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private ActivityMainBinding activityMainBinding;
 
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static String TAG = "EDT (Test MainActivity)";
+    private static final String TAG = "EDT (Test MainActivity)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -349,6 +353,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 EDTLibrary.testMessage(result);
                 SystemLibrary.setNavigationBarState(true);
                 Log.d(TAG, result);
+            } else if (v == activityMainBinding.buttonToggleInputMode) {
+                Log.d(TAG, "Calling Get Keypad Mode from Keyboard Library!");
+                int keyPadMode = KeyLibrary.getKeypadMode();
+                Log.d(TAG, String.format("Get Keypad Mode Result = %d", keyPadMode));
+                keyPadMode++;
+                if (keyPadMode > 4) keyPadMode = 1;
+                Log.d(TAG, "Calling Set Keypad Mode from Keyboard Library!");
+                Log.d(TAG, String.format("Set Keypad Mode Result = %b", KeyLibrary.setKeypadMode(keyPadMode)));
             } else if (v == activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");
                 Log.d(TAG, String.format("Test Message Result = %b", EDTLibrary.testMessage("EDT Tools Test Message!")));

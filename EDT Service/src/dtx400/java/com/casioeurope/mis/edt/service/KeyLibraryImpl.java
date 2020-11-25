@@ -14,7 +14,7 @@ import java.util.List;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
-    private static final BigInteger METHODS_SUPPORTED = new BigInteger("111111111111", 2);
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("111111111111111111111111111111111100", 2);
     private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
@@ -26,8 +26,35 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
             "clearLaunchApplication",
             "setFnLaunchApplication",
             "getFnLaunchApplication",
-            "clearFnLaunchApplication"};
+            "clearFnLaunchApplication",
+            "broadcastKey",
+            "changeKCMapFile",
+            "changeKCMapFileToDefault",
+            "changeTrayIcon",
+            "getCurrentKCMapFile",
+            "getKeypadMode",
+            "getTestMode",
+            "hasHardwareKey",
+            "hasWakeupRes",
+            "hijackingKey",
+            "isDirectInputStyle",
+            "isFinishedHandle",
+            "isKeyControlMode",
+            "isWakeupRes",
+            "performKeyPressFeedback",
+            "removeKCMapFile",
+            "setDirectInputStyle",
+            "setFixedNumberMode",
+            "setKeyControlMode",
+            "setKeypadMode",
+            "setWakeupRes",
+            "updateMetaState",
+            "getRestrictInputMode",
+            "setRestrictInputMode"};
+
     private static volatile jp.casio.ht.devicelibrary.KeyLibrary jpInstance;
+    private static volatile KeyLibraryImpl hijackInstance;
+    private IHiJackServiceEDT hiJackService;
 
     private static final List<Integer> keyCodesItG400 = new ArrayList<>(
             Arrays.asList(278, 277)
@@ -46,6 +73,22 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
             }
         }
         return jpInstance;
+    }
+
+    private static KeyLibraryImpl getHijackInstance() {
+        if (hijackInstance == null) {
+            hijackInstance = new KeyLibraryImpl();
+            try {
+                @SuppressLint("PrivateApi") Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
+                IBinder binder = (IBinder) method.invoke(null, "HiJackService");
+                if (binder != null) {
+                    hijackInstance.hiJackService = IHiJackServiceEDT.Stub.asInterface(binder);
+                }
+            } catch (InvocationTargetException | NoSuchMethodException | ClassNotFoundException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return hijackInstance;
     }
 
     public KeyLibraryImpl() {
@@ -124,6 +167,125 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
     public int clearFnLaunchApplication(int nID, BooleanParcelable unsupported) throws RemoteException {
         unsupported.setValue(false);
         return getJpInstance().clearFnLaunchApplication(nID);
+    }
+
+    public void broadcastKey(String action, String extra, KeyEvent event, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        getHijackInstance().hiJackService.broadcastKey(action, extra, event);
+    }
+
+    public int changeKCMapFile(String path, byte[] data, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.changeKCMapFile(path, data);
+    }
+
+    public boolean changeKCMapFileToDefault(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.changeKCMapFileToDefault();
+    }
+
+    public void changeTrayIcon(KeyEvent event, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        getHijackInstance().hiJackService.changeTrayIcon(event);
+    }
+
+    public String getCurrentKCMapFile(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.getCurrentKCMapFile();
+    }
+
+    public int getKeypadMode(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.getKeypadMode();
+    }
+
+    public int getTestMode(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.getTestMode();
+    }
+
+    public boolean hasHardwareKey(int keyCode, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.hasHardwareKey(keyCode);
+    }
+
+    public boolean hasWakeupRes(KeyEvent event, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.hasWakeupRes(event);
+    }
+
+    public boolean hijackingKey(KeyEvent event, boolean useCache, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.hijackingKey(event, useCache);
+    }
+
+    public boolean isDirectInputStyle(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.isDirectInputStyle();
+    }
+
+    public boolean isFinishedHandle(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.isFinishedHandle();
+    }
+
+    public boolean isKeyControlMode(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.isKeyControlMode();
+    }
+
+    public boolean isWakeupRes(int keyCode, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.isWakeupRes(keyCode);
+    }
+
+    public void performKeyPressFeedback(KeyEvent event, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        getHijackInstance().hiJackService.performKeyPressFeedback(event);
+    }
+
+    public boolean removeKCMapFile(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.removeKCMapFile();
+    }
+
+    public boolean setDirectInputStyle(boolean enable, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.setDirectInputStyle(enable);
+    }
+
+    public boolean setFixedNumberMode(boolean on, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.setFixedNumberMode(on);
+    }
+
+    public boolean setKeyControlMode(boolean enable, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.setKeyControlMode(enable);
+    }
+
+    public boolean setKeypadMode(int mode, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.setKeypadMode(mode);
+    }
+
+    public boolean setWakeupRes(int resourceID, boolean enabled, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.setWakeupRes(resourceID, enabled);
+    }
+
+    public void updateMetaState(KeyEvent event, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        getHijackInstance().hiJackService.updateMetaState(event);
+    }
+
+    public boolean getRestrictInputMode(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(true);
+        return false;
+    }
+
+    public void setRestrictInputMode(boolean enable, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(true);
     }
 
     public boolean isMethodNameSupported(String methodName) {

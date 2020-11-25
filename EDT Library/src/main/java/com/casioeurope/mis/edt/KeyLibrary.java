@@ -1,6 +1,7 @@
 package com.casioeurope.mis.edt;
 
 import android.os.RemoteException;
+import android.view.KeyEvent;
 
 import com.casioeurope.mis.edt.constant.KeyLibraryConstant;
 import com.casioeurope.mis.edt.type.ApplicationInfo;
@@ -79,13 +80,10 @@ public class KeyLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link SamLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link SamLibrary this class} for further details.
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
      */
     public static int getUserKeyCode(int nID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().getUserKeyCode(nID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getUserKeyCode(nID);
     }
 
     /**
@@ -100,10 +98,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setDefaultKeyCode(int nID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().setDefaultKeyCode(nID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setDefaultKeyCode(nID);
     }
 
     /**
@@ -121,10 +116,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setFnUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().setFnUserKeyCode(nID, KeyCode, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setFnUserKeyCode(nID, KeyCode);
     }
 
     /**
@@ -142,10 +134,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().setUserKeyCode(nID, KeyCode, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setUserKeyCode(nID, KeyCode);
     }
 
     /**
@@ -158,13 +147,10 @@ public class KeyLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link SamLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link SamLibrary this class} for further details.
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
      */
     public static int getFnUserKeyCode(int nID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().getFnUserKeyCode(nID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getFnUserKeyCode(nID);
     }
 
     /**
@@ -179,10 +165,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setFnDefaultKeyCode(int nID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().setFnDefaultKeyCode(nID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setFnDefaultKeyCode(nID);
     }
 
     /**
@@ -199,12 +182,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
-        int retVal=getInstance().keyLibraryService().setLaunchApplication(nID, appInfoParcelable, unsupported);
-        appInfoParcelable.copyTo(appInfo);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setLaunchApplication(nID, appInfo);
     }
 
     /**
@@ -219,15 +197,10 @@ public class KeyLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link SamLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link SamLibrary this class} for further details.
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
      */
     public static int getLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
-        int retVal=getInstance().keyLibraryService().getLaunchApplication(nID, appInfoParcelable, unsupported);
-        appInfoParcelable.copyTo(appInfo);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getLaunchApplication(nID, appInfo);
     }
 
     /**
@@ -243,10 +216,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int clearLaunchApplication(int nID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().clearLaunchApplication(nID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.clearLaunchApplication(nID);
     }
 
     /**
@@ -263,12 +233,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int setFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
-        int retVal=getInstance().keyLibraryService().setFnLaunchApplication(nID, appInfoParcelable, unsupported);
-        appInfoParcelable.copyTo(appInfo);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.setFnLaunchApplication(nID, appInfo);
     }
 
     /**
@@ -283,15 +248,10 @@ public class KeyLibrary {
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link SamLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link SamLibrary this class} for further details.
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
      */
     public static int getFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
-        int retVal=getInstance().keyLibraryService().getFnLaunchApplication(nID, appInfoParcelable, unsupported);
-        appInfoParcelable.copyTo(appInfo);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.getFnLaunchApplication(nID, appInfo);
     }
 
     /**
@@ -307,10 +267,323 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      */
     public static int clearFnLaunchApplication(int nID) throws RemoteException, UnsupportedOperationException {
-        BooleanParcelable unsupported = new BooleanParcelable();
-        int retVal=getInstance().keyLibraryService().clearFnLaunchApplication(nID, unsupported);
-        checkMethodUnsupported(unsupported);
-        return retVal;
+        return Implementation.clearFnLaunchApplication(nID);
+    }
+
+    /**
+     * Sends an ordered broadcast key event to all registered receivers for the given intent.<br/>
+     * Use this method to circumvent permission issues on key broadcasts with latest android versions.
+     *
+     * @param action {@link String String}: Specifies the {@link android.content.Intent Intent}'s action parameter for the broadcast key event. {@link android.content.BroadcastReceiver BroadcastReceiver}s need to register to matching actions to receive the broadcast.
+     * @param extra {@link String String}: Specifies the {@link android.content.Intent Intent}'s extra parameter for the broadcast key event.
+     * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} to be broadcasted.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void broadcastKey(String action, String extra, KeyEvent event) throws RemoteException, UnsupportedOperationException {
+        Implementation.broadcastKey(action, extra, event);
+    }
+
+    /**
+     * Change the current Key Character Map File to a new one, providing the bytes that make up the new Key Character Map file
+     *
+     * @param path {@link String String}: Specifies the <a href="https://source.android.com/devices/input/key-character-map-files">Key Character Map File</a> to be used.<br/>
+     *                                  The filename may or may not contain a full path.
+     * @param data {@code byte[]}: The data of the new Key Character Map File.
+     * @return {@code int}:<br/>
+     *     {@link KeyLibraryConstant.RETURN#SUCCESS SUCCESS}: Success<br/>
+     *     {@link KeyLibraryConstant.RETURN#ERROR_KCM ERROR_KCM}: Error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static int changeKCMapFile(String path, byte[] data) throws RemoteException, UnsupportedOperationException {
+        return Implementation.changeKCMapFile(path, data);
+    }
+
+    /**
+     * Change the current Key Character Map File to the System Default one
+     *
+     * @return {@code boolean}: Returns true on success and false on failure.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean changeKCMapFileToDefault() throws RemoteException, UnsupportedOperationException {
+        return Implementation.changeKCMapFileToDefault();
+    }
+
+    /**
+     * Update the Keyboard's Tray Icon to reflect a state as if the given {@link android.view.KeyEvent KeyEvent} would just have occured
+     *
+     * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} that reflects the desired Keyboard's Tray Icon state
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void changeTrayIcon(KeyEvent event) throws RemoteException, UnsupportedOperationException {
+        Implementation.changeTrayIcon(event);
+    }
+
+    /**
+     * Get the current Key Character Map File name
+     *
+     * @return {@link String String}: Returns the name of the current Key Character Map File, or null on failure.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static String getCurrentKCMapFile() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.getCurrentKCMapFile();
+    }
+
+    /**
+     * Get the currently active Input Mode for the Hardware Keyboard
+     *
+     * @return {@code int}: Currently active Keyboard Input Mode.<br/>
+     *                        Possible values are:<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_NUMERIC INPUT_MODE_NUMERIC}: Numeric Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_SMALL_ALPHA INPUT_MODE_SMALL_ALPHA}: Alpha (Small Letters) Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_CAPITAL_ALPHA INPUT_MODE_CAPITAL_ALPHA}: Alpha (Capital Letters) Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_FN INPUT_MODE_FN}: Fn Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.RETURN#ERROR_NOTSUPPORTED ERROR_NOTSUPPORTED}: Unsupported error
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static int getKeypadMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.getKeypadMode();
+    }
+
+    /**
+     * Check whether the Hardware Keyboard is running in "Test Mode"
+     *
+     * @return {@code int}: 0 if Test Mode is disabled, other values indicate certain kind of test modes
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static int getTestMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.getTestMode();
+    }
+
+    /**
+     * Check whether a certain keycode corresponds to a key on the Hardware Keyboard
+     *
+     * @param keyCode {@code int}: Specifies the keycode to be checked
+     * @return {@code boolean}: true if the keycode is available on the Hardware Keyboard, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean hasHardwareKey(int keyCode) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.hasHardwareKey(keyCode);
+    }
+
+    /**
+     * Check whether a certain {@link android.view.KeyEvent KeyEvent} can act as Wakeup Resource
+     *
+     * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} to be checked
+     * @return {@code boolean}: true if the {@link android.view.KeyEvent KeyEvent} can act as Wakeup Resource, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean hasWakeupRes(KeyEvent event) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.hasWakeupRes(event);
+    }
+
+    /**
+     * Convert a KeyEvent according to alternative mapping tables and apply it after conversion
+     *
+     * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} to be converted and applied
+     * @param useCache {@code boolean}: True if events shall be cached, otherwise false
+     * @return {@code boolean}: true if the {@link android.view.KeyEvent KeyEvent} could be converted and applied, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean hijackingKey(KeyEvent event, boolean useCache) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.hijackingKey(event, useCache);
+    }
+
+    /**
+     * Check whether "Direct Input Mode" is active or not.
+     *
+     * @return {@code boolean}: true if "Direct Input Mode" is active, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean isDirectInputStyle() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.isDirectInputStyle();
+    }
+
+    /**
+     * Check whether all cached Key Events have been processed
+     *
+     * @return {@code boolean}: true if all cached Key Events have been processed, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean isFinishedHandle() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.isFinishedHandle();
+    }
+
+    /**
+     * Check whether key input is routed through the hardware keyboard driver
+     *
+     * @return {@code boolean}: true if key input is routed through the hardware keyboard driver, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean isKeyControlMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.isKeyControlMode();
+    }
+
+    /**
+     * Check whether a certain keycode is set to act as Wakeup Resource
+     *
+     * @param keyCode {@code int}: The keycode to be checked
+     * @return {@code boolean}: true if the keycode is set to act as Wakeup Resource, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean isWakeupRes(int keyCode) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.isWakeupRes(keyCode);
+    }
+
+    /**
+     * Apply the configured Feedback (Sound, Vibration, Wakeup, Tray Icon) for the corresponding {@link KeyEvent KeyEvent}
+     *
+     * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} for which the Feedback shall be performed
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void performKeyPressFeedback(KeyEvent event) throws RemoteException, UnsupportedOperationException {
+        Implementation.performKeyPressFeedback(event);
+    }
+
+    /**
+     * Removes the current Key Character Map File and changes back to the System Default one
+     *
+     * @return {@code boolean}: Returns true on success and false on failure.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean removeKCMapFile() throws RemoteException, UnsupportedOperationException {
+        return Implementation.removeKCMapFile();
+    }
+
+    /**
+     * Set whether the "Direct Input Mode" shall be used
+     *
+     * @param enable {@code boolean}: true if "Direct Input Mode" shall be used, otherwise false
+     * @return {@code boolean}: true if the setting could be applied, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean setDirectInputStyle(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setDirectInputStyle(enable);
+    }
+
+    /**
+     * Set whether the Input Mode shall be fixed to numeric input
+     *
+     * @param on {@code boolean}: true if the Input Mode shall be fixed to numeric input, otherwise false
+     * @return {@code boolean}: true if the setting could be applied, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean setFixedNumberMode(boolean on) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setFixedNumberMode(on);
+    }
+
+    /**
+     * Set whether key input shall be routed through the hardware keyboard driver
+     *
+     * @param enable {@code boolean}: true if the key input shall be routed through the hardware keyboard driver, otherwise false
+     * @return {@code boolean}: true if the setting could be applied, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean setKeyControlMode(boolean enable) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setKeyControlMode(enable);
+    }
+
+    /**
+     * Activate a certain Input Mode for the Hardware Keyboard
+     *
+     * @param mode {@code int}: Keyboard Input Mode to be used.<br/>
+     *                        Valid values are:<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_NUMERIC INPUT_MODE_NUMERIC}: Numeric Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_SMALL_ALPHA INPUT_MODE_SMALL_ALPHA}: Alpha (Small Letters) Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_CAPITAL_ALPHA INPUT_MODE_CAPITAL_ALPHA}: Alpha (Capital Letters) Keyboard Input Mode<br/>
+     *                        {@link KeyLibraryConstant.INPUT_MODE#INPUT_MODE_FN INPUT_MODE_FN}: Fn Keyboard Input Mode<br/>
+     * @return {@code boolean}: true if the setting could be applied, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean setKeypadMode(int mode) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setKeypadMode(mode);
+    }
+
+    /**
+     * Activate or deactivate a certain keyboard resource to act as Wakeup Resource
+     *
+     * @param resourceID {@code int}: The keyboard resource to act as Wakeup Resource
+     * @param enable {@code boolean}: true if the keyboard resource shall act as Wakeup Resource, otherwise false
+     * @return {@code boolean}: true if the setting could be applied, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static boolean setWakeupRes(int resourceID, boolean enabled) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setWakeupRes(resourceID, enabled);
+    }
+
+    /**
+     * Update the Tray Icon Meta State for the corresponding {@link KeyEvent KeyEvent}
+     *
+     * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} for which the Tray Icon Meta State shall be updated
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void updateMetaState(KeyEvent event) throws RemoteException, UnsupportedOperationException {
+        Implementation.updateMetaState(event);
+    }
+
+    /**
+     * Check whether key input is limited to numeric input only
+     *
+     * @return {@code boolean}: true if key input is limited to numeric input only, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     */
+    public static boolean getRestrictInputMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.getRestrictInputMode();
+    }
+
+    /**
+     * Set whether the Input Mode shall be fixed to numeric input
+     *
+     * @param enable {@code boolean}: true if the Input Mode shall be fixed to numeric input, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     */
+    public static void setRestrictInputMode(boolean enable) throws RemoteException, UnsupportedOperationException {
+        Implementation.setRestrictInputMode(enable);
     }
 
     /**
@@ -319,7 +592,7 @@ public class KeyLibrary {
      * @param method {@link BigInteger BigInteger}: Constant referencing the method to be checked
      * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link SamLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link SamLibrary this class} for further details.
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
      */
     public static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
         return Implementation.isMethodSupported(method);
@@ -331,7 +604,7 @@ public class KeyLibrary {
      * @param methodName {@link String String}: Name of the method to be checked
      * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link SamLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link SamLibrary this class} for further details.
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
      */
     public static boolean isMethodSupported(String methodName) throws IllegalStateException {
         return Implementation.isMethodSupported(methodName);
@@ -353,7 +626,7 @@ public class KeyLibrary {
             if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal=getInstance().keyLibraryService().getUserKeyCode(nID, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("getUserKeyCode", unsupported);
             return retVal;
         }
 
@@ -367,7 +640,7 @@ public class KeyLibrary {
                 return KeyLibraryConstant.RETURN.SUCCESS;
             }
             int retVal=getInstance().keyLibraryService().setDefaultKeyCode(nID, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("setDefaultKeyCode", unsupported);
             return retVal;
         }
 
@@ -381,7 +654,7 @@ public class KeyLibrary {
                 return KeyLibraryConstant.RETURN.SUCCESS;
             }
             int retVal=getInstance().keyLibraryService().setFnUserKeyCode(nID, KeyCode, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("setFnUserKeyCode", unsupported);
             return retVal;
         }
 
@@ -395,7 +668,7 @@ public class KeyLibrary {
                 return KeyLibraryConstant.RETURN.SUCCESS;
             }
             int retVal=getInstance().keyLibraryService().setUserKeyCode(nID, KeyCode, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("setUserKeyCode", unsupported);
             return retVal;
         }
 
@@ -403,7 +676,7 @@ public class KeyLibrary {
             if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
             BooleanParcelable unsupported = new BooleanParcelable();
             int retVal=getInstance().keyLibraryService().getFnUserKeyCode(nID, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("getFnUserKeyCode", unsupported);
             return retVal;
         }
 
@@ -417,7 +690,7 @@ public class KeyLibrary {
                 return KeyLibraryConstant.RETURN.SUCCESS;
             }
             int retVal=getInstance().keyLibraryService().setFnDefaultKeyCode(nID, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("setFnDefaultKeyCode", unsupported);
             return retVal;
         }
 
@@ -433,7 +706,7 @@ public class KeyLibrary {
             }
             int retVal=getInstance().keyLibraryService().setLaunchApplication(nID, appInfoParcelable, unsupported);
             appInfoParcelable.copyTo(appInfo);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("setLaunchApplication", unsupported);
             return retVal;
         }
 
@@ -443,7 +716,7 @@ public class KeyLibrary {
             ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
             int retVal=getInstance().keyLibraryService().getLaunchApplication(nID, appInfoParcelable, unsupported);
             appInfoParcelable.copyTo(appInfo);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("getLaunchApplication", unsupported);
             return retVal;
         }
 
@@ -457,7 +730,7 @@ public class KeyLibrary {
                 return KeyLibraryConstant.RETURN.SUCCESS;
             }
             int retVal=getInstance().keyLibraryService().clearLaunchApplication(nID, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("clearLaunchApplication", unsupported);
             return retVal;
         }
 
@@ -473,7 +746,7 @@ public class KeyLibrary {
             }
             int retVal=getInstance().keyLibraryService().setFnLaunchApplication(nID, appInfoParcelable, unsupported);
             appInfoParcelable.copyTo(appInfo);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("setFnLaunchApplication", unsupported);
             return retVal;
         }
 
@@ -483,7 +756,7 @@ public class KeyLibrary {
             ApplicationInfoParcelable appInfoParcelable = new ApplicationInfoParcelable(appInfo);
             int retVal=getInstance().keyLibraryService().getFnLaunchApplication(nID, appInfoParcelable, unsupported);
             appInfoParcelable.copyTo(appInfo);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("getFnLaunchApplication", unsupported);
             return retVal;
         }
 
@@ -497,8 +770,273 @@ public class KeyLibrary {
                 return KeyLibraryConstant.RETURN.SUCCESS;
             }
             int retVal=getInstance().keyLibraryService().clearFnLaunchApplication(nID, unsupported);
-            checkMethodUnsupported(unsupported);
+            checkMethodUnsupported("clearFnLaunchApplication", unsupported);
             return retVal;
+        }
+
+        private static void broadcastKey(String action, String extra, KeyEvent event) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().broadcastKey(action, extra, event, unsupported);
+                    checkMethodUnsupported("broadcastKey", unsupported);
+                });
+                return;
+            }
+            getInstance().keyLibraryService().broadcastKey(action, extra, event, unsupported);
+            checkMethodUnsupported("broadcastKey", unsupported);
+        }
+
+        private static int changeKCMapFile(String path, byte[] data) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().changeKCMapFile(path, data, unsupported);
+                    checkMethodUnsupported("changeKCMapFile", unsupported);
+                });
+                return KeyLibraryConstant.RETURN.SUCCESS;
+            }
+            int retVal=getInstance().keyLibraryService().changeKCMapFile(path, data, unsupported);
+            checkMethodUnsupported("changeKCMapFile", unsupported);
+            return retVal;
+        }
+
+        private static boolean changeKCMapFileToDefault() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().changeKCMapFileToDefault(unsupported);
+                    checkMethodUnsupported("changeKCMapFileToDefault", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().changeKCMapFileToDefault(unsupported);
+            checkMethodUnsupported("changeKCMapFileToDefault", unsupported);
+            return retVal;
+        }
+
+        private static void changeTrayIcon(KeyEvent event) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().changeTrayIcon(event, unsupported);
+                    checkMethodUnsupported("changeTrayIcon", unsupported);
+                });
+                return;
+            }
+            getInstance().keyLibraryService().changeTrayIcon(event, unsupported);
+            checkMethodUnsupported("changeTrayIcon", unsupported);
+        }
+
+        private static String getCurrentKCMapFile() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            String retVal=getInstance().keyLibraryService().getCurrentKCMapFile(unsupported);
+            checkMethodUnsupported("getCurrentKCMapFile", unsupported);
+            return retVal;
+        }
+
+        private static int getKeypadMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal=getInstance().keyLibraryService().getKeypadMode(unsupported);
+            checkMethodUnsupported("getKeypadMode", unsupported);
+            return retVal;
+        }
+
+        private static int getTestMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            int retVal=getInstance().keyLibraryService().getTestMode(unsupported);
+            checkMethodUnsupported("getTestMode", unsupported);
+            return retVal;
+        }
+
+        private static boolean hasHardwareKey(int keyCode) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().hasHardwareKey(keyCode, unsupported);
+            checkMethodUnsupported("hasHardwareKey", unsupported);
+            return retVal;
+        }
+
+        private static boolean hasWakeupRes(KeyEvent event) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().hasWakeupRes(event, unsupported);
+            checkMethodUnsupported("hasWakeupRes", unsupported);
+            return retVal;
+        }
+
+        private static boolean hijackingKey(KeyEvent event, boolean useCache) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().hijackingKey(event, useCache, unsupported);
+            checkMethodUnsupported("hijackingKey", unsupported);
+            return retVal;
+        }
+
+        private static boolean isDirectInputStyle() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().isDirectInputStyle(unsupported);
+            checkMethodUnsupported("isDirectInputStyle", unsupported);
+            return retVal;
+        }
+
+        private static boolean isFinishedHandle() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().isFinishedHandle(unsupported);
+            checkMethodUnsupported("isFinishedHandle", unsupported);
+            return retVal;
+        }
+
+        private static boolean isKeyControlMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().isKeyControlMode(unsupported);
+            checkMethodUnsupported("isKeyControlMode", unsupported);
+            return retVal;
+        }
+
+        private static boolean isWakeupRes(int keyCode) throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().isWakeupRes(keyCode, unsupported);
+            checkMethodUnsupported("isWakeupRes", unsupported);
+            return retVal;
+        }
+
+        private static void performKeyPressFeedback(KeyEvent event) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().performKeyPressFeedback(event, unsupported);
+                    checkMethodUnsupported("performKeyPressFeedback", unsupported);
+                });
+                return;
+            }
+            getInstance().keyLibraryService().performKeyPressFeedback(event, unsupported);
+            checkMethodUnsupported("performKeyPressFeedback", unsupported);
+        }
+
+        private static boolean removeKCMapFile() throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().removeKCMapFile(unsupported);
+                    checkMethodUnsupported("removeKCMapFile", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().removeKCMapFile(unsupported);
+            checkMethodUnsupported("removeKCMapFile", unsupported);
+            return retVal;
+        }
+
+        private static boolean setDirectInputStyle(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().setDirectInputStyle(enable, unsupported);
+                    checkMethodUnsupported("setDirectInputStyle", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().setDirectInputStyle(enable, unsupported);
+            checkMethodUnsupported("setDirectInputStyle", unsupported);
+            return retVal;
+        }
+
+        private static boolean setFixedNumberMode(boolean on) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().setFixedNumberMode(on, unsupported);
+                    checkMethodUnsupported("setFixedNumberMode", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().setFixedNumberMode(on, unsupported);
+            checkMethodUnsupported("setFixedNumberMode", unsupported);
+            return retVal;
+        }
+
+        private static boolean setKeyControlMode(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().setKeyControlMode(enable, unsupported);
+                    checkMethodUnsupported("setKeyControlMode", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().setKeyControlMode(enable, unsupported);
+            checkMethodUnsupported("setKeyControlMode", unsupported);
+            return retVal;
+        }
+
+        private static boolean setKeypadMode(int mode) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().setKeypadMode(mode, unsupported);
+                    checkMethodUnsupported("setKeypadMode", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().setKeypadMode(mode, unsupported);
+            checkMethodUnsupported("setKeypadMode", unsupported);
+            return retVal;
+        }
+
+        private static boolean setWakeupRes(int resourceID, boolean enabled) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().setWakeupRes(resourceID, enabled, unsupported);
+                    checkMethodUnsupported("setWakeupRes", unsupported);
+                });
+                return true;
+            }
+            boolean retVal=getInstance().keyLibraryService().setWakeupRes(resourceID, enabled, unsupported);
+            checkMethodUnsupported("setWakeupRes", unsupported);
+            return retVal;
+        }
+
+        private static void updateMetaState(KeyEvent event) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().updateMetaState(event, unsupported);
+                    checkMethodUnsupported("updateMetaState", unsupported);
+                });
+                return;
+            }
+            getInstance().keyLibraryService().updateMetaState(event, unsupported);
+            checkMethodUnsupported("updateMetaState", unsupported);
+        }
+
+        private static boolean getRestrictInputMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().getRestrictInputMode(unsupported);
+            checkMethodUnsupported("getRestrictInputMode", unsupported);
+            return retVal;
+        }
+
+        private static void setRestrictInputMode(boolean enable) throws RemoteException, UnsupportedOperationException {
+            BooleanParcelable unsupported = new BooleanParcelable();
+            if (getInstance().keyLibraryService() == null) {
+                onLibraryReady(() -> {
+                    getInstance().keyLibraryService().setRestrictInputMode(enable, unsupported);
+                    checkMethodUnsupported("setRestrictInputMode", unsupported);
+                });
+                return;
+            }
+            getInstance().keyLibraryService().setRestrictInputMode(enable, unsupported);
+            checkMethodUnsupported("setRestrictInputMode", unsupported);
         }
 
         private static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
@@ -518,6 +1056,7 @@ public class KeyLibrary {
                 return false;
             }
         }
+
     }
 
 }

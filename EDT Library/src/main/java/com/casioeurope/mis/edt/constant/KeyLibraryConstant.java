@@ -195,6 +195,10 @@ public class KeyLibraryConstant {
      */
     public static class RETURN {
         /**
+         * An Error occured while specifying a new Key Character Map File
+         */
+        public static final int ERROR_KCM = -16;
+        /**
          * An internal Error occured
          */
         public static final int ERROR_FUNCTION = -2;
@@ -206,6 +210,33 @@ public class KeyLibraryConstant {
          * The method has been called successfully
          */
         public static final int SUCCESS = 0;
+    }
+
+    /**
+     * Input Modes available to hardware keyboards
+     */
+    public static class INPUT_MODE {
+        /**
+         * Unknown Keyboard Input Mode.
+         */
+        public static final int INPUT_MODE_UNKNOWN = 0;
+        /**
+         * Numeric Keyboard Input Mode.
+         */
+        public static final int INPUT_MODE_NUMERIC = 1;
+        /**
+         * Alpha (Small Letters) Keyboard Input Mode.
+         */
+        public static final int INPUT_MODE_SMALL_ALPHA = 2;
+        /**
+         * Alpha (Capital Letters) Keyboard Input Mode.
+         */
+        public static final int INPUT_MODE_CAPITAL_ALPHA = 3;
+        /**
+         * Fn Keyboard Input Mode<br/>
+         * This Input Mode applies for a single key stroke only, after which the Input Mode automatically returns to the previously selected Mode.
+         */
+        public static final int INPUT_MODE_FN = 4;
     }
 
     /**
