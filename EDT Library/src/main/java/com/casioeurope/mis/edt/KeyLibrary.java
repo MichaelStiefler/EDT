@@ -28,7 +28,7 @@ import java.math.BigInteger;
  *          <br/>Which can be simplified to:<br/>
  * <pre>KeyLibrary.onLibraryReady(() -&gt; { KeyLibrary.setDefaultKeyCode(KeyLibraryConstant.KEYID.CENTERTRIGGER); });</pre>
  *
- * @version 2.00
+ * @version 2.02
  * @since 2.00
  */
 @SuppressWarnings({"unused", "RedundantSuppression", "deprecation", "JavadocReference", "SpellCheckingInspection"})
@@ -81,6 +81,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.00
      */
     public static int getUserKeyCode(int nID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getUserKeyCode(nID);
@@ -96,6 +97,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int setDefaultKeyCode(int nID) throws RemoteException, UnsupportedOperationException {
         return Implementation.setDefaultKeyCode(nID);
@@ -114,6 +116,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int setFnUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
         return Implementation.setFnUserKeyCode(nID, KeyCode);
@@ -132,6 +135,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int setUserKeyCode(int nID, int KeyCode) throws RemoteException, UnsupportedOperationException {
         return Implementation.setUserKeyCode(nID, KeyCode);
@@ -148,6 +152,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.00
      */
     public static int getFnUserKeyCode(int nID) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getFnUserKeyCode(nID);
@@ -163,6 +168,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int setFnDefaultKeyCode(int nID) throws RemoteException, UnsupportedOperationException {
         return Implementation.setFnDefaultKeyCode(nID);
@@ -180,6 +186,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int setLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
         return Implementation.setLaunchApplication(nID, appInfo);
@@ -198,6 +205,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.00
      */
     public static int getLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getLaunchApplication(nID, appInfo);
@@ -214,6 +222,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int clearLaunchApplication(int nID) throws RemoteException, UnsupportedOperationException {
         return Implementation.clearLaunchApplication(nID);
@@ -231,6 +240,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int setFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException {
         return Implementation.setFnLaunchApplication(nID, appInfo);
@@ -249,6 +259,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.00
      */
     public static int getFnLaunchApplication(int nID, ApplicationInfo appInfo) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getFnLaunchApplication(nID, appInfo);
@@ -265,6 +276,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_FUNCTION ERROR_FUNCTION}: Internal error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static int clearFnLaunchApplication(int nID) throws RemoteException, UnsupportedOperationException {
         return Implementation.clearFnLaunchApplication(nID);
@@ -279,6 +291,7 @@ public class KeyLibrary {
      * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} to be broadcasted.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static void broadcastKey(String action, String extra, KeyEvent event) throws RemoteException, UnsupportedOperationException {
         Implementation.broadcastKey(action, extra, event);
@@ -295,6 +308,7 @@ public class KeyLibrary {
      *     {@link KeyLibraryConstant.RETURN#ERROR_KCM ERROR_KCM}: Error
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static int changeKCMapFile(String path, byte[] data) throws RemoteException, UnsupportedOperationException {
         return Implementation.changeKCMapFile(path, data);
@@ -306,6 +320,7 @@ public class KeyLibrary {
      * @return {@code boolean}: Returns true on success and false on failure.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean changeKCMapFileToDefault() throws RemoteException, UnsupportedOperationException {
         return Implementation.changeKCMapFileToDefault();
@@ -317,6 +332,7 @@ public class KeyLibrary {
      * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} that reflects the desired Keyboard's Tray Icon state
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static void changeTrayIcon(KeyEvent event) throws RemoteException, UnsupportedOperationException {
         Implementation.changeTrayIcon(event);
@@ -330,6 +346,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static String getCurrentKCMapFile() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getCurrentKCMapFile();
@@ -349,6 +366,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static int getKeypadMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getKeypadMode();
@@ -362,6 +380,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static int getTestMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getTestMode();
@@ -376,6 +395,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean hasHardwareKey(int keyCode) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.hasHardwareKey(keyCode);
@@ -390,6 +410,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean hasWakeupRes(KeyEvent event) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.hasWakeupRes(event);
@@ -405,6 +426,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean hijackingKey(KeyEvent event, boolean useCache) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.hijackingKey(event, useCache);
@@ -418,6 +440,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean isDirectInputStyle() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.isDirectInputStyle();
@@ -431,6 +454,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean isFinishedHandle() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.isFinishedHandle();
@@ -444,6 +468,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean isKeyControlMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.isKeyControlMode();
@@ -458,6 +483,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean isWakeupRes(int keyCode) throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.isWakeupRes(keyCode);
@@ -469,6 +495,7 @@ public class KeyLibrary {
      * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} for which the Feedback shall be performed
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static void performKeyPressFeedback(KeyEvent event) throws RemoteException, UnsupportedOperationException {
         Implementation.performKeyPressFeedback(event);
@@ -480,6 +507,7 @@ public class KeyLibrary {
      * @return {@code boolean}: Returns true on success and false on failure.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean removeKCMapFile() throws RemoteException, UnsupportedOperationException {
         return Implementation.removeKCMapFile();
@@ -492,6 +520,7 @@ public class KeyLibrary {
      * @return {@code boolean}: true if the setting could be applied, otherwise false
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean setDirectInputStyle(boolean enable) throws RemoteException, UnsupportedOperationException {
         return Implementation.setDirectInputStyle(enable);
@@ -504,6 +533,7 @@ public class KeyLibrary {
      * @return {@code boolean}: true if the setting could be applied, otherwise false
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean setFixedNumberMode(boolean on) throws RemoteException, UnsupportedOperationException {
         return Implementation.setFixedNumberMode(on);
@@ -516,6 +546,7 @@ public class KeyLibrary {
      * @return {@code boolean}: true if the setting could be applied, otherwise false
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean setKeyControlMode(boolean enable) throws RemoteException, UnsupportedOperationException {
         return Implementation.setKeyControlMode(enable);
@@ -533,6 +564,7 @@ public class KeyLibrary {
      * @return {@code boolean}: true if the setting could be applied, otherwise false
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean setKeypadMode(int mode) throws RemoteException, UnsupportedOperationException {
         return Implementation.setKeypadMode(mode);
@@ -542,10 +574,11 @@ public class KeyLibrary {
      * Activate or deactivate a certain keyboard resource to act as Wakeup Resource
      *
      * @param resourceID {@code int}: The keyboard resource to act as Wakeup Resource
-     * @param enable {@code boolean}: true if the keyboard resource shall act as Wakeup Resource, otherwise false
+     * @param enabled {@code boolean}: true if the keyboard resource shall act as Wakeup Resource, otherwise false
      * @return {@code boolean}: true if the setting could be applied, otherwise false
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static boolean setWakeupRes(int resourceID, boolean enabled) throws RemoteException, UnsupportedOperationException {
         return Implementation.setWakeupRes(resourceID, enabled);
@@ -557,6 +590,7 @@ public class KeyLibrary {
      * @param event {@link KeyEvent KeyEvent}: Specifies the {@link android.view.KeyEvent KeyEvent} for which the Tray Icon Meta State shall be updated
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static void updateMetaState(KeyEvent event) throws RemoteException, UnsupportedOperationException {
         Implementation.updateMetaState(event);
@@ -570,6 +604,7 @@ public class KeyLibrary {
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
      */
     public static boolean getRestrictInputMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
         return Implementation.getRestrictInputMode();
@@ -581,6 +616,7 @@ public class KeyLibrary {
      * @param enable {@code boolean}: true if the Input Mode shall be fixed to numeric input, otherwise false
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
      */
     public static void setRestrictInputMode(boolean enable) throws RemoteException, UnsupportedOperationException {
         Implementation.setRestrictInputMode(enable);
@@ -593,6 +629,7 @@ public class KeyLibrary {
      * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.00
      */
     public static boolean isMethodSupported(BigInteger method) throws IllegalStateException {
         return Implementation.isMethodSupported(method);
@@ -605,6 +642,7 @@ public class KeyLibrary {
      * @return {@code boolean}: {@code true} if the method is supported on the currently active device, otherwise {@code false}
      * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
      *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.00
      */
     public static boolean isMethodSupported(String methodName) throws IllegalStateException {
         return Implementation.isMethodSupported(methodName);
@@ -616,6 +654,7 @@ public class KeyLibrary {
      * @param callback {@link LibraryCallback LibraryCallback}: Instance of the {@link LibraryCallback LibraryCallback} Interface which holds the {@link LibraryCallback#onLibraryReady() onLibraryReady()} Method which will get called once the regarding library becomes available
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.00
      */
     public static void onLibraryReady(LibraryCallback callback) throws RemoteException, UnsupportedOperationException {
         EDTServiceConnection.getInstance().addKeyLibraryCallback(callback);
