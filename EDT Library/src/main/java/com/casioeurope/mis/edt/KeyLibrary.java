@@ -527,6 +527,20 @@ public class KeyLibrary {
     }
 
     /**
+     * Check whether key input is limited to numeric input only
+     *
+     * @return {@code boolean}: true if key input is limited to numeric input only, otherwise false
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
+     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
+     * @since 2.02
+     */
+    public static boolean getFixedNumberMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+        return Implementation.getFixedNumberMode();
+    }
+
+    /**
      * Set whether the Input Mode shall be fixed to numeric input
      *
      * @param on {@code boolean}: true if the Input Mode shall be fixed to numeric input, otherwise false
@@ -594,32 +608,6 @@ public class KeyLibrary {
      */
     public static void updateMetaState(KeyEvent event) throws RemoteException, UnsupportedOperationException {
         Implementation.updateMetaState(event);
-    }
-
-    /**
-     * Check whether key input is limited to numeric input only
-     *
-     * @return {@code boolean}: true if key input is limited to numeric input only, otherwise false
-     * @throws RemoteException Gets thrown when access to the system service fails.
-     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
-     * @throws IllegalStateException Gets thrown when the Library is not ready yet to accept method calls.<br/>
-     *                      In such case, please use {@link KeyLibrary#onLibraryReady onLibraryReady} Method to add a {@link LibraryCallback callback} which then processes this method. See API Notes of {@link KeyLibrary this class} for further details.
-     * @since 2.02
-     */
-    public static boolean getRestrictInputMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
-        return Implementation.getRestrictInputMode();
-    }
-
-    /**
-     * Set whether the Input Mode shall be fixed to numeric input
-     *
-     * @param enable {@code boolean}: true if the Input Mode shall be fixed to numeric input, otherwise false
-     * @throws RemoteException Gets thrown when access to the system service fails.
-     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
-     * @since 2.02
-     */
-    public static void setRestrictInputMode(boolean enable) throws RemoteException, UnsupportedOperationException {
-        Implementation.setRestrictInputMode(enable);
     }
 
     /**
@@ -988,6 +976,14 @@ public class KeyLibrary {
             return retVal;
         }
 
+        private static boolean getFixedNumberMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
+            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
+            BooleanParcelable unsupported = new BooleanParcelable();
+            boolean retVal=getInstance().keyLibraryService().getFixedNumberMode(unsupported);
+            checkMethodUnsupported("getFixedNumberMode", unsupported);
+            return retVal;
+        }
+
         private static boolean setFixedNumberMode(boolean on) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
             if (getInstance().keyLibraryService() == null) {
@@ -1055,27 +1051,6 @@ public class KeyLibrary {
             }
             getInstance().keyLibraryService().updateMetaState(event, unsupported);
             checkMethodUnsupported("updateMetaState", unsupported);
-        }
-
-        private static boolean getRestrictInputMode() throws RemoteException, UnsupportedOperationException, IllegalStateException {
-            if (getInstance().keyLibraryService() == null) throw new IllegalStateException("Library not ready yet, please use LibraryCallback Interface!");
-            BooleanParcelable unsupported = new BooleanParcelable();
-            boolean retVal=getInstance().keyLibraryService().getRestrictInputMode(unsupported);
-            checkMethodUnsupported("getRestrictInputMode", unsupported);
-            return retVal;
-        }
-
-        private static void setRestrictInputMode(boolean enable) throws RemoteException, UnsupportedOperationException {
-            BooleanParcelable unsupported = new BooleanParcelable();
-            if (getInstance().keyLibraryService() == null) {
-                onLibraryReady(() -> {
-                    getInstance().keyLibraryService().setRestrictInputMode(enable, unsupported);
-                    checkMethodUnsupported("setRestrictInputMode", unsupported);
-                });
-                return;
-            }
-            getInstance().keyLibraryService().setRestrictInputMode(enable, unsupported);
-            checkMethodUnsupported("setRestrictInputMode", unsupported);
         }
 
         private static boolean isMethodSupported(BigInteger method) throws IllegalStateException {

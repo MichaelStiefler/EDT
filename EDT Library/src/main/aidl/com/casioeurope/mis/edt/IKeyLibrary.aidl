@@ -33,11 +33,10 @@ interface IKeyLibrary {
     void performKeyPressFeedback(in KeyEvent event, out BooleanParcelable unsupported);
     boolean removeKCMapFile(out BooleanParcelable unsupported);
     boolean setDirectInputStyle(boolean enable, out BooleanParcelable unsupported);
+    boolean getFixedNumberMode(out BooleanParcelable unsupported);
     boolean setFixedNumberMode(boolean on, out BooleanParcelable unsupported);
     boolean setKeyControlMode(boolean enable, out BooleanParcelable unsupported);
     boolean setKeypadMode(int mode, out BooleanParcelable unsupported);
     boolean setWakeupRes(int resourceID, boolean enabled, out BooleanParcelable unsupported);
     void updateMetaState(in KeyEvent event, out BooleanParcelable unsupported);
-    boolean getRestrictInputMode(out BooleanParcelable unsupported);
-    void setRestrictInputMode(boolean enable, out BooleanParcelable unsupported);
 }

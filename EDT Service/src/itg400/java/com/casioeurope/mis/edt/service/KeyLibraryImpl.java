@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import device.common.IHiJackServiceEDT;
+import device.common.IHiJackService;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
-    private static final BigInteger METHODS_SUPPORTED = new BigInteger("000111000111010010100000000000000011", 2);
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("00011000000000001010010000111000111", 2);
     private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
@@ -52,17 +52,16 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
             "performKeyPressFeedback",
             "removeKCMapFile",
             "setDirectInputStyle",
+            "getFixedNumberMode",
             "setFixedNumberMode",
             "setKeyControlMode",
             "setKeypadMode",
             "setWakeupRes",
-            "updateMetaState",
-            "getRestrictInputMode",
-            "setRestrictInputMode"};
+            "updateMetaState"};
 
     private static volatile jp.casio.ht.devicelibrary.KeyLibrary jpInstance;
     private static volatile KeyLibraryImpl hijackInstance;
-    private IHiJackServiceEDT hiJackService;
+    private IHiJackService hiJackService;
 
     private static final List<Integer> keyCodesItG400 = new ArrayList<>(
             Arrays.asList(278, 277)
@@ -90,7 +89,7 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
                 @SuppressLint("PrivateApi") Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
                 IBinder binder = (IBinder) method.invoke(null, "HiJackService");
                 if (binder != null) {
-                    hijackInstance.hiJackService = IHiJackServiceEDT.Stub.asInterface(binder);
+                    hijackInstance.hiJackService = IHiJackService.Stub.asInterface(binder);
                 }
             } catch (InvocationTargetException | NoSuchMethodException | ClassNotFoundException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -255,9 +254,15 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
         return false;
     }
 
-    public boolean setFixedNumberMode(boolean on, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
+    public boolean getFixedNumberMode(BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        return getHijackInstance().hiJackService.getRestrictInputMode();
+    }
+
+    public boolean setFixedNumberMode(boolean on, BooleanParcelable unsupported) throws RemoteException {
+        unsupported.setValue(false);
+        getHijackInstance().hiJackService.setRestrictInputMode(on);
+        return true;
     }
 
     public boolean setKeyControlMode(boolean enable, BooleanParcelable unsupported) {
@@ -277,16 +282,6 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
     public void updateMetaState(KeyEvent event, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-    }
-
-    public boolean getRestrictInputMode(BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        return getHijackInstance().hiJackService.getRestrictInputMode();
-    }
-
-    public void setRestrictInputMode(boolean enable, BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(false);
-        getHijackInstance().hiJackService.setRestrictInputMode(enable);
     }
 
     public boolean isMethodNameSupported(String methodName) {

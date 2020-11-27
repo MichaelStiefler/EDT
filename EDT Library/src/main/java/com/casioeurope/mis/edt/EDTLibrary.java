@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.casioeurope.mis.edt.type.APN;
 import com.casioeurope.mis.edt.type.APNParcelable;
@@ -1004,18 +1005,48 @@ public class EDTLibrary {
     }
 
     /**
-     * Sets a new Device Time Zone
+     * Sets a new Device Time Zone from a specified android.icu.util.TimeZone
      *
-     * @param timeZone {@link android.icu.util.TimeZone TimeZone}: The new Time Zone to be set
+     * @param timeZone {@link android.icu.util.TimeZone android.icu.util.TimeZone}: The new Time Zone to be set
      * @return {@code boolean} whether or not the new Time Zone could be set
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
      * @apiNote Requires Android N (Android 7) or later.<br/>
+     * Devices running Android M (Android 6) or earlier should use {@link #setTimeZone(java.util.TimeZone) setTimeZone(java.util.TimeZone timeZone)} instead.
      * If you call this method on a device running an earlier version of Android, this method will return {@code false}.
      * @since 1.00
      */
-    public static boolean setTimeZone(TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
+    public static boolean setTimeZone(android.icu.util.TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
         return Implementation.setTimeZone(timeZone);
+    }
+
+    /**
+     * Sets a new Device Time Zone from a specified java.util.TimeZone
+     *
+     * @param timeZone {@link java.util.TimeZone java.util.TimeZone}: The new Time Zone to be set
+     * @return {@code boolean} whether or not the new Time Zone could be set
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @apiNote This Method is meant to be used on devices running Requires Android M (Android 6) or earlier.<br/>
+     * Devices running Android N (Android 7) or later should use {@link #setTimeZone(android.icu.util.TimeZone) setTimeZone(android.icu.util.TimeZone timeZone)} instead.
+     * @since 2.02
+     */
+    public static boolean setTimeZone(java.util.TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setTimeZone(timeZone);
+    }
+
+    /**
+     * Sets a new Device Time Zone from a specified TimeZone ID
+     *
+     * @param timeZoneID {@link java.lang.String String}: The ID of the new Time Zone to be set.<br/>
+     *                                                  Use {@link android.icu.util.TimeZone#getAvailableIDs() android.icu.util.TimeZone.getAvailableIDs()} or {@link java.util.TimeZone#getAvailableIDs() java.util.TimeZone.getAvailableIDs()} to get a list of available TimeZone IDs on your device.
+     * @return {@code boolean} whether or not the new Time Zone could be set
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.02
+     */
+    public static boolean setTimeZone(String timeZoneID) throws RemoteException, UnsupportedOperationException {
+        return Implementation.setTimeZone(timeZoneID);
     }
 
     /**
@@ -1889,20 +1920,26 @@ public class EDTLibrary {
             checkMethodUnsupported("setScreenLockTimeout", unsupported);
             return retVal;
         }
-        private static boolean setTimeZone(TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
+        private static boolean setTimeZone(android.icu.util.TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) { // requires Android N or later
                 throw new UnsupportedOperationException("Requires Android N or later!");
             }
+            return setTimeZone(timeZone.getID());
+        }
+        private static boolean setTimeZone(java.util.TimeZone timeZone) throws RemoteException, UnsupportedOperationException {
+            return setTimeZone(timeZone.getID());
+        }
+        private static boolean setTimeZone(String timeZoneID) throws RemoteException, UnsupportedOperationException {
             BooleanParcelable unsupported = new BooleanParcelable();
             if (getInstance().edtService() == null) {
                 onLibraryReady(() -> {
-                    getInstance().edtService().setTimeZone(unsupported, timeZone.getDisplayName());
-                            checkMethodUnsupported("setTimeZone", unsupported);
+                    getInstance().edtService().setTimeZone(unsupported, timeZoneID);
+                    checkMethodUnsupported("setTimeZone", unsupported);
                 });
                 return true;
             }
             // Convert TimeZone to String because AIDL can handle limited data types only
-            boolean retVal = getInstance().edtService().setTimeZone(unsupported, timeZone.getDisplayName());
+            boolean retVal = getInstance().edtService().setTimeZone(unsupported, timeZoneID);
             checkMethodUnsupported("setTimeZone", unsupported);
             return retVal;
         }

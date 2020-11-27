@@ -1,5 +1,6 @@
 package com.casioeurope.mis.edt.service;
 
+import android.os.RemoteException;
 import android.view.KeyEvent;
 
 import com.casioeurope.mis.edt.IKeyLibrary;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
-    private static final BigInteger METHODS_SUPPORTED = new BigInteger("000000000000000000000000000000000000", 2);
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("00000000000000000000000000000000000", 2);
     private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
@@ -43,13 +44,12 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
             "performKeyPressFeedback",
             "removeKCMapFile",
             "setDirectInputStyle",
+            "getFixedNumberMode",
             "setFixedNumberMode",
             "setKeyControlMode",
             "setKeypadMode",
             "setWakeupRes",
-            "updateMetaState",
-            "getRestrictInputMode",
-            "setRestrictInputMode"};
+            "updateMetaState"};
 
     public KeyLibraryImpl() {
     }
@@ -196,6 +196,11 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
         return false;
     }
 
+    public boolean getFixedNumberMode(BooleanParcelable unsupported) {
+        unsupported.setValue(true);
+        return false;
+    }
+
     public boolean setFixedNumberMode(boolean on, BooleanParcelable unsupported) {
         unsupported.setValue(true);
         return false;
@@ -217,15 +222,6 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
     }
 
     public void updateMetaState(KeyEvent event, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-    }
-
-    public boolean getRestrictInputMode(BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(true);
-        return false;
-    }
-
-    public void setRestrictInputMode(boolean enable, BooleanParcelable unsupported) throws RemoteException {
         unsupported.setValue(true);
     }
 

@@ -1,5 +1,7 @@
 package com.casioeurope.mis.edt.constant;
 
+import android.view.KeyEvent;
+
 import com.casioeurope.mis.edt.KeyLibrary;
 import com.casioeurope.mis.edt.type.ApplicationInfo;
 
@@ -196,6 +198,7 @@ public class KeyLibraryConstant {
     public static class RETURN {
         /**
          * An Error occured while specifying a new Key Character Map File
+         * @since 2.02
          */
         public static final int ERROR_KCM = -16;
         /**
@@ -214,27 +217,33 @@ public class KeyLibraryConstant {
 
     /**
      * Input Modes available to hardware keyboards
+     * @since 2.02
      */
     public static class INPUT_MODE {
         /**
          * Unknown Keyboard Input Mode.
+         * @since 2.02
          */
         public static final int INPUT_MODE_UNKNOWN = 0;
         /**
          * Numeric Keyboard Input Mode.
+         * @since 2.02
          */
         public static final int INPUT_MODE_NUMERIC = 1;
         /**
          * Alpha (Small Letters) Keyboard Input Mode.
+         * @since 2.02
          */
         public static final int INPUT_MODE_SMALL_ALPHA = 2;
         /**
          * Alpha (Capital Letters) Keyboard Input Mode.
+         * @since 2.02
          */
         public static final int INPUT_MODE_CAPITAL_ALPHA = 3;
         /**
          * Fn Keyboard Input Mode<br/>
          * This Input Mode applies for a single key stroke only, after which the Input Mode automatically returns to the previously selected Mode.
+         * @since 2.02
          */
         public static final int INPUT_MODE_FN = 4;
     }
@@ -246,51 +255,189 @@ public class KeyLibraryConstant {
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setUserKeyCode(int, int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_SETUSERKEYCODE = new BigInteger("000000000001", 2);
+        public static final BigInteger METHOD_SETUSERKEYCODE = new BigInteger("00000000000000000000000000000000001", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getUserKeyCode(int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_GETUSERKEYCODE = new BigInteger("000000000010", 2);
+        public static final BigInteger METHOD_GETUSERKEYCODE = new BigInteger("00000000000000000000000000000000010", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setDefaultKeyCode(int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_SETDEFAULTKEYCODE = new BigInteger("000000000100", 2);
+        public static final BigInteger METHOD_SETDEFAULTKEYCODE = new BigInteger("00000000000000000000000000000000100", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setFnUserKeyCode(int, int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_SETFNUSERKEYCODE = new BigInteger("000000001000", 2);
+        public static final BigInteger METHOD_SETFNUSERKEYCODE = new BigInteger("00000000000000000000000000000001000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getFnUserKeyCode(int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_GETFNUSERKEYCODE = new BigInteger("000000010000", 2);
+        public static final BigInteger METHOD_GETFNUSERKEYCODE = new BigInteger("00000000000000000000000000000010000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setFnDefaultKeyCode(int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_SETFNDEFAULTKEYCODE = new BigInteger("000000100000", 2);
+        public static final BigInteger METHOD_SETFNDEFAULTKEYCODE = new BigInteger("00000000000000000000000000000100000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_SETLAUNCHAPPLICATION = new BigInteger("000001000000", 2);
+        public static final BigInteger METHOD_SETLAUNCHAPPLICATION = new BigInteger("00000000000000000000000000001000000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_GETLAUNCHAPPLICATION = new BigInteger("000010000000", 2);
+        public static final BigInteger METHOD_GETLAUNCHAPPLICATION = new BigInteger("00000000000000000000000000010000000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#clearLaunchApplication(int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_CLEARLAUNCHAPPLICATION = new BigInteger("000100000000", 2);
+        public static final BigInteger METHOD_CLEARLAUNCHAPPLICATION = new BigInteger("00000000000000000000000000100000000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setFnLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_SETFNLAUNCHAPPLICATION = new BigInteger("001000000000", 2);
+        public static final BigInteger METHOD_SETFNLAUNCHAPPLICATION = new BigInteger("00000000000000000000000001000000000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getFnLaunchApplication(int, ApplicationInfo)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_GETFNLAUNCHAPPLICATION = new BigInteger("010000000000", 2);
+        public static final BigInteger METHOD_GETFNLAUNCHAPPLICATION = new BigInteger("00000000000000000000000010000000000", 2);
         /**
          * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#clearFnLaunchApplication(int)} method is supported on the currently active device
          */
-        public static final BigInteger METHOD_CLEARFNLAUNCHAPPLICATION = new BigInteger("100000000000", 2);
+        public static final BigInteger METHOD_CLEARFNLAUNCHAPPLICATION = new BigInteger("00000000000000000000000100000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#broadcastKey(String, String, KeyEvent)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_BROADCASTKEY = new BigInteger("00000000000000000000001000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#changeKCMapFile(String, byte[])} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_CHANGEKCMAPFILE = new BigInteger("00000000000000000000010000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#changeKCMapFileToDefault()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_CHANGEKCMAPFILETODEFAULT = new BigInteger("00000000000000000000100000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#changeTrayIcon(KeyEvent)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_CHANGETRAYICON = new BigInteger("00000000000000000001000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getCurrentKCMapFile()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_GETCURRENTKCMAPFILE = new BigInteger("00000000000000000010000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getKeypadMode()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_GETKEYPADMODE = new BigInteger("00000000000000000100000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getTestMode()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_GETTESTMODE = new BigInteger("00000000000000001000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#hasHardwareKey(int)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_HASHARDWAREKEY = new BigInteger("00000000000000010000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#hasWakeupRes(KeyEvent)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_HASWAKEUPRES = new BigInteger("00000000000000100000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#hijackingKey(KeyEvent, boolean)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_HIJACKINGKEY = new BigInteger("00000000000001000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#isDirectInputStyle()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_ISDIRECTINPUTSTYLE = new BigInteger("00000000000010000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#isFinishedHandle()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_ISFINISHEDHANDLE = new BigInteger("00000000000100000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#isKeyControlMode()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_ISKEYCONTROLMODE = new BigInteger("00000000001000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#isWakeupRes(int)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_ISWAKEUPRES = new BigInteger("00000000010000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#performKeyPressFeedback(KeyEvent)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_PERFORMKEYPRESSFEEDBACK = new BigInteger("00000000100000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#removeKCMapFile()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_REMOVEKCMAPFILE = new BigInteger("00000001000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setDirectInputStyle(boolean)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_SETDIRECTINPUTSTYLE = new BigInteger("00000010000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#getFixedNumberMode()} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_GETFIXEDNUMBERMODE = new BigInteger("00000100000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setFixedNumberMode(boolean)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_SETFIXEDNUMBERMODE = new BigInteger("00001000000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setKeyControlMode(boolean)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_SETKEYCONTROLMODE = new BigInteger("00010000000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setKeypadMode(int)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_SETKEYPADMODE = new BigInteger("00100000000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#setWakeupRes(int, boolean)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_SETWAKEUPRES = new BigInteger("01000000000000000000000000000000000", 2);
+
+        /**
+         * Constant to be used with {@link KeyLibrary#isMethodSupported(BigInteger)} in order to check whether the {@link KeyLibrary#updateMetaState(KeyEvent)} method is supported on the currently active device
+         * @since 2.02
+         */
+        public static final BigInteger METHOD_UPDATEMETASTATE = new BigInteger("10000000000000000000000000000000000", 2);
     }
 
 }

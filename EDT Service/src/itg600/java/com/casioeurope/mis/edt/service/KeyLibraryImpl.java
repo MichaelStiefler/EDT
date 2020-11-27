@@ -20,7 +20,7 @@ import device.common.IHiJackService;
 @SuppressWarnings({"unused", "RedundantSuppression", "RedundantThrows"})
 public class KeyLibraryImpl extends IKeyLibrary.Stub {
 
-    private static final BigInteger METHODS_SUPPORTED = new BigInteger("111111111111111111111111111111111100", 2);
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("11111011111111111111111111111111111", 2);
     private static final String[] methodNames = {"setUserKeyCode",
             "getUserKeyCode",
             "setDefaultKeyCode",
@@ -50,13 +50,12 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
             "performKeyPressFeedback",
             "removeKCMapFile",
             "setDirectInputStyle",
+            "getFixedNumberMode",
             "setFixedNumberMode",
             "setKeyControlMode",
             "setKeypadMode",
             "setWakeupRes",
-            "updateMetaState",
-            "getRestrictInputMode",
-            "setRestrictInputMode"};
+            "updateMetaState"};
 
     private static volatile jp.casio.ht.devicelibrary.KeyLibrary jpInstance;
     private static volatile KeyLibraryImpl hijackInstance;
@@ -277,6 +276,11 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
         return getHijackInstance().hiJackService.setDirectInputStyle(enable);
     }
 
+    public boolean getFixedNumberMode(BooleanParcelable unsupported) {
+        unsupported.setValue(true);
+        return false;
+    }
+
     public boolean setFixedNumberMode(boolean on, BooleanParcelable unsupported) throws RemoteException {
         unsupported.setValue(false);
         return getHijackInstance().hiJackService.setFixedNumberMode(on);
@@ -300,15 +304,6 @@ public class KeyLibraryImpl extends IKeyLibrary.Stub {
     public void updateMetaState(KeyEvent event, BooleanParcelable unsupported) throws RemoteException {
         unsupported.setValue(false);
         getHijackInstance().hiJackService.updateMetaState(event);
-    }
-
-    public boolean getRestrictInputMode(BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(true);
-        return false;
-    }
-
-    public void setRestrictInputMode(boolean enable, BooleanParcelable unsupported) throws RemoteException {
-        unsupported.setValue(true);
     }
 
     public boolean isMethodNameSupported(String methodName) {
