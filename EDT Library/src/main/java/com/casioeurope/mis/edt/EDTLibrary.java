@@ -678,6 +678,33 @@ public class EDTLibrary {
     }
 
     /**
+     * Clears the logcat contents of the default log buffer set (Clears main, system, and crash buffers).
+     *
+     * @return {@code boolean} whether or not the Logcat contents could be cleared successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.03
+     */
+    public static boolean logcatClear() throws RemoteException, UnsupportedOperationException {
+        return Implementation.logcatClear("default");
+    }
+
+    /**
+     * Clears the logcat contents of of the specified log buffer set(s).
+     *
+     * @param buffers      {@link java.lang.String String}: Buffer(s) to be cleared as specified in <a href="https://developer.android.com/studio/command-line/logcat#alternativeBuffers">Viewing alternative log buffers</a>.<br/>
+     *                                                    Use the single -b format with comma-separated list of buffers if you want to specify multiple buffers.<br/>
+     *                                                    Available buffers are: default (Reports main, system, and crash buffers), all (reports all buffers), radio, events, main, system, and crash.
+     * @return {@code boolean} whether or not the Logcat contents could be cleared successfully.
+     * @throws RemoteException Gets thrown when access to the system service fails.
+     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
+     * @since 2.03
+     */
+    public static boolean logcatClear(String buffers) throws RemoteException, UnsupportedOperationException {
+        return Implementation.logcatClear(buffers);
+    }
+
+    /**
      * Writes the current logcat contents to a File, using the default log buffer set (Reports main, system, and crash buffers).
      *
      * @param fileName     {@link java.lang.String String}: File Path and Name of the File which will hold the current logcat contents.
@@ -694,7 +721,7 @@ public class EDTLibrary {
      * Writes the current logcat contents to a File, using the specified log buffer set(s).
      *
      * @param fileName     {@link java.lang.String String}: File Path and Name of the File which will hold the current logcat contents.
-     * @param buffers      {@link java.lang.String String}: Buffer(s) to be used as specified in <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Viewing alternative log buffers</a>.<br/>
+     * @param buffers      {@link java.lang.String String}: Buffer(s) to be used as specified in <a href="https://developer.android.com/studio/command-line/logcat#alternativeBuffers">Viewing alternative log buffers</a>.<br/>
      *                                                    Use the single -b format with comma-separated list of buffers if you want to specify multiple buffers.<br/>
      *                                                    Available buffers are: default (Reports main, system, and crash buffers), all (reports all buffers), radio, events, main, system, and crash.
      * @return {@code boolean} whether or not the File could be written successfully.
@@ -704,33 +731,6 @@ public class EDTLibrary {
      */
     public static boolean logcatToFile(String fileName, String buffers) throws RemoteException, UnsupportedOperationException {
         return Implementation.logcatToFile(fileName, buffers);
-    }
-
-    /**
-     * Clears the logcat contents of the default log buffer set (Clears main, system, and crash buffers).
-     *
-     * @return {@code boolean} whether or not the Logcat contents could be cleared successfully.
-     * @throws RemoteException Gets thrown when access to the system service fails.
-     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
-     * @since 2.03
-     */
-    public static boolean logcatClear() throws RemoteException, UnsupportedOperationException {
-        return Implementation.logcatClear("default");
-    }
-
-    /**
-     * Clears the logcat contents of of the specified log buffer set(s).
-     *
-     * @param buffers      {@link java.lang.String String}: Buffer(s) to be cleared as specified in <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Viewing alternative log buffers</a>.<br/>
-     *                                                    Use the single -b format with comma-separated list of buffers if you want to specify multiple buffers.<br/>
-     *                                                    Available buffers are: default (Reports main, system, and crash buffers), all (reports all buffers), radio, events, main, system, and crash.
-     * @return {@code boolean} whether or not the Logcat contents could be cleared successfully.
-     * @throws RemoteException Gets thrown when access to the system service fails.
-     * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
-     * @since 2.03
-     */
-    public static boolean logcatClear(String buffers) throws RemoteException, UnsupportedOperationException {
-        return Implementation.logcatClear(buffers);
     }
 
     /**
