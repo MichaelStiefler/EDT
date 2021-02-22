@@ -8,7 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -31,8 +31,8 @@ public class ScanLib {
     private static ScannerLibrary scanLib;
 
     public static boolean getCurrentScanSettings(String settingsFilePath, Context context) {
-        String fileNameCurrentJson = FileUtils.removeExtension(settingsFilePath) + "_cur.json";
-        String fileNameCurrentXml = FileUtils.removeExtension(settingsFilePath) + "_cur.xml";
+        String fileNameCurrentJson = FilenameUtils.removeExtension(settingsFilePath) + "_cur.json";
+        String fileNameCurrentXml = FilenameUtils.removeExtension(settingsFilePath) + "_cur.xml";
         boolean getJson = true, getXml = true;
         if (settingsFilePath.toLowerCase().endsWith(".json")) {
             getXml = false;
@@ -56,7 +56,7 @@ public class ScanLib {
             setJson = false;
             fileNameNewXml = settingsFilePath;
         } else {
-            if (FileUtils.getExtension(settingsFilePath).length() == 0) {
+            if (FilenameUtils.getExtension(settingsFilePath).length() == 0) {
                 fileNameNewJson = settingsFilePath + ".json";
                 fileNameNewXml = settingsFilePath + ".xml";
             } else {

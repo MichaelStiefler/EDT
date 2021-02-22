@@ -20,14 +20,15 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     defaultConfig {
         applicationId 'com.casioeurope.mis.edt.service'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 202001
-        versionName '2.02'
+        versionCode 203001
+        versionName '2.03'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -103,11 +104,12 @@ dependencies {
     itg650Implementation project(path: ':DeviceLibraryItg6x0')
     itg600Implementation project(path: ':EEICLibraryItg6x0')
     itg650Implementation project(path: ':EEICLibraryItg6x0')
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation project(path: ':EDT Library')
-    implementation group: 'commons-io', name: 'commons-io', version: '20030203.000550'
+    //noinspection GradleDependency
+    implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
     implementation('org.simpleframework:simple-xml:2.7.1') {
         exclude module: 'stax'
         exclude module: 'stax-api'

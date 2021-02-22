@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.casioeurope.mis.edt.BuildConfig;
 import com.casioeurope.mis.edt.type.APN;
 import com.casioeurope.mis.edt.type.APNParcelable;
 import com.casioeurope.mis.edt.IEDT;
@@ -55,7 +56,7 @@ public class EDTImpl extends IEDT.Stub {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    private static final BigInteger METHODS_SUPPORTED_EDT = new BigInteger("11111111111111111111111111111111111111111111111111111111111111111111", 2);
+    private static final BigInteger METHODS_SUPPORTED_EDT = new BigInteger("1111111111111111111111111111111111111111111111111111111111111111111111", 2);
     private static String[] methodNamesEdt = {
             "addNetwork",
             "allowUnknownSources",
@@ -96,6 +97,8 @@ public class EDTImpl extends IEDT.Stub {
             "initializeKeyStore",
             "installApk",
             "installCertificate",
+            "logcatClear",
+            "logcatToFile",
             "lockDevice",
             "mountSDCard",
             "moveFile",
@@ -1316,5 +1319,19 @@ public class EDTImpl extends IEDT.Stub {
             return false;
         }
         return AppManager.disableBatteryOptimization(this.context, packageName);
+    }
+
+    @Override
+    public boolean logcatToFile(BooleanParcelable unsupported, String fileName, String buffers) {
+        logMethodEntranceExit(true, String.format("logcatToFile(%s, %s)", fileName, buffers));
+        unsupported.setValue(false);
+        return FileTools.logcatToFile(fileName, buffers);
+    }
+
+    @Override
+    public boolean logcatClear(BooleanParcelable unsupported, String buffers) {
+        logMethodEntranceExit(true, String.format("logcatClear(%s)", buffers));
+        unsupported.setValue(false);
+        return FileTools.logcatClear(buffers);
     }
 }

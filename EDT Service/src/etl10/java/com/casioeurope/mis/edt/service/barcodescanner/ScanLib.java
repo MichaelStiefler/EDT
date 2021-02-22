@@ -5,7 +5,7 @@ import android.content.Context;
 import com.casioeurope.mis.edt.service.barcodescanner.etl10.ScannerLibrary;
 import com.google.gson.Gson;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -35,7 +35,7 @@ public class ScanLib {
             setJson = false;
             fileNameNewXml = settingsFilePath;
         } else {
-            if (FileUtils.getExtension(settingsFilePath).length() == 0) {
+            if (FilenameUtils.getExtension(settingsFilePath).length() == 0) {
                 fileNameNewJson = settingsFilePath + ".json";
                 fileNameNewXml = settingsFilePath + ".xml";
             } else {

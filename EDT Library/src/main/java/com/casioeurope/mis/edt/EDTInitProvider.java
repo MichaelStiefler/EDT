@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class EDTInitProvider extends ContentProvider {
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true; //BuildConfig.DEBUG;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
     private static final String TAG = "EDT (InitProvider)";
 

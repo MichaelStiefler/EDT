@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.casioeurope.mis.edt.BuildConfig;
 import com.casioeurope.mis.edt.type.ReadWriteFileParamsParcelable;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -57,7 +59,7 @@ public class FileTools {
             if (dataOffset < 0) dataOffset = 0;
             int numBytesToProcess = readWriteFileParamsParcelable.getLength();
             is = newInputStream(readWriteFileParamsParcelable.getPath(), readWriteFileParamsParcelable.getOptions().toArray(new OpenOption[0]));
-            byte[] streamData = IOUtil.toByteArray(is);
+            byte[] streamData = IOUtils.toByteArray(is);
             if (streamData.length - fileOffset < numBytesToProcess) {
                 Log.d(TAG, String.format("readFile(%s) failed: Insufficient amount of data in file. Available: %d, requested: %d, file offset: %d.", readWriteFileParamsParcelable.getPath().toString(), streamData.length - fileOffset, numBytesToProcess, fileOffset));
                 return false;
@@ -141,4 +143,34 @@ public class FileTools {
         }
         return false;
     }
+
+    public static boolean logcatToFile(String fileName, String buffers) {
+        try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                if (!file.delete()) return false;
+            }
+
+            String cmd = "logcat -b " + buffers + " -d -f " + file.getAbsolutePath();
+            Process p = Runtime.getRuntime().exec(cmd);
+            p.waitFor();
+            return p.exitValue() == 0;
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+        return false;
+    }
+
+    public static boolean logcatClear(String buffers) {
+        try {
+            String cmd = "logcat -b " + buffers + " -c";
+            Process p = Runtime.getRuntime().exec(cmd);
+            p.waitFor();
+            return p.exitValue() == 0;
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+        return false;
+    }
+
 }

@@ -1047,10 +1047,54 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:text="Toggle Input Mode"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLogcatToFile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonShowSerialNumber" />
+
+        <Button
+            android:id="@+id/buttonLogcatToFile"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="#000000"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="#36ff00"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="Write Logcat to File"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLogcatClear"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonToggleInputMode" />
+
+        <Button
+            android:id="@+id/buttonLogcatClear"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="#000000"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="#36ff00"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="Clear Logcat"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTestMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonLogcatToFile" />
 
         <Button
             android:id="@+id/buttonTestMessage"
@@ -1072,7 +1116,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonToggleInputMode" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonLogcatClear" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

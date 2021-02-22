@@ -121,4 +121,6 @@ interface IEDT {
     boolean disableApplication(out BooleanParcelable unsupported, String packageName);
     boolean enableBatteryOptimization(out BooleanParcelable unsupported, String packageName);
     boolean disableBatteryOptimization(out BooleanParcelable unsupported, String packageName);
+    boolean logcatToFile(out BooleanParcelable unsupported, String fileName, String buffers);
+    boolean logcatClear(out BooleanParcelable unsupported, String buffers);
 }

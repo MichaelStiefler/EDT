@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.icu.util.TimeZone;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
@@ -361,6 +362,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 if (keyPadMode > 4) keyPadMode = 1;
                 Log.d(TAG, "Calling Set Keypad Mode from Keyboard Library!");
                 Log.d(TAG, String.format("Set Keypad Mode Result = %b", KeyLibrary.setKeypadMode(keyPadMode)));
+            } else if (v == activityMainBinding.buttonLogcatToFile) {
+                Log.d(TAG, "Calling logcatToFile from EDT Library!");
+                String result = String.format("logcatToFile = %b", EDTLibrary.logcatToFile(Environment.getExternalStorageDirectory() + "/logcat.txt"));
+                Log.d(TAG, result);
+            } else if (v == activityMainBinding.buttonLogcatClear) {
+                Log.d(TAG, "Calling logcatClear from EDT Library!");
+                String result = String.format("logcatClear = %b", EDTLibrary.logcatClear());
+                Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonTestMessage) {
                 Log.d(TAG, "Calling Test Message from Service!");
                 Log.d(TAG, String.format("Test Message Result = %b", EDTLibrary.testMessage("EDT Tools Test Message!")));

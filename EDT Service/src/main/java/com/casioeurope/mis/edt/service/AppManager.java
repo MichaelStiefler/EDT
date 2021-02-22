@@ -11,7 +11,7 @@ import android.os.storage.StorageVolume;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -162,7 +162,7 @@ public class AppManager {
             PackageInstaller.Session session = packageInstaller.openSession(sessionId);
             try(OutputStream out = session.openWrite(localApk.getName(), 0, -1);
                 FileInputStream fin = new FileInputStream(localApk)) {
-                out.write(IOUtil.toByteArray(fin));
+                out.write(IOUtils.toByteArray(fin));
                 session.fsync(out);
             }
             session.commit(PendingIntent.getBroadcast(context, sessionId,

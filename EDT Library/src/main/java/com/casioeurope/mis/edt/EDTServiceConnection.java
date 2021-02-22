@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @SuppressWarnings("SpellCheckingInspection")
 public class EDTServiceConnection implements ServiceConnection {
 
-    public static final boolean LOG_METHOD_ENTRANCE_EXIT = true; //BuildConfig.DEBUG;
+    public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
     @SuppressWarnings("FieldCanBeLocal")
     private static final String TAG = "EDT (EDTServiceConnection)";
 
