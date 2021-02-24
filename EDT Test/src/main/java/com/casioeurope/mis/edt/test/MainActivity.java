@@ -364,7 +364,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, String.format("Set Keypad Mode Result = %b", KeyLibrary.setKeypadMode(keyPadMode)));
             } else if (v == activityMainBinding.buttonLogcatToFile) {
                 Log.d(TAG, "Calling logcatToFile from EDT Library!");
-                String result = String.format("logcatToFile = %b", EDTLibrary.logcatToFile(Environment.getExternalStorageDirectory() + "/logcat.txt"));
+                String result = String.format("logcatToFile = %b", EDTLibrary.logcatToFile(Environment.getExternalStorageDirectory() + "/logcat.txt", "all"));
                 Log.d(TAG, result);
             } else if (v == activityMainBinding.buttonLogcatClear) {
                 Log.d(TAG, "Calling logcatClear from EDT Library!");

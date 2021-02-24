@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  *          <br/>Or even further to:<br/>
  * <pre>EDTLibrary.onLibraryReady(EDTLibrary::reboot);</pre>
  *
- * @version 2.03
+ * @version 2.04
  * @since 1.00
  */
 @SuppressWarnings({"unused", "RedundantSuppression", "deprecation", "JavadocReference", "SpellCheckingInspection"})
@@ -686,7 +686,7 @@ public class EDTLibrary {
      * @since 2.03
      */
     public static boolean logcatClear() throws RemoteException, UnsupportedOperationException {
-        return Implementation.logcatClear("default");
+        return Implementation.logcatClear("");
     }
 
     /**
@@ -694,7 +694,7 @@ public class EDTLibrary {
      *
      * @param buffers      {@link java.lang.String String}: Buffer(s) to be cleared as specified in <a href="https://developer.android.com/studio/command-line/logcat#alternativeBuffers">Viewing alternative log buffers</a>.<br/>
      *                                                    Use the single -b format with comma-separated list of buffers if you want to specify multiple buffers.<br/>
-     *                                                    Available buffers are: default (Reports main, system, and crash buffers), all (reports all buffers), radio, events, main, system, and crash.
+     *                                                    Available buffers are: default (clears main, system, and crash buffers), all (clears all buffers), radio, events, main, system, and crash.
      * @return {@code boolean} whether or not the Logcat contents could be cleared successfully.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.
@@ -714,7 +714,7 @@ public class EDTLibrary {
      * @since 2.03
      */
     public static boolean logcatToFile(String fileName) throws RemoteException, UnsupportedOperationException {
-        return Implementation.logcatToFile(fileName, "default");
+        return Implementation.logcatToFile(fileName, "");
     }
 
     /**
@@ -723,7 +723,7 @@ public class EDTLibrary {
      * @param fileName     {@link java.lang.String String}: File Path and Name of the File which will hold the current logcat contents.
      * @param buffers      {@link java.lang.String String}: Buffer(s) to be used as specified in <a href="https://developer.android.com/studio/command-line/logcat#alternativeBuffers">Viewing alternative log buffers</a>.<br/>
      *                                                    Use the single -b format with comma-separated list of buffers if you want to specify multiple buffers.<br/>
-     *                                                    Available buffers are: default (Reports main, system, and crash buffers), all (reports all buffers), radio, events, main, system, and crash.
+     *                                                    Available buffers are: default (reports main, system, and crash buffers), all (reports all buffers), radio, events, main, system, and crash.
      * @return {@code boolean} whether or not the File could be written successfully.
      * @throws RemoteException Gets thrown when access to the system service fails.
      * @throws UnsupportedOperationException Gets thrown when the current device does not support this method.

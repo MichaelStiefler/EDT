@@ -146,14 +146,21 @@ public class FileTools {
 
     public static boolean logcatToFile(String fileName, String buffers) {
         try {
+//            Log.d(TAG, String.format("logcatToFile(%s, %s)", fileName, buffers));
             File file = new File(fileName);
+//            Log.d(TAG, String.format("file = %s", file.getAbsolutePath()));
             if (file.exists()) {
+//                Log.d(TAG, "file exists...");
                 if (!file.delete()) return false;
+//                Log.d(TAG, "deleted.");
             }
 
-            String cmd = "logcat -b " + buffers + " -d -f " + file.getAbsolutePath();
+            String cmd = new StringBuilder("logcat ").append(buffersCmd(buffers)).append("-d -f ").append(file.getAbsolutePath()).toString();
+            //String cmd = "logcat -b " + buffers + " -d -f " + file.getAbsolutePath();
+//            Log.d(TAG, String.format("cmd = %s", cmd));
             Process p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
+//            Log.d(TAG, String.format("p.exitValue() = %d", p.exitValue()));
             return p.exitValue() == 0;
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -163,7 +170,7 @@ public class FileTools {
 
     public static boolean logcatClear(String buffers) {
         try {
-            String cmd = "logcat -b " + buffers + " -c";
+            String cmd = new StringBuilder("logcat ").append(buffersCmd(buffers)).append("-c").toString();
             Process p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
             return p.exitValue() == 0;
@@ -171,6 +178,21 @@ public class FileTools {
             Log.e(TAG, Log.getStackTraceString(e));
         }
         return false;
+    }
+
+    private static String buffersCmd(String buffers) {
+        StringBuilder cmdBuilder = new StringBuilder();
+        if (buffers != null) {
+            String[] buffersArray = buffers.trim().split("\\s*,\\s*");
+            if (!(buffersArray.length == 1 && (buffersArray[0].length()<1 || buffersArray[0].equalsIgnoreCase("default")))) {
+                for (String buffer:buffersArray)
+                    if (buffer.equalsIgnoreCase("default"))
+                        cmdBuilder.append("-b main -b system -b crash ");
+                    else
+                        cmdBuilder.append("-b ").append(buffer).append(" ");
+            }
+        }
+        return cmdBuilder.toString();
     }
 
 }
