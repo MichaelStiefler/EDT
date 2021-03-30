@@ -128,21 +128,64 @@ public class EeicLibraryConstant {
     }
 
     /**
+     * Constants for controlling Serial Interface using the {@link EeicLibrary.SpiDevice} class.
+     */
+    public static class SPI_DEVICE {
+        /**
+         * Clock Polarity (CPOL) set to 0 and Clock Phase (CPHA) set to 0.
+         */
+        public static final int MODE0 = 0;
+        /**
+         * Clock Polarity (CPOL) set to 0 and Clock Phase (CPHA) set to 1.
+         */
+        public static final int MODE1 = 1;
+        /**
+         * Clock Polarity (CPOL) set to 1 and Clock Phase (CPHA) set to 0.
+         */
+        public static final int MODE2 = 2;
+        /**
+         * Clock Polarity (CPOL) set to 1 and Clock Phase (CPHA) set to 1.
+         */
+        public static final int MODE3 = 3;
+        /**
+         * Set the chip select (CS) to active low.
+         */
+        public static final int CS_LOW = 0;
+        /**
+         * Set the chip select (CS) to active high.
+         */
+        public static final int CS_HIGH = 1;
+    }
+
+
+    /**
      * Return Codes to be returned by the methods of the {@link EeicLibrary} class.
      */
-    public static class RETURN {
-        /**
-         * An internal Error occured
-         */
-        public static final int ERROR_FUNCTION = -2;
-        /**
-         * The Method call is unsupported
-         */
-        public static final int ERROR_UNSUPPORTED = -1;
+    public static class RESULT {
         /**
          * The method has been called successfully
          */
         public static final int SUCCESS = 0;
+        /**
+         * The Method call is unsupported
+         */
+        public static final int ERROR_NOT_SUPPORT = -1;
+        /**
+         * An illegal argument has been passed to the method
+         */
+        public static final int ERROR_ILLEGAL_ARGUMENT = -2;
+        /**
+         * An internal error occurred while calling the method
+         */
+        public static final int ERROR_INTERNAL = -3;
+        /**
+         * The target device has not been initialized
+         */
+        public static final int ERROR_NOT_INITIALIZE = -4;
+        /**
+         * A read timeout occured while reading serial data
+         */
+        public static final int ERROR_TIMEOUT = -5;
     }
 
 }

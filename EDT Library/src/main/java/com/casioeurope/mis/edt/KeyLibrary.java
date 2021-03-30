@@ -67,7 +67,7 @@ public class KeyLibrary {
     }
 
     private IKeyLibrary keyLibraryService() {
-        return EDTServiceConnection.getInstance().getKeyLibrary();
+        return EDTServiceConnection.getKeyLibrary();
     }
 
     /**

@@ -1185,7 +1185,7 @@ public class ReflectionLibrary {
     }
 
     private IEDT edtService() {
-        return EDTServiceConnection.getInstance().getEDTService();
+        return EDTServiceConnection.getEDTService();
     }
 
     /**

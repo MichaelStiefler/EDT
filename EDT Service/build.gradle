@@ -27,8 +27,8 @@ android {
         applicationId 'com.casioeurope.mis.edt.service'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 204001
-        versionName '2.04'
+        versionCode 205001
+        versionName '2.05'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -53,29 +53,19 @@ android {
             // and the plugin automatically assigns all the module's flavors to
             // that dimension.
             dimension "device"
-            //applicationIdSuffix ".itg400"
             versionNameSuffix "-itg400"
         }
-        itg600 {
+        itg6x0 {
             dimension "device"
-            //applicationIdSuffix ".itg600"
-            versionNameSuffix "-itg600"
-            minSdkVersion 28
-        }
-        itg650 {
-            dimension "device"
-            //applicationIdSuffix ".itg650"
-            versionNameSuffix "-itg650"
+            versionNameSuffix "-itg6x0"
             minSdkVersion 28
         }
         dtx400 {
             dimension "device"
-            //applicationIdSuffix ".dtx400"
             versionNameSuffix "-dtx400"
         }
         etl10 {
             dimension "device"
-            //applicationIdSuffix ".etl10"
             versionNameSuffix "-etl10"
         }
     }
@@ -94,16 +84,14 @@ repositories {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     itg400Implementation project(path: ':DeviceLibraryItg400')
     dtx400Implementation project(path: ':DeviceLibraryDtx400')
-    itg600Implementation project(path: ':DeviceLibraryItg6x0')
-    itg650Implementation project(path: ':DeviceLibraryItg6x0')
-    itg600Implementation project(path: ':EEICLibraryItg6x0')
-    itg650Implementation project(path: ':EEICLibraryItg6x0')
+    itg6x0Implementation project(path: ':DeviceLibraryItg6x0')
+    itg6x0Implementation project(path: ':EEICLibraryItg6x0')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

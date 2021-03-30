@@ -11,8 +11,9 @@ import java.util.Arrays;
 @SuppressWarnings({"unused", "RedundantThrows", "RedundantSuppression", "SpellCheckingInspection"})
 public class EeicLibraryImpl extends IEeicLibrary.Stub {
 
-    private static final BigInteger METHODS_SUPPORTED = new BigInteger("0000000000000000", 2);
+    private static final BigInteger METHODS_SUPPORTED = new BigInteger("000000000000000000", 2);
     private static final String[] methodNames = {"close",
+            "getErrorCount",
             "getLibraryVersion",
             "getValue",
             "isPowerOn",
@@ -26,10 +27,18 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
             "setPower",
             "setSlaveAddress",
             "setValue",
+            "transfer",
             "unregisterCallback",
             "write"};
 
-    public EeicLibraryImpl() {
+    private EeicLibraryImpl() {
+    }
+
+    private static EeicLibraryImpl instance;
+
+    public static EeicLibraryImpl getInstance() {
+        if (instance == null) instance = new EeicLibraryImpl();
+        return instance;
     }
 
     public boolean isMethodNameSupported(String methodName) {
@@ -58,31 +67,31 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
     public String getLibraryVersion(BooleanParcelable unsupported) {
         unsupported.setValue(true);
         return null;
-   }
+    }
 
     public int gpioDeviceSetInputDirection(int pinNo, int pinStatus, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public int gpioDeviceSetOutputDirection(int pinNo, int value, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public int gpioDeviceSetValue(int pinNo, int value, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public int gpioDeviceGetValue(int pinNo, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public int gpioDeviceSetInterruptEdge(int pinNo, int type, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public boolean gpioDeviceRegisterCallback(IEeicCallback callback, BooleanParcelable unsupported) {
@@ -95,19 +104,9 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
         return false;
     }
 
-    public boolean serialDeviceOpen1(int baudrate, int flags, boolean hwflow, int bitLen, int parityBit, int stopBit, BooleanParcelable unsupported) {
+    public int serialDeviceOpen(int baudrate, boolean hwflow, int bitLen, int parityBit, int stopBit, boolean parmrk, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean serialDeviceOpen2(int baudrate, int bitLen, int parityBit, int stopBit, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean serialDeviceOpen3(int baudrate, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public boolean serialDeviceClose(BooleanParcelable unsupported) {
@@ -115,24 +114,19 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
         return false;
     }
 
-    public boolean serialDeviceWrite1(byte data, BooleanParcelable unsupported) {
+    public boolean serialDeviceWrite(byte[] buffer, int offset, int length, BooleanParcelable unsupported) {
         unsupported.setValue(true);
         return false;
     }
 
-    public boolean serialDeviceWrite2(byte[] buffer, BooleanParcelable unsupported) {
+    public int serialDeviceRead1(byte[] buffer, int length, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean serialDeviceWrite3(byte[] buffer, int offset, int length, BooleanParcelable unsupported) {
+    public int serialDeviceRead2(byte[] buffer, int length, int timeout, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
-    }
-
-    public int serialDeviceRead(byte[] buffer, int length, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public boolean serialDeviceSendBreak(BooleanParcelable unsupported) {
@@ -140,79 +134,59 @@ public class EeicLibraryImpl extends IEeicLibrary.Stub {
         return false;
     }
 
-    public boolean i2cDeviceOpen1(BooleanParcelable unsupported) {
+    public int serialDeviceGetErrorCount(BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean i2cDeviceOpen2(int flags, BooleanParcelable unsupported) {
+    public int i2cDeviceOpen(BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean i2cDeviceClose(BooleanParcelable unsupported) {
+    public int i2cDeviceClose(BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean i2cDeviceWrite1(byte data, BooleanParcelable unsupported) {
+    public int i2cDeviceWrite(byte[] buffer, int length, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean i2cDeviceWrite2(byte[] buffer, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean i2cDeviceWrite3(byte[] buffer, int offset, int length, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public int i2cDeviceRead(byte[] buffer, int length, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean i2cDeviceSetSlaveAddress(int address, BooleanParcelable unsupported) {
+    public int i2cDeviceSetSlaveAddress(int address, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean spiDeviceOpen1(BooleanParcelable unsupported) {
+    public int spiDeviceOpen(int mode, int cs_state, int frequencyHz, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean spiDeviceOpen2(int flags, BooleanParcelable unsupported) {
+    public int spiDeviceClose(BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
-    public boolean spiDeviceClose(BooleanParcelable unsupported) {
+    public int spiDeviceWrite(byte[] buffer, int length, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean spiDeviceWrite1(byte data, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean spiDeviceWrite2(byte[] buffer, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
-    }
-
-    public boolean spiDeviceWrite3(byte[] buffer, int offset, int length, BooleanParcelable unsupported) {
-        unsupported.setValue(true);
-        return false;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
     public int spiDeviceRead(byte[] buffer, int length, BooleanParcelable unsupported) {
         unsupported.setValue(true);
-        return EeicLibraryConstant.RETURN.ERROR_UNSUPPORTED;
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
+    }
+
+    public int spiDeviceTransfer(byte[] txBuffer, byte[] rxBuffer, int length, BooleanParcelable unsupported) {
+        unsupported.setValue(true);
+        return EeicLibraryConstant.RESULT.ERROR_NOT_SUPPORT;
     }
 
 }

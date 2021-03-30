@@ -251,7 +251,7 @@ public class SamLibrary {
     }
 
     private ISamLibrary samLibraryService() {
-        return EDTServiceConnection.getInstance().getSamLibrary();
+        return EDTServiceConnection.getSamLibrary();
     }
 
     /**

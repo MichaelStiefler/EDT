@@ -136,7 +136,7 @@ public class SystemLibrary {
     }
 
     private ISystemLibrary systemLibraryService() {
-        return EDTServiceConnection.getInstance().getSystemLibrary();
+        return EDTServiceConnection.getSystemLibrary();
     }
 
     /**

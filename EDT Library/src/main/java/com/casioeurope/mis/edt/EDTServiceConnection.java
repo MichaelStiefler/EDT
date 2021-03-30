@@ -39,12 +39,12 @@ public class EDTServiceConnection implements ServiceConnection {
         Log.v(TAG, nameOfCurrentMethod + " " + sb.toString() + (entrance ? " +" : " -"));
     }
 
-    private IEDT edtService;
-    private ISystemLibrary systemLibraryService;
-    private IKeyLibrary keyLibraryService;
-    private IScannerLibrary scannerLibraryService;
-    private ISamLibrary samLibraryService;
-    private IEeicLibrary eeicLibraryService;
+    private static IEDT edtService;
+    private static ISystemLibrary systemLibraryService;
+    private static IKeyLibrary keyLibraryService;
+    private static IScannerLibrary scannerLibraryService;
+    private static ISamLibrary samLibraryService;
+    private static IEeicLibrary eeicLibraryService;
 
     private final Queue<LibraryCallback> edtServiceCallbacks = new ConcurrentLinkedQueue<>();
     private final Queue<LibraryCallback> systemLibraryServiceCallbacks = new ConcurrentLinkedQueue<>();
@@ -96,21 +96,21 @@ public class EDTServiceConnection implements ServiceConnection {
         }
     }
 
-    public IEDT getEDTService() {
-        return this.edtService;
+    public static IEDT getEDTService() {
+        return edtService;
     }
-    public ISystemLibrary getSystemLibrary() {
-        return this.systemLibraryService;
+    public static ISystemLibrary getSystemLibrary() {
+        return systemLibraryService;
     }
-    public IKeyLibrary getKeyLibrary() {
-        return this.keyLibraryService;
+    public static IKeyLibrary getKeyLibrary() {
+        return keyLibraryService;
     }
-    public IScannerLibrary getScannerLibrary() { return this.scannerLibraryService; }
-    public ISamLibrary getSamLibrary() {
-        return this.samLibraryService;
+    public static IScannerLibrary getScannerLibrary() { return scannerLibraryService; }
+    public static ISamLibrary getSamLibrary() {
+        return samLibraryService;
     }
-    public IEeicLibrary getEeicLibrary() {
-        return this.eeicLibraryService;
+    public static IEeicLibrary getEeicLibrary() {
+        return eeicLibraryService;
     }
 
     @SuppressWarnings("UnusedReturnValue")

@@ -64,7 +64,7 @@ public class EDTLibrary {
     }
 
     private IEDT edtService() {
-        return EDTServiceConnection.getInstance().getEDTService();
+        return EDTServiceConnection.getEDTService();
     }
 
     private static void checkMethodUnsupported(BooleanParcelable unsupported) throws UnsupportedOperationException {

@@ -36,6 +36,7 @@ public class EDTInitProvider extends ContentProvider {
 
     private void doOnCreate() {
         logMethodEntranceExit(true);
+//        Objects.requireNonNull(getContext()).unbindService(EDTServiceConnection.getInstance());
         EDTServiceConnection.getInstance().bind(Objects.requireNonNull(getContext()));
         logMethodEntranceExit(false);
     }

@@ -73,7 +73,7 @@ public class ScannerLibrary {
     }
 
     private IScannerLibrary edtServiceScannerLibrary() {
-        return EDTServiceConnection.getInstance().getScannerLibrary();
+        return EDTServiceConnection.getScannerLibrary();
     }
 
     /**

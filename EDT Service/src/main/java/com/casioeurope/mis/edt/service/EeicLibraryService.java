@@ -12,7 +12,7 @@ import java.util.Arrays;
 @SuppressWarnings("SpellCheckingInspection")
 public class EeicLibraryService extends Service {
     public static final boolean LOG_METHOD_ENTRANCE_EXIT = BuildConfig.DEBUG;
-    private static final String TAG = "EDT (EeicLibraryService)";
+    private static final String TAG = "EDT (EeicLibService)";
 
     private static void logMethodEntranceExit(boolean entrance, String... addonTags) {
         if (!LOG_METHOD_ENTRANCE_EXIT) return;
@@ -33,7 +33,7 @@ public class EeicLibraryService extends Service {
     private IBinder doOnBind(@SuppressWarnings({"unused", "RedundantSuppression"}) Intent intent) {
         logMethodEntranceExit(true);
         logMethodEntranceExit(false);
-        return new EeicLibraryImpl();
+        return EeicLibraryImpl.getInstance();
     }
 
     @Nullable
