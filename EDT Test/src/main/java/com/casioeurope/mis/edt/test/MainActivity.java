@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.icu.util.TimeZone;
+import android.net.ProxyInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,6 +19,8 @@ import com.casioeurope.mis.edt.type.APN;
 import com.casioeurope.mis.edt.type.ReadWriteFileParams;
 import com.casioeurope.mis.edt.test.databinding.ActivityMainBinding;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -161,11 +164,25 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.d(TAG, "Calling Add Wifi Account from Service!");
                 //               WifiConfigurationParcelable conf = new WifiConfigurationParcelable();
                 android.net.wifi.WifiConfiguration conf = new android.net.wifi.WifiConfiguration();
-                conf.SSID = "\"MIS Test\"";
+                conf.SSID = "\"WAREHOUSEBB\"";
                 conf.hiddenSSID = true;
                 //noinspection SpellCheckingInspection
-                conf.preSharedKey = "\"UmfegUmfe\"";
-                //String result = String.format("Add Wifi AccountResult = %b", edtToolsService.addNetwork(conf));
+                conf.preSharedKey = "\"ammFDwTMDMmKZb83ZWtfr8EGVbUKBWQV\"";
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                    conf.setHttpProxy(ProxyInfo.buildDirectProxy("180.1.3.201", 3128));
+                } else {
+                    try {
+                        Method setHttpProxyMethod = conf.getClass().getDeclaredMethod("setHttpProxy", ProxyInfo.class);
+                        setHttpProxyMethod.setAccessible(true);
+                        setHttpProxyMethod.invoke(conf, ProxyInfo.buildDirectProxy("180.1.3.201", 3128));
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
                 boolean retVal = EDTLibrary.addNetwork(conf);
                 if (retVal) retVal = EDTLibrary.connectNetwork("MIS Test");
                 String result = String.format("Add Wifi AccountResult = %b", retVal);

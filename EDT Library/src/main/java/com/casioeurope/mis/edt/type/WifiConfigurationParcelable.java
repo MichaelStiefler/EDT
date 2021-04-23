@@ -2,9 +2,13 @@ package com.casioeurope.mis.edt.type;
 
 import android.annotation.SuppressLint;
 import android.net.LinkProperties;
+import android.net.ProxyInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.BitSet;
 
 @SuppressWarnings({"deprecation", "RedundantSuppression"})
@@ -82,6 +86,9 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
         this.status = conf.status;
         this.wepKeys = conf.wepKeys;
         this.wepTxKeyIndex = conf.wepTxKeyIndex;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            this.setHttpProxy(conf.getHttpProxy());
+        }
     }
 
     @Override
@@ -109,6 +116,22 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
         dest.writeString(ipAssignment == null ? "" : ipAssignment.toString());
         dest.writeString(proxySettings == null ? "" : proxySettings.toString());
         dest.writeParcelable(linkProperties, flags);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            dest.writeParcelable(getHttpProxy(), flags);
+        } else {
+            try {
+                Method getHttpProxyMethod = android.net.wifi.WifiConfiguration.class.getDeclaredMethod("getHttpProxy");
+                getHttpProxyMethod.setAccessible(true);
+                ProxyInfo proxyInfo = (ProxyInfo)getHttpProxyMethod.invoke(this);
+                dest.writeParcelable(proxyInfo, flags);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public android.net.wifi.WifiConfiguration getWifiConfiguration() {
@@ -134,9 +157,26 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
         conf.status = this.status;
         conf.wepKeys = this.wepKeys;
         conf.wepTxKeyIndex = this.wepTxKeyIndex;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+            conf.setHttpProxy(this.getHttpProxy());
+        } else {
+            try {
+                Method getHttpProxyMethod = android.net.wifi.WifiConfiguration.class.getDeclaredMethod("getHttpProxy");
+                Method setHttpProxyMethod = android.net.wifi.WifiConfiguration.class.getDeclaredMethod("setHttpProxy", ProxyInfo.class);
+                getHttpProxyMethod.setAccessible(true);
+                setHttpProxyMethod.setAccessible(true);
+                ProxyInfo proxyInfo = (ProxyInfo)getHttpProxyMethod.invoke(this);
+                setHttpProxyMethod.invoke(conf, proxyInfo);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
         return conf;
     }
-
 
     public static final Creator<WifiConfigurationParcelable> CREATOR = new Creator<WifiConfigurationParcelable>() {
         @SuppressLint("ParcelClassLoader")
@@ -167,6 +207,22 @@ public class WifiConfigurationParcelable extends android.net.wifi.WifiConfigurat
             temp = in.readString();
             if (temp != null && !temp.isEmpty()) config.proxySettings = ProxySettings.valueOf(temp);
             config.linkProperties = in.readParcelable(null);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // requires Android O or later
+                config.setHttpProxy(in.readParcelable(null));
+            } else {
+                try {
+                    Method setHttpProxyMethod = android.net.wifi.WifiConfiguration.class.getDeclaredMethod("setHttpProxy", ProxyInfo.class);
+                    setHttpProxyMethod.setAccessible(true);
+                    ProxyInfo proxyInfo = (ProxyInfo)in.readParcelable(null);
+                    setHttpProxyMethod.invoke(config, proxyInfo);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
             return config;
         }
 

@@ -26,8 +26,8 @@ android {
         applicationId 'com.casioeurope.mis.edt.test'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 205001
-        versionName "2.05"
+        versionCode 206001
+        versionName "2.06"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
